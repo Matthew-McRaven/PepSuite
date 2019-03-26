@@ -1,0 +1,422 @@
+% pep9-documentation.tex
+% !TEX TS-program = xelatex
+
+\documentclass[10pt,fleqn]{book}
+
+\usepackage{fontspec}
+\usepackage[slantedGreek]{mathptmx}
+\usepackage{amsmath,amssymb,amsfonts}        % Typical math resource packages
+\usepackage{graphics}                        % For inclusion of pdf graphics
+\usepackage[table]{xcolor}                   % For coloring table rows
+\usepackage{booktabs}                        % For table rules
+\usepackage{fancyhdr}                        % For modifying header and footer styles
+\usepackage{enumitem}                        % For modifying itemize indentation
+\usepackage{sectsty}                         % For changing the section header font
+\usepackage{textpos}                         % For positioning graphic in code figures
+\usepackage{fancyvrb}                        % For Verbatim
+\usepackage{alltt}                           % For using italic or bold inside code listings
+\usepackage[labelsep=quad,labelfont={bf,sf},singlelinecheck=false]{caption}
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\defaultfontfeatures{Mapping=tex-text}
+\setmainfont[Ligatures={Common}]{Times}
+\setsansfont{Helvetica}
+\setmonofont[Scale=.95]{Courier}
+
+% Layout parameters in picas
+\setlength{\voffset}{-3pc}
+\setlength{\topmargin}{0pc}
+\setlength{\headheight}{2pc}
+\setlength{\headsep}{1pc}
+\setlength{\textheight}{56pc}
+\setlength{\footskip}{2pc}
+\setlength{\textwidth}{45pc}
+\setlength{\evensidemargin}{-3pc}
+\setlength{\oddsidemargin}{-3pc}
+
+\setlength{\mathindent}{0pc} % Suppress indentation of math
+
+\newcommand{\lgap}{2pt}                             % Line gap
+\newcommand{\llgap}{6pt}                            % Larger line gap
+\newcommand{\lllgap}{12pt}                          % Larger yet line gap
+\newcommand{\equivs}{\ensuremath{\;\equiv\;}}       % Equivales with space
+\newcommand{\equivss}{\ensuremath{\;\;\equiv\;\;}}  % Equivales with double space
+\newcommand{\nequiv}{\ensuremath{\not\equiv}}       % Inequivalent
+\newcommand{\impl}{\ensuremath{\Rightarrow}}        % Implies
+\newcommand{\impls}{\ensuremath{\;\Rightarrow\;}}   % Implies with space
+\newcommand{\nimpl}{\ensuremath{\not\Rightarrow}}   % Does not imply
+\newcommand{\foll}{\ensuremath{\Leftarrow}}         % Follows from
+\newcommand{\nfoll}{\ensuremath{\not\Leftarrow}}    % Does not follow from
+\newcommand{\mymod}{\;\textbf{mod}\;}
+\newcommand{\mygcd}{\;\textbf{gcd}\;}
+\newcommand{\mylcm}{\;\textbf{lcm}\;}
+
+% These macros are used for quantifications. Thanks to David Gries for sharing
+\newcommand{\thedr}{\rule[-.25ex]{.32mm}{1.75ex}}   % Symbol that separates dummy from range in quantification
+\newcommand{\dr}{\;\,\thedr\,\;}                    % Symbol that separates dummy from range, with spacing
+\newcommand{\rb}{:}                                 % Symbol that separates range from body in quantification
+\newcommand{\drrb}{\;\thedr\,{:}\;}                 % Symbol that separates dummy from body when range is missing
+\newcommand{\all}{\forall}                          % Universal quantification
+\newcommand{\ext}{\exists}                          % Existential quantification
+\newcommand{\guard}{[\negthinspace ]}               % Rectangle for guard
+
+% Macros for proof hints
+\newcommand{\Gll} {\langle}                         % Open hint
+\newcommand{\Ggg} {\rangle}                         % Close hint
+\newlength{\Glllength}                              % Length of open hint symbol
+\settowidth{\Glllength}{$.\Gll$}
+\newcommand{\Hint}[1]     {\ \ \ $\Gll              \mbox{#1} \Ggg$ }   % Single line hint
+\newcommand{\Hintfirst}[1]{\ \ \ $\Gll              \mbox{#1}$ }        % First line of multiline hint
+\newcommand{\Hintmid}[1]  {\ \ $\hspace{\Glllength} \mbox{#1}$ }        % Middle line of multiline hint
+\newcommand{\Hintlast}[1] {\ \ $\hspace{\Glllength} \mbox{#1} \Ggg$ }   % Last line of multiline hint
+
+% Single and double quotes
+\newcommand{\Lq}{\mbox{`}}
+\newcommand{\Rq}{\mbox{'}}
+\newcommand{\Lqq}{\mbox{``}}
+\newcommand{\Rqq}{\mbox{''}}
+
+% Units for textpos package
+\setlength{\TPHorizModule}{1pc}
+\setlength{\TPVertModule}{1pc}
+
+% Move left margin of body 1 pica to the right, leaving
+% numbered problems overhanging on the left.
+\newenvironment{mybody}
+   {\begin{list}{}
+      {
+         \setlength{\topsep}{0pc}
+         \setlength{\leftmargin}{1pc}
+         \setlength{\rightmargin}{0pc}
+         \setlength{\listparindent}{\parindent}
+         \setlength{\itemindent}{\parindent}
+         \setlength{\parsep}{\parskip}
+      }
+   \item[]}
+   {\end{list}}
+
+\newenvironment{exercises}
+   {\begin{list}
+      {\arabic{ecounter}.}
+      {
+         \usecounter{ecounter}
+         \setcounter {ecounter}{0}
+         \setlength\leftmargin{2pc}
+         \setlength\labelwidth{6pc}
+         \setlength\labelsep{1pc}
+      }}
+   {\end{list}}
+   
+\def\bettermbox{\leavevmode\hbox}
+
+% Exercise number counter
+\newcounter{ecounter}
+
+% Exercise letter format
+\newcommand{\exletter}[1]{\textbf{#1}}
+
+% Set bullet shape and color for \item lists
+\renewcommand{\labelitemi}{${\color{blue}\blacksquare}$}
+
+% Set spacing for table rows
+\renewcommand{\arraystretch}{1}
+
+% Set section number depth to 1
+%\setcounter{secnumdepth}{3}
+
+% Set section fonts to sanserif with sectsty package
+\allsectionsfont{\sffamily}
+
+% Braces and bash for alltt environment
+\newcommand\allttopen{\symbol{`\{}}
+\newcommand\allttclose{\symbol{`\}}}
+\newcommand\allttbash{\symbol{`\\}}
+
+% Control float placement
+\renewcommand{\textfraction}{0.001}
+\renewcommand{\topfraction}{0.999}
+\renewcommand{\floatpagefraction}{0.35}
+\setcounter{totalnumber}{2}
+
+\begin{document}
+
+\frontmatter
+
+	\title{\Huge Pep/10}
+	\author{J. Stanley Warford}
+	\date{\today}
+	\maketitle
+
+	\pagenumbering{roman}
+
+\mainmatter
+	\pagestyle{fancy}
+	\fancyhf{}
+    \fancyhf[OLH,ELH]{\bfseries \sffamily Pep/9}
+	\fancyhf[OCF,ECF]{\bfseries \sffamily \thepage}
+	\renewcommand{\headrulewidth}{1pt}
+	\renewcommand{\footrulewidth}{0pt}
+	\renewcommand{\chaptermark}[1]{\markboth{\sffamily\chaptername{} \thechapter\quad \large\rmfamily\slshape#1}{}}
+	\renewcommand{\sectionmark}[1]{\markright{#1}}
+	\renewcommand{\headrule}{{\color{blue} \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}	
+
+\setcounter{page}{1}
+\fancyhf[ORH,ERH]{\bfseries \sffamily Comparison with Pep/8}
+\noindent Here are the differences between Pep/9 and Pep/8 along with a rationale for each change.
+
+\begin{exercises}
+\item \verb|RETn| replaced by \verb|RET|\\[6pt]
+In Pep/8, there are eight versions of the return statement, \verb|RET0|, \verb|RET1|, ..., \verb|RET7|.
+\verb|RETn| deallocates n bytes from the run-time stack, and then executes a return from a function call.
+The reasoning is that returns are always preceded by a deallocation of local variables, so programs are shorter if the assembly language programmer is not required to write an \verb|ADDSP| instruction to explicitly deallocate the locals before the return.\\[6pt]
+While this ISA design may be justified on architectural principles, it turned out to be deficient pedagogically.
+The problem is that students must learn two different concepts, the deallocation mechanism for data and the return mechanism for flow of control.
+Combining these two different concepts into one statement can be confusing during the learning process.
+Pep/9 now requires students to explicitly deallocate locals with the \verb|ADDSP| statement.
+An added stylistic advantage is that the explicit \verb|ADDSP| to deallocate locals at the end of a function corresponds directly to the \verb|SUBSP| at the beginning of the function to allocate locals.
+
+\item Memory-mapped I/O\\[6pt]
+Of all the instructions in the Pep/8 instruction set, the most unrealistic are \verb|CHARI| and \verb|CHARO| for character input and output.
+Most real computer systems map input and output ports to main memory, which is now the design of Pep/9.
+In the new instruction set, there are no native input and output instructions.
+Instead, the Pep/8 instruction
+\begin{verbatim}
+CHARI alpha,ad
+\end{verbatim}
+is replaced by the Pep/9 instructions
+\begin{verbatim}
+LDBA charIn,d   ;Load byte to A from the input port charIn
+STBA alpha,ad   ;Store byte from A to alpha
+\end{verbatim}
+and the Pep/8 instruction
+\begin{verbatim}
+CHARO beta,ad
+\end{verbatim}
+is replaced by the Pep/9 instructions
+\begin{verbatim}
+LDBA beta,ad    ;Load byte to A from beta
+STBA charOut,d  ;Store byte to the output port charOut
+\end{verbatim}
+In the above code fragments, \verb|ad| represents any valid addressing mode for the instruction.
+Symbols \verb|charIn| and \verb|charOut| are defined in the Pep/9 operating system and stored as machine vectors at the bottom of memory.
+Their values are included automatically in the symbol table of the assembler.\\[6pt]
+One disadvantage of memory-mapped I/O is that every \verb|CHARI| and \verb|CHARO| statement in a Pep/8 program must now be written as two statements, making programs longer.
+This disadvantage is mitigated by the fact that the trap instructions \verb|DECI|, \verb|DECO|, and \verb|STRO| work as before, as the native I/O statements are hidden inside their trap routines.\\[6pt]
+The advantage is that students learn first hand how memory-mapped I/O works by loading from the input port and storing to the output port.
+This requirement also illustrates the concept and the use of the memory map, a topic students have a tendency to avoid with Pep/8.
+There is also a nice connection with the example in Chapter 11 on address decoding that shows how to wire an 8-port I/O chip into the memory map.
+
+\item New native instruction \verb|CPBr|\\[6pt]
+In Pep/8, byte quantities must be compared with \verb|CPr|, which compares two-byte quantities.
+Consequently, the high-order byte of the comparison must be considered, sometimes by clearing the high-order byte of the register before the comparison is made.
+The resulting assembler code for doing byte comparisons is convoluted.\\[6pt]
+\verb|CPBr| is a new compare byte instruction that sets the status bits without regard to the high-order byte of the register.
+The resulting code is simpler to understand and to write.\\[6pt]
+The Register Transfer Language (RTL) specification of the Pep/8 load byte instruction \verb|LDBYTEr| is\\[6pt]
+$\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow \textrm{r}<0 \; , \; \textrm{Z}\leftarrow \textrm{r}=0$\\[6pt]
+The RTL specification of the Pep/9 load byte instruction, now named \verb|LDBr|, is\\[6pt]
+$\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow 0 \; , \; \textrm{Z}\leftarrow \textrm{r}\langle 8..15\rangle=0$\\[6pt]
+The N and Z bits are now set according to the properties of the byte quantity, which is always considered to be nonnegative, \textit{i.e.}, unsigned.
+This specification is consistent with the fact that byte comparisons are always made with ASCII character values, not numeric values, and so produce results that would naturally be expected.
+It also simplifies the microcode implementation of the instruction in Chapter 12.
+
+\item Improved mnemonics\\[6pt]
+Pep/9 renames the mnemonics for the compare, load, and store instructions as shown below.\\[6pt]
+\begin{tabular}{ l l l }
+\toprule
+Instruction & Pep/9       & Pep/8\\
+\midrule
+Compare word & \verb|CPWr| & \verb|CPr|\\
+Compare byte & \verb|CPBr| & \textit{Not available}\\
+Load word    & \verb|LDWr| & \verb|LDr|\\
+Load byte    & \verb|LDBr| & \verb|LDBYTEr|\\
+Store word   & \verb|STWr| & \verb|STr|\\
+Store byte   & \verb|STBr| & \verb|STBYTEr|\\
+\bottomrule
+\end{tabular}
+
+Pep/9 retains the letters \verb|CP| for compare, \verb|LD| for load, and \verb|ST| for store, but is now consistent in using the letters \verb|W| for word, which is now required, and \verb|B| for byte with this group of instructions.
+Not only is this naming convention more consistent, but there is a tendency for students to forget the meaning of a word (two bytes in the Pep computers).
+Including the letter \verb|W| in the mnemonics for the two-byte instructions reinforces the meaning of ``word''.
+
+\item New trap instruction \verb|HEXO|\\[6pt]
+Pep/9 eliminates the \verb|NOP2| and \verb|NOP3| trap instructions from the instruction set, which, together with the elimination of the \verb|RETn| and character I/O instructions, allows the inclusion of another nonunary trap instruction.
+\verb|HEXO|, which stands for hexadecimal output, was available in Pep/7 and is resurrected in Pep/9.
+It outputs a word as four hexadecimal characters.
+
+\item Addressing mode nomenclature\\[6pt]
+Pep/9 changes the name ``stack-indexed deferred'' addressing to ``stack-deferred indexed'' addressing and the corresponding assembler notation from \verb|sxf| to \verb|sfx|.
+This change more accurately reflects the semantics of the addressing mode as the stack deferred operation happens \textit{before} the index operation.
+
+\end{exercises}
+
+\newpage
+
+\fancyhf[ORH,ERH]{\bfseries \sffamily Instruction set}
+\noindent Here is the Pep/9 instruction set.\\
+
+\begin{tabular}{ l l l l l }
+\toprule
+Instruction & Mnemonic & Instruction & Addressing & Status\\
+Specifier   &          &             & Mode       & Bits\\
+\midrule
+
+0000 0000   & \verb|STOP|    & Stop execution                       & U \\
+0000 0001   & \verb|RET|     & Return from \verb|CALL|              & U \\
+0000 0010   & \verb|RETTR|   & Return from trap                     & U \\
+0000 0011   & \verb|MOVSPA|  & Move SP to A                         & U \\  
+0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$\langle12..15\rangle$         & U \\
+0000 0101   & \verb|MOVAFLG| & Move A$\langle12..15\rangle$ to NZVC flags         & U \\
+ \\
+0000 011r   & \verb|NOTr|    & Bitwise invert r                     & U                    & NZ \\
+0000 100r   & \verb|NEGr|    & Negate r                             & U                    & NZV \\
+0000 101r   & \verb|ASLr|    & Arithmetic shift left r              & U                    & NZVC \\
+0000 110r   & \verb|ASRr|    & Arithmetic shift right r             & U                    & NZC \\
+0000 111r   & \verb|ROLr|    & Rotate left r                        & U                    & C \\
+0001 000r   & \verb|RORr|    & Rotate right r                       & U                    & C \\
+ \\
+0001 001a   & \verb|BR|      & Branch unconditional                 & i, x \\
+0001 010a   & \verb|BRLE|    & Branch if less than or equal to      & i, x \\ 
+0001 011a   & \verb|BRLT|    & Branch if less than                  & i, x \\
+0001 100a   & \verb|BREQ|    & Branch if equal to                   & i, x \\ 
+0001 101a   & \verb|BRNE|    & Branch if not equal to               & i, x \\ 
+0001 110a   & \verb|BRGE|    & Branch if greater than or equal to   & i, x \\ 
+0001 111a   & \verb|BRGT|    & Branch if greater than               & i, x \\ 
+0010 000a   & \verb|BRV|     & Branch if V                          & i, x \\ 
+0010 001a   & \verb|BRC|     & Branch if C                          & i, x \\ 
+0010 010a   & \verb|CALL|    & Call subroutine                      & i, x \\ 
+ \\
+0010 011n   & \verb|NOPn|    & Unary no operation trap              & U \\
+0010 1aaa   & \verb|NOP|     & Nonunary no operation trap           & i \\
+ \\
+0011 0aaa   & \verb|DECI|    & Decimal input trap                   & d, n, s, sf, x, sx, sfx    & NZV \\
+0011 1aaa   & \verb|DECO|    & Decimal output trap                  & i, d, n, s, sf, x, sx, sfx \\
+0100 0aaa   & \verb|HEXO|    & Hexadecimal output trap              & i, d, n, s, sf, x, sx, sfx \\
+0100 1aaa   & \verb|STRO|    & String output trap                   & d, n, sf, x \\
+ \\
+0101 0aaa   & \verb|ADDSP|   & Add to stack pointer (SP)            & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+0101 1aaa   & \verb|SUBSP|   & Subtract from stack pointer (SP)     & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+ \\
+0110 raaa   & \verb|ADDr|    & Add to r                             & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+0111 raaa   & \verb|SUBr|    & Subtract from r                      & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1000 raaa   & \verb|ANDr|    & Bitwise AND to r                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1001 raaa   & \verb|ORr|     & Bitwise OR to r                      & i, d, n, s, sf, x, sx, sfx  & NZ \\
+ \\
+1010 raaa   & \verb|CPWr|    & Compare word to r                    & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1011 raaa   & \verb|CPBr|    & Compare byte to r$\langle8..15\rangle$ & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1100 raaa   & \verb|LDWr|    & Load word r from memory              & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1101 raaa   & \verb|LDBr|    & Load byte r$\langle8..15\rangle$ from memory & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1110 raaa   & \verb|STWr|    & Store word r to memory               & d, n, s, sf, x, sx, sfx \\
+1111 raaa   & \verb|STBr|    & Store byte r$\langle8..15\rangle$ to memory & d, n, s, sf, x, sx, sfx \\
+\bottomrule
+\end{tabular}
+
+\newpage
+
+\fancyhf[ORH,ERH]{\bfseries \sffamily RTL specification of the instruction set}
+\noindent Here is the RTL specification of the Pep/9 instruction set.\\
+
+\begin{tabular}{ l l }
+\toprule
+Instruction & Register transfer language specification\\
+\midrule
+
+\verb|STOP|    & Stop execution \\
+\verb|RET|     & $\textrm{PC}\leftarrow \textrm{Mem}[\textrm{SP}]\; ; \;\textrm{SP}\leftarrow\textrm{SP}+2$ \\
+\verb|RETTR|   & $\textrm{NZVC}\leftarrow\textrm{Mem}[\textrm{SP}]\langle 4..7\rangle \; ; \; \textrm{A}\leftarrow\textrm{Mem}[\textrm{SP}+1] \; ; \; \textrm{X}\leftarrow\textrm{Mem}[\textrm{SP}+3] \; ; \; \textrm{PC}\leftarrow\textrm{Mem}[\textrm{SP}+5] \; ; \; \textrm{SP}\leftarrow\textrm{Mem}[\textrm{SP}+7]$\\
+\verb|MOVSPA|  & $\textrm{A}\leftarrow \textrm{SP}$\\
+\verb|MOVFLGA| & $\textrm{A}\langle 8..11\rangle\leftarrow 0 \; , \; \textrm{A}\langle 12..15\rangle\leftarrow \textrm{NZVC}$\\
+\verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}\langle 12..15\rangle$\\
+\\
+\verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
+\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}\langle 0\rangle \; , \; \textrm{r}\langle 0..14\rangle\leftarrow\textrm{r}\langle 1..15\rangle \; , \;\textrm{r}\langle 15\rangle\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
+\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}\langle 15\rangle \; , \; \textrm{r}\langle 1..15\rangle\leftarrow\textrm{r}\langle 0..14\rangle \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|ROLr|    & $\textrm{C}\leftarrow \textrm{r}\langle 0\rangle \; , \; \textrm{r}\langle 0..14\rangle\leftarrow\textrm{r}\langle 1..15\rangle \; , \;{r}\langle 15\rangle\leftarrow \textrm{C}$\\
+\verb|RORr|    & $\textrm{C}\leftarrow \textrm{r}\langle 15\rangle \; , \; \textrm{r}\langle 1..15\rangle\leftarrow\textrm{r}\langle 0..14\rangle \; , \;{r}\langle 0\rangle\leftarrow \textrm{C}$\\
+\\
+\verb|BR|      & $\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRLE|    & $\textrm{N}=1\lor\textrm{Z}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRLT|    & $\textrm{N}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BREQ|    & $\textrm{Z}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRNE|    & $\textrm{Z}=0\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRGE|    & $\textrm{N}=0\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRGT|    & $\textrm{N}=0\land\textrm{Z}=0\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRV|     & $\textrm{V}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|BRC|     & $\textrm{C}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\verb|CALL|    & $\textrm{SP}\leftarrow\textrm{SP}-2 \; ; \; \textrm{Mem}[\textrm{SP}]\leftarrow \textrm{PC} \; ; \; \textrm{PC}\leftarrow \textrm{Oprnd}$\\
+\\
+\verb|NOPn|    & Trap: Unary no operation\\
+\verb|NOP|     & Trap: Nonunary no operation\\
+\\
+\verb|DECI|    & Trap: $\textrm{Oprnd}\leftarrow \{\textit{decimal input}\}$\\
+\verb|DECO|    & Trap: $\{\textit{decimal output}\} \leftarrow \textrm{Oprnd}$\\
+\verb|HEXO|    & Trap: $\{\textit{hexadecimal output}\} \leftarrow \textrm{Oprnd}$\\
+\verb|STRO|    & Trap: $\{\textit{string output}\} \leftarrow \textrm{Oprnd}$\\
+\\
+\verb|ADDSP|   & $\textrm{SP}\leftarrow \textrm{SP}+\textrm{Oprnd}$\\
+\verb|SUBSP|   & $\textrm{SP}\leftarrow \textrm{SP}-\textrm{Oprnd}$\\
+\\
+\verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
+\verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
+\verb|ANDr|    & $\textrm{r}\leftarrow \textrm{r}\land\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|ORr|     & $\textrm{r}\leftarrow \textrm{r}\lor\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\\
+\verb|CPWr|    & $\textrm{T}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{T}<0 \; , \; \textrm{Z}\leftarrow\textrm{T}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
+\verb|CPBr|    & $\textrm{T}\leftarrow \textrm{r}\langle 8..15\rangle -\textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{T}<0 \; , \; \textrm{Z}\leftarrow\textrm{T}=0 \; , \; \textrm{V}\leftarrow 0 \; , \; \textrm{C}\leftarrow 0$\\
+\verb|LDWr|    & $\textrm{r} \leftarrow \textrm{Oprnd} \; ; \; \textrm{N}\leftarrow \textrm{r}<0 \; , \; \textrm{Z}\leftarrow \textrm{r}=0$\\
+\verb|LDBr|    & $\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow 0 \; , \; \textrm{Z}\leftarrow \textrm{r}\langle 8..15\rangle=0$\\
+\verb|STWr|    & $\textrm{Oprnd} \leftarrow \textrm{r}$\\
+\verb|STBr|    & $\textrm{byte Oprnd} \leftarrow \textrm{r}\langle 8..15\rangle$\\
+\midrule
+Trap           & $\textrm{T}\leftarrow\textrm{Mem}[\textrm{FFF6}] \; ; \;
+\textrm{Mem}[\textrm{T}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
+\textrm{Mem}[\textrm{T}-3]\leftarrow\textrm{SP} \; ; \;
+\textrm{Mem}[\textrm{T}-5]\leftarrow\textrm{PC} \; ; \;
+\textrm{Mem}[\textrm{T}-7]\leftarrow\textrm{X} \; ; \;$\\
+ & 
+$\textrm{Mem}[\textrm{T}-9]\leftarrow\textrm{A} \; ; \;
+\textrm{Mem}[\textrm{T}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
+\textrm{SP}\leftarrow\textrm{T}-10 \; ; \;
+\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
+\bottomrule
+\end{tabular}
+
+\newpage
+
+\fancyhf[ORH,ERH]{\bfseries \sffamily Memory map}
+\noindent Here is the memory map of the Pep/9 system.
+The shaded portion is ROM.
+Compared to the Pep/8 memory map, this map has an input port at address FC15 and an output port at address FC16.
+Corresponding to the I/O ports are two additional machine vectors at addresses FFF8 and FFFA.\\
+\begin{center}
+\includegraphics{memory-map.pdf}
+\end{center}
+
+\newpage
+
+\fancyhf[ORH,ERH]{\bfseries \sffamily CPU data section}
+\noindent Here is the data section of the Pep/9 CPU.
+Compared to the Pep/8 data section, Pep/9 has two additional components --- a shadow carry bit, denoted S in the figure below, and an additional multiplexer with its associated control line CSMux.
+The shadow carry bit is not visible at the ISA level and is used for internal address calculations in the microcode.
+This design solves a major headache present in Pep/8, which requires the saving and restoration of the C bit when an internal address addition would wipe it out.
+A step towards a more realistic model is the requirement of three consecutive MemRead/MemWrite assertions for memory access as opposed to two with Pep/8.\\
+\begin{center}
+\includegraphics{pep9cpu.pdf}
+\end{center}
+
+\newpage
+
+\fancyhf[ORH,ERH]{\bfseries \sffamily CPU data section with two-byte data bus}
+\noindent Here is the data section of the Pep/9 CPU with the two-byte data bus.
+The fifth edition of \textit{Computer Systems} drops the discussion of the MAR Incrementer in favor of a more extensive discussion of increasing the data bus width to improve performance.
+The material is improved by incorporating it into the Pep9CPU software.
+Students can toggle between the two models, with and without the wider data bus, test their solutions with the software, and use the UnitPre and UnitPost tests in the Help system.
+
+\begin{center}
+\includegraphics{pep9cpudatabus.pdf}
+\end{center}
+
+\end{document}
