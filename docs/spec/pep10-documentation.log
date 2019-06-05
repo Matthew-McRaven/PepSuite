@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.6.7)  4 JUN 2019 16:46
+This is XeTeX, Version 3.14159265-2.6-0.99999 (TeX Live 2018) (preloaded format=xelatex 2018.6.7)  5 JUN 2019 16:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1037,23 +1037,19 @@ File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 172--173
-
- []
-
 LaTeX Font Info:    Font shape `TU/Courier(0)/m/n' will be
-(Font)              scaled to size 9.49997pt on input line 173.
-[1
+(Font)              scaled to size 9.49997pt on input line 172.
+ [1
 
 ] [2] [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 390--394
+Underfull \hbox (badness 10000) in paragraph at lines 420--425
 
  []
 
-File: memory-map.pdf Graphic file (type pdf)
-<use memory-map.pdf>
+File: pep10-memory-map.pdf Graphic file (type pdf)
+<use pep10-memory-map.pdf>
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 401--406
+Underfull \hbox (badness 10000) in paragraph at lines 432--437
 
  []
 
@@ -1062,20 +1058,20 @@ File: pep9cpu.pdf Graphic file (type pdf)
 [6]
 File: pep9cpudatabus.pdf Graphic file (type pdf)
 <use pep9cpudatabus.pdf>
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 422.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 453.
  [7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 422.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 453.
  (./pep10-documentation.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 422.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 422.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 453.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 453.
 Package rerunfilecheck Info: File `pep10-documentation.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 422.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 453.
  ) 
 Here is how much of TeX's memory you used:
  22945 strings out of 492969
- 418277 string characters out of 6133924
- 547566 words of memory out of 5000000
+ 418301 string characters out of 6133924
+ 548566 words of memory out of 5000000
  26741 multiletter control sequences out of 15000+600000
  551668 words of font info for 103 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
