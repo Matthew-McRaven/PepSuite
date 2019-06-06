@@ -198,81 +198,51 @@ There are two benefits to this feature.
 First, students do not need to learn a new \verb|STOP| instruction to terminate their machine language programs.
 But more importantly, they learn the utility of memory-mapped device registers with this rudimentary example.
 
-\item System calls
+\item Trap instructions replaced by system calls
 
-Blah, blah ...
-
-Of all the instructions in the Pep/9 instruction set, the most unrealistic are \verb|CHARI| and \verb|CHARO| for character input and output.
-Most real computer systems map input and output ports to main memory, which is now the design of Pep/10.
-In the new instruction set, there are no native input and output instructions.
-Instead, the Pep/9 instruction
+Pep/9 has five trap instructions -- \verb|NOP|, \verb|DECI|, \verb|DECO|, \verb|HEXO|, and \verb|STRO|.
+Pep/10 replaces them with two system calls -- \verb|SYCALL| for system call and \verb|USYCALL| for unary system call.
+For example, \verb|DECI| is no longer an instruction mnemonic as it is in Pep/9, but a symbol exported from the operating system.
+This decimal input instruction in Pep/9
 \begin{verbatim}
-CHARI alpha,ad
+DECI   num,d
 \end{verbatim}
-is replaced by the Pep/10 instructions
+becomes the following system call in Pep/10
 \begin{verbatim}
-LDBA charIn,d   ;Load byte to A from the input port charIn
-STBA alpha,ad   ;Store byte from A to alpha
+LDWT   DECI,i
+SYCALL num,d
 \end{verbatim}
-and the Pep/9 instruction
+Pep/10 has a new Trap register visible at level ISA3 used by the system call instructions.
+\verb|LDWT| is the load word trap instruction, which loads the entry point address of the \verb|DECI| code in the operating system.
+
+In Pep/9, the use of the trap instructions so closely parallel the use of the native ISA instructions that beginning students frequently do not even realize they are system calls.
+Pep/10 has the pedagogic advantage of making system calls explicit, and is more realistic.
+From a system design perspective, the trap instructions no longer occupy the opcode space which opens the possibility for new instructions.
+The new design also does not constrain the number or variety of system calls.
+
+\item Assembler macro facility
+
+In yet another step toward industry standard practice, Pep/10 introduces assembler macro expansions.
+The IDE provides cononical standard macros for all the system calls.
+With the supplied macros, the above \verb|DECI| example becomes simply
 \begin{verbatim}
-CHARO beta,ad
+@DECI  num,d
 \end{verbatim}
-is replaced by the Pep/10 instructions
-\begin{verbatim}
-LDBA beta,ad    ;Load byte to A from beta
-STBA charOut,d  ;Store byte to the output port charOut
-\end{verbatim}
-In the above code fragments, \verb|ad| represents any valid addressing mode for the instruction.
-Symbols \verb|charIn| and \verb|charOut| are defined in the Pep/10 operating system and stored as machine vectors at the bottom of memory.
-Their values are included automatically in the symbol table of the assembler.\\[6pt]
-One disadvantage of memory-mapped I/O is that every \verb|CHARI| and \verb|CHARO| statement in a Pep/9 program must now be written as two statements, making programs longer.
-This disadvantage is mitigated by the fact that the trap instructions \verb|DECI|, \verb|DECO|, and \verb|STRO| work as before, as the native I/O statements are hidden inside their trap routines.\\[6pt]
-The advantage is that students learn first hand how memory-mapped I/O works by loading from the input port and storing to the output port.
-This requirement also illustrates the concept and the use of the memory map, a topic students have a tendency to avoid with Pep/9.
-There is also a nice connection with the example in Chapter 11 on address decoding that shows how to wire an 8-port I/O chip into the memory map.
+where \verb|@DECI| is now the macro name.
+All the generated program listings show the macro source instruction and its expansion.
+The convenient \verb|CHARI| and \verb|CHARO| instructions from Pep/8 and earlier are now back as macros \verb|@CHARI| and \verb|@CHARO|.
+Students no longer need to copy/paste the code for \verb|malloc()| at the end of their source because \verb|@malloc| is now a supplied macro.
 
-\item New native instruction \verb|CPBr|\\[6pt]
-In Pep/9, byte quantities must be compared with \verb|CPr|, which compares two-byte quantities.
-Consequently, the high-order byte of the comparison must be considered, sometimes by clearing the high-order byte of the register before the comparison is made.
-The resulting assembler code for doing byte comparisons is convoluted.\\[6pt]
-\verb|CPBr| is a new compare byte instruction that sets the status bits without regard to the high-order byte of the register.
-The resulting code is simpler to understand and to write.\\[6pt]
-The Register Transfer Language (RTL) specification of the Pep/9 load byte instruction \verb|LDBYTEr| is\\[6pt]
-$\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow \textrm{r}<0 \; , \; \textrm{Z}\leftarrow \textrm{r}=0$\\[6pt]
-The RTL specification of the Pep/10 load byte instruction, now named \verb|LDBr|, is\\[6pt]
-$\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow 0 \; , \; \textrm{Z}\leftarrow \textrm{r}\langle 8..15\rangle=0$\\[6pt]
-The N and Z bits are now set according to the properties of the byte quantity, which is always considered to be nonnegative, \textit{i.e.}, unsigned.
-This specification is consistent with the fact that byte comparisons are always made with ASCII character values, not numeric values, and so produce results that would naturally be expected.
-It also simplifies the microcode implementation of the instruction in Chapter 12.
+It is possible for students to write their own macros with the Pep/10 IDE, which contains documentation for how to do so.
+However, writing macros is outside the scope of this text.
 
-\item Improved mnemonics\\[6pt]
-Pep/10 renames the mnemonics for the compare, load, and store instructions as shown below.\\[6pt]
-\begin{tabular}{ l l l }
-\toprule
-Instruction & Pep/10       & Pep/9\\
-\midrule
-Compare word & \verb|CPWr| & \verb|CPr|\\
-Compare byte & \verb|CPBr| & \textit{Not available}\\
-Load word    & \verb|LDWr| & \verb|LDr|\\
-Load byte    & \verb|LDBr| & \verb|LDBYTEr|\\
-Store word   & \verb|STWr| & \verb|STr|\\
-Store byte   & \verb|STBr| & \verb|STBYTEr|\\
-\bottomrule
-\end{tabular}
+\item New instruction \verb|XORr|
 
-Pep/10 retains the letters \verb|CP| for compare, \verb|LD| for load, and \verb|ST| for store, but is now consistent in using the letters \verb|W| for word, which is now required, and \verb|B| for byte with this group of instructions.
-Not only is this naming convention more consistent, but there is a tendency for students to forget the meaning of a word (two bytes in the Pep computers).
-Including the letter \verb|W| in the mnemonics for the two-byte instructions reinforces the meaning of ``word''.
+The exclusive OR instruction \verb|XORr| is now a native ISA instruction.
 
-\item New trap instruction \verb|HEXO|\\[6pt]
-Pep/10 eliminates the \verb|NOP2| and \verb|NOP3| trap instructions from the instruction set, which, together with the elimination of the \verb|RETn| and character I/O instructions, allows the inclusion of another nonunary trap instruction.
-\verb|HEXO|, which stands for hexadecimal output, was available in Pep/7 and is resurrected in Pep/10.
-It outputs a word as four hexadecimal characters.
+\item New register bank
 
-\item Addressing mode nomenclature\\[6pt]
-Pep/10 changes the name ``stack-indexed deferred'' addressing to ``stack-deferred indexed'' addressing and the corresponding assembler notation from \verb|sxf| to \verb|sfx|.
-This change more accurately reflects the semantics of the addressing mode as the stack deferred operation happens \textit{before} the index operation.
+Blah blah ...
 
 \end{exercises}
 
@@ -357,7 +327,7 @@ Instruction & Register transfer language specification\\
 \textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
 \textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
 \textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
-\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{Y} \; ; \;$\\
+\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{X} \; ; \;$\\
  & 
 $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
@@ -386,7 +356,7 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
 \textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
 \textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
-\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{Y} \; ; \;$\\
+\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{X} \; ; \;$\\
  & 
 $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
