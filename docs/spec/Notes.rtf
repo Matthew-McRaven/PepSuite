@@ -8,9 +8,21 @@
 \deftab560
 \pard\pardeftab560\slleading20\partightenfactor0
 
-\f0\b\fs24 \cf0 Handling fault instructions:\
+\f0\b\fs24 \cf0 No disk port:\
 
-\f1\b0 	Fault instructions will perform a LDWT and a USYCALL.\
+\f1\b0 	Rejected the idea of having a disk port in the interest of memory-map simplicity.\
+\
+\
+
+\f0\b Handling unimplemented opcodes:\
+
+\f1\b0 	In the interest of memory-map simplicity, do not have a fault handler and associated vector. Specify the hardware to execute unimplemented opcodes as NOP. Should be extremely rare, in fact too rare to justify the additional complexity.\
+\
+\
+
+\f0\b Writing system calls:\
+
+\f1\b0 	A system call consists of a LDWT followed by a SYCALL or USYCALL.\
 	It will load an address from the memory vectors (FFF2?) containing the address of the invalid opcode trap handler.\
 \
 \

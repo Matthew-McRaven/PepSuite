@@ -236,11 +236,15 @@ Students no longer need to copy/paste the code for \verb|malloc()| at the end of
 It is possible for students to write their own macros with the Pep/10 IDE, which contains documentation for how to do so.
 However, writing macros is outside the scope of this text.
 
+\item Easier modification of OS
+
+Pep/9 requires students to redefine the mnemonics Blah blah ...
+
 \item New instruction \verb|XORr|
 
 The exclusive OR instruction \verb|XORr| is now a native ISA instruction.
 
-\item New register bank
+\item Modified CPU
 
 Blah blah ...
 
@@ -332,7 +336,7 @@ Instruction & Register transfer language specification\\
 $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-10 \; ; \;
-\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFA}]$\\
+\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFF8}]$\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
@@ -361,7 +365,7 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-10 \; ; \;
-\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFC}]$\\
+\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
 \verb|LDWT|    & $\textrm{T}\leftarrow \textrm{Oprnd}$\\
 \\
 \verb|LDWr|    & $\textrm{r} \leftarrow \textrm{Oprnd} \; ; \; \textrm{N}\leftarrow \textrm{r}<0 \; , \; \textrm{Z}\leftarrow \textrm{r}=0$\\
@@ -390,7 +394,7 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 The shaded portion is ROM.
 Compared to the Pep/9 memory map, this map has several additional components -- a shutdown port at address 5555, a dispatcher at address 6666, a unary trap handler at address 8888 and a fault handler at address AAAA.
 Pep/9 has six machine vectors from FFF4 to FFFE.
-Because of the new components, Pep/10 has ten machine vectors at addresses FFEC to FFFE.\\
+Because of the new components, Pep/10 has nine machine vectors at addresses FFEE to FFFE.\\
 \begin{center}
 \includegraphics{pep10-memory-map}
 \end{center}
