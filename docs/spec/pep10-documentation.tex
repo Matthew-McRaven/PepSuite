@@ -215,7 +215,7 @@ SYCALL num,d
 Pep/10 has a new Trap register visible at level ISA3 used by the system call instructions.
 \verb|LDWT| is the load word trap instruction, which loads the entry point address of the \verb|DECI| code in the operating system.
 
-In Pep/9, the use of the trap instructions so closely parallel the use of the native ISA instructions that beginning students frequently do not even realize they are system calls.
+In Pep/9, the use of the trap instructions so closely parallels the use of the native ISA instructions that beginning students frequently do not even realize they are system calls.
 Pep/10 has the pedagogic advantage of making system calls explicit, and is more realistic.
 From a system design perspective, the trap instructions no longer occupy the opcode space which opens the possibility for new instructions.
 The new design also does not constrain the number or variety of system calls.
@@ -229,24 +229,41 @@ With the supplied macros, the above \verb|DECI| example becomes simply
 @DECI  num,d
 \end{verbatim}
 where \verb|@DECI| is now the macro name.
-All the generated program listings show the macro source instruction and its expansion.
+The generated program listing shows the macro source instruction and its expansion.
 The convenient \verb|CHARI| and \verb|CHARO| instructions from Pep/8 and earlier are now back as macros \verb|@CHARI| and \verb|@CHARO|.
-Students no longer need to copy/paste the code for \verb|malloc()| at the end of their source because \verb|@malloc| is now a supplied macro.
+This is a pedagogical improvement over Pep/9, because now character I/O is programmed exactly like decimal I/O.
+With dynamic allocation, students no longer need to copy/paste the code for \verb|malloc()| at the end of their source because \verb|@malloc| is a supplied macro.
 
 It is possible for students to write their own macros with the Pep/10 IDE, which contains documentation for how to do so.
 However, writing macros is outside the scope of this text.
 
 \item Easier modification of OS
 
-Pep/9 requires students to redefine the mnemonics Blah blah ...
+In Pep/9, to write a new trap instruction the IDE requires you to redefine one of the existing mnemonics.
+Now that trap instructions are replaced with system calls there is no longer such a requirement.
+The Pep/10 assembler picks up all the information it needs from the OS source code using a new \verb|.EXPORT| directive that makes OS symbols accessible to the application code.
+Students can write any number of system calls unconstrained by the opcode space.
 
 \item New instruction \verb|XORr|
 
-The exclusive OR instruction \verb|XORr| is now a native ISA instruction.
+Deletion of the trap instructions from Pep/9 opened up the opcode space for new instructions.
+Finally, the exclusive OR instruction \verb|XORr| is a native ISA instruction.
 
-\item Modified CPU
+\item Improved CPU
 
-Blah blah ...
+At the ISA level, the only difference in the CPU is the new 16-bit Trap register.
+At the LG1 level, the arithmetic/logic unit and the data paths for both the one-byte bus and the two-byte bus are unchanged from Pep/9.
+The register bank has an additional input port for a new D bus originating from the control section.
+There are no longer any awkward constant registers because any value can be loaded into any register from the control section over the D bus.
+
+\item Improved instruction set
+
+The instruction set is now more representative of real ISA instruction sets.
+Neither the \verb|STOP| instruction nor the specialized trap mnemonics of Pep/9 are in actual ISA sets.
+System calls are also typical.
+Both Pep/9 and Pep/10 have 40 ISA instructions, but the Pep/10 set is more regular.
+The opcode space is cleaner, with all the unary instructions followed by all the branch instructions with two addressing modes
+followed by the remaining instructions with eight addressing modes.
 
 \end{exercises}
 
@@ -418,7 +435,7 @@ The shadow carry bit is not visible at the ISA level and is used for internal ad
 This design solves a major headache present in Pep/9, which requires the saving and restoration of the C bit when an internal address addition would wipe it out.
 A step towards a more realistic model is the requirement of three consecutive MemRead/MemWrite assertions for memory access as opposed to two with Pep/9.\\
 \begin{center}
-\includegraphics{pep9cpu.pdf}
+\includegraphics{pep10-1-byte-bus}
 \end{center}
 
 \newpage
@@ -430,7 +447,7 @@ The material is improved by incorporating it into the Pep9CPU software.
 Students can toggle between the two models, with and without the wider data bus, test their solutions with the software, and use the UnitPre and UnitPost tests in the Help system.
 
 \begin{center}
-\includegraphics{pep9cpudatabus.pdf}
+\includegraphics{pep10-2-byte-bus.pdf}
 \end{center}
 
 \end{document}
