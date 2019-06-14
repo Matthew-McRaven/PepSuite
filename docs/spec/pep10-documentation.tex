@@ -6,7 +6,7 @@
 \usepackage{fontspec}
 \usepackage[slantedGreek]{mathptmx}
 \usepackage{amsmath,amssymb,amsfonts}        % Typical math resource packages
-\usepackage{graphics}                        % For inclusion of pdf graphics
+\usepackage{graphicx}                        % For inclusion of pdf graphics
 \usepackage[table]{xcolor}                   % For coloring table rows
 \usepackage{booktabs}                        % For table rules
 \usepackage{fancyhdr}                        % For modifying header and footer styles
@@ -254,7 +254,8 @@ Finally, the exclusive OR instruction \verb|XORr| is a native ISA instruction.
 At the ISA level, the only difference in the CPU is the new 16-bit Trap register.
 At the LG1 level, the arithmetic/logic unit and the data paths for both the one-byte bus and the two-byte bus are unchanged from Pep/9.
 The register bank has an additional input port for a new D bus originating from the control section.
-There are no longer any awkward constant registers because any value can be loaded into any register from the control section over the D bus.
+Pep/10 has only two constant registers covering the most common cases instead of the awkward five in Pep/9.
+Now any constant value can be loaded into any register from the control section over the D bus.
 
 \item Improved instruction set
 
@@ -264,6 +265,10 @@ System calls are also typical.
 Both Pep/9 and Pep/10 have 40 ISA instructions, but the Pep/10 set is more regular.
 The opcode space is cleaner, with all the unary instructions followed by all the branch instructions with two addressing modes
 followed by the remaining instructions with eight addressing modes.
+
+\item Improved control section
+
+For the Pep/9 micro application, the microinstruction format now supports microcalls and microreturns made possible by a return address call stack in the control section.
 
 \end{exercises}
 
@@ -419,9 +424,9 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \fancyhf[ORH,ERH]{\bfseries \sffamily Memory map}
 \noindent Here is the memory map of the Pep/10 system.
 The shaded portion is ROM.
-Compared to the Pep/9 memory map, this map has several additional components -- a shutdown port at address 5555, a dispatcher at address 6666, a unary trap handler at address 8888 and a fault handler at address AAAA.
+Compared to the Pep/9 memory map, this map has several additional components -- a disk input port at address 5555, a shutdown port at address 6666, a dispatcher at address 7777, and a unary trap handler at address 9999.
 Pep/9 has six machine vectors from FFF4 to FFFE.
-Because of the new components, Pep/10 has nine machine vectors at addresses FFEE to FFFE.\\
+Because of the new components, Pep/10 has ten machine vectors at addresses FFEC to FFFE.\\
 \begin{center}
 \includegraphics{pep10-memory-map}
 \end{center}
@@ -447,7 +452,7 @@ The material is improved by incorporating it into the Pep9CPU software.
 Students can toggle between the two models, with and without the wider data bus, test their solutions with the software, and use the UnitPre and UnitPost tests in the Help system.
 
 \begin{center}
-\includegraphics{pep10-2-byte-bus.pdf}
+\includegraphics[scale=0.95]{pep10-2-byte-bus.pdf}
 \end{center}
 
 \end{document}
