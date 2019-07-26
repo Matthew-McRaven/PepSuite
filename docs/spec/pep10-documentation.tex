@@ -201,7 +201,7 @@ But more importantly, they learn the utility of memory-mapped device registers w
 \item Trap instructions replaced by system calls
 
 Pep/9 has five trap instructions -- \verb|NOP|, \verb|DECI|, \verb|DECO|, \verb|HEXO|, and \verb|STRO|.
-Pep/10 replaces them with two system calls -- \verb|SYCALL| for system call and \verb|USYCALL| for unary system call.
+Pep/10 replaces them with two system calls -- \verb|SCALL| for system call and \verb|USCALL| for unary system call.
 For example, \verb|DECI| is no longer an instruction mnemonic as it is in Pep/9, but a symbol exported from the operating system.
 This decimal input instruction in Pep/9
 \begin{verbatim}
@@ -210,7 +210,7 @@ DECI   num,d
 becomes the following system call in Pep/10
 \begin{verbatim}
 LDWT   DECI,i
-SYCALL num,d
+SCALL  num,d
 \end{verbatim}
 Pep/10 has a new Trap register visible at level ISA3 used by the system call instructions.
 \verb|LDWT| is the load word trap instruction, which loads the entry point address of the \verb|DECI| code in the operating system.
@@ -268,7 +268,7 @@ followed by the remaining instructions with eight addressing modes.
 
 \item Improved control section
 
-For the Pep/9 micro application, the microinstruction format now supports microcalls and microreturns made possible by a return address call stack in the control section.
+For the Pep/10 micro application, the microinstruction format now supports microcalls and microreturns made possible by a return address call stack in the control section.
 
 \end{exercises}
 
@@ -283,14 +283,14 @@ Specifier   &                &                                             & Mod
 \midrule
 
 0000 0000   & \verb|RET|     & Return from \verb|CALL|                     & U \\
-0000 0001   & \verb|RETSY|   & Return from system \verb|CALL|              & U \\
+0000 0001   & \verb|SRET|    & Return from system \verb|CALL|              & U \\
 0000 0010   & \verb|MOVSPA|  & Move SP to A                                & U \\
 0000 0011   & \verb|MOVASP|  & Move A to SP                                & U \\  
 0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$\langle12..15\rangle$  & U \\
 0000 0101   & \verb|MOVAFLG| & Move A$\langle12..15\rangle$ to NZVC flags  & U \\
 0000 0110   & \verb|MOVTPC|  & Move T to PC                                & U \\
 0000 0111   & \verb|NOP|     & No operation                                & U \\
-0000 1000   & \verb|USYCALL| & Unary system call                           & U \\
+0000 1000   & \verb|USCALL|  & Unary system call                           & U \\
  \\
 0001 000r   & \verb|NOTr|    & Bitwise invert r                            & U                    & NZ \\
 0001 001r   & \verb|NEGr|    & Negate r                                    & U                    & NZV \\
@@ -310,7 +310,7 @@ Specifier   &                &                                             & Mod
 0010 110a   & \verb|BRC|     & Branch if C                                 & i, x \\ 
 0010 111a   & \verb|CALL|    & Call subroutine                             & i, x \\ 
  \\
-0011 0aaa   & \verb|SYCALL|  & System call                                 & i, d, n, s, sf, x, sx, sfx \\
+0011 0aaa   & \verb|SCALL|   & System call                                 & i, d, n, s, sf, x, sx, sfx \\
 0011 1aaa   & \verb|LDWT|    & Load word T from memory                     & i, d, n, s, sf, x, sx, sfx \\
  \\
 0100 raaa   & \verb|LDWr|    & Load word r from memory                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
@@ -342,14 +342,14 @@ Instruction & Register transfer language specification\\
 \midrule
 
 \verb|RET|     & $\textrm{PC}\leftarrow \textrm{Mem}[\textrm{SP}]\; ; \;\textrm{SP}\leftarrow\textrm{SP}+2$ \\
-\verb|RETSY|   & $\textrm{NZVC}\leftarrow\textrm{Mem}[\textrm{SP}]\langle 4..7\rangle \; ; \; \textrm{A}\leftarrow\textrm{Mem}[\textrm{SP}+1] \; ; \; \textrm{X}\leftarrow\textrm{Mem}[\textrm{SP}+3] \; ; \; \textrm{PC}\leftarrow\textrm{Mem}[\textrm{SP}+5] \; ; \; \textrm{SP}\leftarrow\textrm{Mem}[\textrm{SP}+7]$\\
+\verb|SRET|    & $\textrm{NZVC}\leftarrow\textrm{Mem}[\textrm{SP}]\langle 4..7\rangle \; ; \; \textrm{A}\leftarrow\textrm{Mem}[\textrm{SP}+1] \; ; \; \textrm{X}\leftarrow\textrm{Mem}[\textrm{SP}+3] \; ; \; \textrm{PC}\leftarrow\textrm{Mem}[\textrm{SP}+5] \; ; \; \textrm{SP}\leftarrow\textrm{Mem}[\textrm{SP}+7]$\\
 \verb|MOVSPA|  & $\textrm{A}\leftarrow \textrm{SP}$\\
 \verb|MOVASP|  & $\textrm{SP}\leftarrow \textrm{A}$\\
 \verb|MOVFLGA| & $\textrm{A}\langle 8..11\rangle\leftarrow 0 \; , \; \textrm{A}\langle 12..15\rangle\leftarrow \textrm{NZVC}$\\
 \verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}\langle 12..15\rangle$\\
 \verb|MOVTPC|  & $\textrm{PC}\leftarrow \textrm{T}$\\
 \verb|NOP|     & \{\textit{No operation}\}\\
-\verb|USYCALL| & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
+\verb|USCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
 
 %\textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
 %\textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
@@ -388,7 +388,7 @@ $\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
 \verb|BRC|     & $\textrm{C}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
 \verb|CALL|    & $\textrm{SP}\leftarrow\textrm{SP}-2 \; ; \; \textrm{Mem}[\textrm{SP}]\leftarrow \textrm{PC} \; ; \; \textrm{PC}\leftarrow \textrm{Oprnd}$\\
 \\
-\verb|SYCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
+\verb|SCALL|   & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
 \textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
 \textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
 \textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
@@ -424,9 +424,9 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \fancyhf[ORH,ERH]{\bfseries \sffamily Memory map}
 \noindent Here is the memory map of the Pep/10 system.
 The shaded portion is ROM.
-Compared to the Pep/9 memory map, this map has several additional components -- a disk input port at address 5555, a shutdown port at address 6666, a dispatcher at address 7777, and a unary trap handler at address 9999.
+Compared to the Pep/9 memory map, this map has several additional components -- a disk input port at address 3333, a power off port at address 6666, and a dispatcher at address 7777.
 Pep/9 has six machine vectors from FFF4 to FFFE.
-Because of the new components, Pep/10 has ten machine vectors at addresses FFEC to FFFE.\\
+Because of the new components, Pep/10 has nnine machine vectors at addresses FFEE to FFFE.\\
 \begin{center}
 \includegraphics{pep10-memory-map}
 \end{center}
