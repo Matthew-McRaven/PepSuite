@@ -368,7 +368,7 @@ Instruction & Register transfer language specification\\
 $\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-9]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-9 \; ; \;
-\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFF8}]$\\
+\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
