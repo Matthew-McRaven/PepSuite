@@ -241,8 +241,30 @@ However, writing macros is outside the scope of this text.
 
 In Pep/9, to write a new trap instruction the IDE requires you to redefine one of the existing mnemonics.
 Now that trap instructions are replaced with system calls there is no longer such a requirement.
-The Pep/10 assembler picks up all the information it needs from the OS source code using a new \verb|.EXPORT| directive that makes OS symbols accessible to the application code.
-Students can write any number of system calls unconstrained by the opcode space.
+The Pep/10 assembler uses the new \verb|.SCALL| and \verb|.USCALL| directives to automatically create system call macros.
+Operating system programmers may use the \verb|.EXPORT| directive to control which symbols are available from application code.
+By combining these facilities, students can write any number of system calls unconstrained by the opcode space.
+
+The full declaration of a system call in the operating system is as follows:
+\begin{verbatim}
+        .EXPORT mymacro
+        .USCALL mymacro
+mymacro: ret
+\end{verbatim}
+
+\item Explicitly declared IO ports
+
+Pep/10 introduces two new directives: \verb|.INPUT| and \verb|.OUTPUT|.
+These directives indicate to the simulation and student that associated symbols correspond to user-accessible devices.
+Operating system programmers will receive warnings from the Pep/10 assembler if they have disconnected IO devices, preventing silent IO failures caused by misspelled symbols.
+An IO directive does not automatically mark the symbol as \verb|EXPORT|'ed, maintaining parity with system call declarations.
+
+The full declaration for a memory-mapped IO port is as follows:
+\begin{verbatim}
+      .EXPORT port
+      .OUTPUT port
+port: .BLOCK  1
+\end{verbatim}
 
 \item New instruction \verb|XORr|
 
