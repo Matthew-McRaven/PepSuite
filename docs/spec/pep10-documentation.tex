@@ -3,7 +3,6 @@
 
 \documentclass[10pt,fleqn]{book}
 
-\usepackage{fontspec}
 \usepackage[slantedGreek]{mathptmx}
 \usepackage{amsmath,amssymb,amsfonts}        % Typical math resource packages
 \usepackage{graphicx}                        % For inclusion of pdf graphics
@@ -20,12 +19,19 @@
 \usepackage{blindtext}
 \usepackage{hyperref}
 
-\defaultfontfeatures{Mapping=tex-text}
-\setmainfont{Times}[ItalicFont    ={* Italic},
-                    BoldFont      ={* Bold},
-                    BoldItalicFont={* Bold Italic}]
-\setsansfont{Helvetica}
-\setmonofont[Scale=.95]{Courier}
+\usepackage{ifplatform}
+
+% Fontspec behaves terribly on linux with proprietary fonts. 
+\ifmacosx
+   \usepackage{fontspec}
+   \defaultfontfeatures{Mapping=tex-text}
+   \setmainfont{Times}[%
+      ItalicFont    ={* Italic},
+      BoldFont      ={* Bold},
+      BoldItalicFont={* Bold Italic}]
+   \setsansfont{Helvetica}
+   \setmonofont[Scale=.95]{Courier}
+\fi
 
 % Layout parameters in picas
 \setlength{\voffset}{-3pc}
