@@ -11,4 +11,4 @@ Build:
     paths:
     - pep10-documentation.pdf
   script:
-    - latexmk pep10-documentation.tex
+    - latexmk -xelatex pep10-documentation.tex
