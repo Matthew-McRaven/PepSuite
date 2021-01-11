@@ -294,9 +294,14 @@ Both Pep/9 and Pep/10 have 40 ISA instructions, but the Pep/10 set is more regul
 The opcode space is cleaner, with all the unary instructions followed by all the branch instructions with two addressing modes
 followed by the remaining instructions with eight addressing modes.
 
-\item Improved control section
+\item New RISC-V microarchitecture.
 
-For the Pep/10 micro application, the microinstruction format now supports microcalls and microreturns made possible by a return address call stack in the control section.
+Pep/10's CPU data path will now use a RISC-V processor core.
+The processor, named \texttt{Pep10Si}, implements the RISCV32I instruction set.
+\texttt{Pep10Si} implements the Pep/10 virtual machine using an emulator.
+This change effectively eliminates the custom hardware described in \texttt{Pep9CPU} and \texttt{Pep9Micro}.
+The realism of the system is enhanced by moving to an exisiting open-source instruction set.
+
 
 \end{exercises}
 
