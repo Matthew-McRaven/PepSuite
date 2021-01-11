@@ -1,0 +1,15 @@
+
+stages:
+- build latex
+
+.phony: &base_latex
+  image: registry.gitlab.com/pep10/writing/latex:v1.0.0
+  stage: build latex
+
+  Build  :
+  <<: *base_latex
+  artifacts:
+    paths:
+    - pep10-documentation.pdf
+  script:
+    - latexmk pep10-documentation.tex
