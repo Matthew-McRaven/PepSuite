@@ -322,8 +322,8 @@ Specifier   &                &                                             & Mod
 0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$\langle12..15\rangle$  & U \\
 0000 0101   & \verb|MOVAFLG| & Move A$\langle12..15\rangle$ to NZVC flags  & U  & NZVC\\
 0000 0110   & \verb|MOVTA|   & Move T to A                                & U \\
-0000 0111   & \verb|NOP|     & No operation                                & U \\
-0000 1000   & \verb|USCALL|  & Unary system call                           & U \\
+0000 0111   & \verb|USCALL|  & Unary system call                           & U \\
+0000 1000   & \verb|NOP|     & No operation                                & U \\
  \\
 0001 000r   & \verb|NOTr|    & Bitwise invert r                            & U                    & NZ \\
 0001 001r   & \verb|NEGr|    & Negate r                                    & U                    & NZV \\
@@ -381,27 +381,16 @@ Instruction & Register transfer language specification\\
 \verb|MOVFLGA| & $\textrm{A}\langle 8..11\rangle\leftarrow 0 \; , \; \textrm{A}\langle 12..15\rangle\leftarrow \textrm{NZVC}$\\
 \verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}\langle 12..15\rangle$\\
 \verb|MOVTA|   & $\textrm{A}\leftarrow \textrm{T}$\\
-\verb|NOP|     & \{\textit{No operation}\}\\
 \verb|USCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
-
-%\textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
-%\textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
-%\textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
-%\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{X} \; ; \;$\\
-
 \textrm{Mem}[\textrm{Y}-2]\leftarrow\textrm{SP} \; ; \;
 \textrm{Mem}[\textrm{Y}-4]\leftarrow\textrm{PC} \; ; \;
 \textrm{Mem}[\textrm{Y}-6]\leftarrow\textrm{X} \; ; \;$\\
  & 
-%$\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
-%\textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
-%\textrm{SP}\leftarrow\textrm{Y}-10 \; ; \;
-%\textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFF8}]$\\
-
 $\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
 \textrm{Mem}[\textrm{Y}-9]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-9 \; ; \;
 \textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
+\verb|NOP|     & \{\textit{No operation}\}\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
