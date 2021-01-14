@@ -321,7 +321,7 @@ Specifier   &                &                                             & Mod
 0000 0011   & \verb|MOVASP|  & Move A to SP                                & U \\  
 0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$\langle12..15\rangle$  & U \\
 0000 0101   & \verb|MOVAFLG| & Move A$\langle12..15\rangle$ to NZVC flags  & U \\
-0000 0110   & \verb|MOVTPC|  & Move T to PC                                & U \\
+0000 0110   & \verb|MOVTA|   & Move T to A                                & U \\
 0000 0111   & \verb|NOP|     & No operation                                & U \\
 0000 1000   & \verb|USCALL|  & Unary system call                           & U \\
  \\
@@ -380,7 +380,7 @@ Instruction & Register transfer language specification\\
 \verb|MOVASP|  & $\textrm{SP}\leftarrow \textrm{A}$\\
 \verb|MOVFLGA| & $\textrm{A}\langle 8..11\rangle\leftarrow 0 \; , \; \textrm{A}\langle 12..15\rangle\leftarrow \textrm{NZVC}$\\
 \verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}\langle 12..15\rangle$\\
-\verb|MOVTPC|  & $\textrm{PC}\leftarrow \textrm{T}$\\
+\verb|MOVTA|   & $\textrm{A}\leftarrow \textrm{T}$\\
 \verb|NOP|     & \{\textit{No operation}\}\\
 \verb|USCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
 
