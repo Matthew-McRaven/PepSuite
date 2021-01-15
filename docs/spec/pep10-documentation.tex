@@ -1,4 +1,4 @@
-% pep9-documentation.tex
+% pep10-documentation.tex
 % !TEX TS-program = xelatex
 
 \documentclass[10pt,fleqn]{book}
@@ -277,14 +277,6 @@ port: .BLOCK  1
 Deletion of the trap instructions from Pep/9 opened up the opcode space for new instructions.
 Finally, the exclusive OR instruction \verb|XORr| is a native ISA instruction.
 
-\item Improved CPU
-
-At the ISA level, the only difference in the CPU is the new 16-bit Trap register.
-At the LG1 level, the arithmetic/logic unit and the data paths for both the one-byte bus and the two-byte bus are unchanged from Pep/9.
-The register bank has an additional input port for a new D bus originating from the control section.
-Pep/10 has only two constant registers covering the most common cases instead of the awkward five in Pep/9.
-Now any constant value can be loaded into any register from the control section over the D bus.
-
 \item Improved instruction set
 
 The instruction set is now more representative of real ISA instruction sets.
@@ -294,13 +286,19 @@ Both Pep/9 and Pep/10 have 40 ISA instructions, but the Pep/10 set is more regul
 The opcode space is cleaner, with all the unary instructions followed by all the branch instructions with two addressing modes
 followed by the remaining instructions with eight addressing modes.
 
-\item New RISC-V microarchitecture.
+\item Modified CPU
+
+At the ISA level, the only difference in the CPU is the new 16-bit Trap register, which is necessary to make system calls.
+At the LG1 level, the Pep/10 data section for the one-byte bus is identical to that of Pep/9, again with the only difference being the labeling of the Trap register.
+The two-byte bus model is deleted altogether in favor of expanded coverage of an industry standard RISC chip.
+
+\item New RISC-V microarchitecture
 
 Pep/10's CPU data path will now use a RISC-V processor core.
 The processor, named \texttt{Pep10Si}, implements the RISCV32I instruction set.
 \texttt{Pep10Si} implements the Pep/10 virtual machine using an emulator.
 This change effectively eliminates the custom hardware described in \texttt{Pep9CPU} and \texttt{Pep9Micro}.
-The realism of the system is enhanced by moving to an exisiting open-source instruction set.
+The realism of the system is enhanced by moving to an existing open-source instruction set.
 
 
 \end{exercises}
