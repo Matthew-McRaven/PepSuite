@@ -238,7 +238,7 @@ where \verb|@DECI| is now the macro name.
 The generated program listing shows the macro source instruction and its expansion.
 The convenient \verb|CHARI| and \verb|CHARO| instructions from Pep/8 and earlier are now back as macros \verb|@CHARI| and \verb|@CHARO|.
 This is a pedagogical improvement over Pep/9, because now character I/O is programmed exactly like decimal I/O.
-With dynamic allocation, students no longer need to copy/paste the code for \verb|malloc()| at the end of their source because \verb|@malloc| is a supplied macro.
+With dynamic allocation, students no longer need to copy/paste the code for \verb|malloc()| at the end of their source because \verb|@MALLOC| is a supplied macro.
 
 It is possible for students to write their own macros with the Pep/10 IDE, which contains documentation for how to do so.
 However, writing macros is outside the scope of this text.
@@ -255,7 +255,7 @@ The full declaration of a system call in the operating system is as follows:
 \begin{verbatim}
         .EXPORT mymacro
         .USCALL mymacro
-mymacro: ret
+mymacro: RET
 \end{verbatim}
 
 \item Explicitly declared IO ports
@@ -271,6 +271,10 @@ The full declaration for a memory-mapped IO port is as follows:
       .OUTPUT port
 port: .BLOCK  1
 \end{verbatim}
+
+\item New disk input port
+
+In another bid towards a more realistic system model, the loader now takes its input from a disk input port.
 
 \item New instruction \verb|XORr|
 
@@ -294,12 +298,21 @@ The two-byte bus model is deleted altogether in favor of expanded coverage of an
 
 \item New RISC-V microarchitecture
 
-Pep/10's CPU data path will now use a RISC-V processor core.
-The processor, named \texttt{Pep10Si}, implements the RISCV32I instruction set.
-\texttt{Pep10Si} implements the Pep/10 virtual machine using an emulator.
-This change effectively eliminates the custom hardware described in \texttt{Pep9CPU} and \texttt{Pep9Micro}.
-The realism of the system is enhanced by moving to an existing open-source instruction set.
+The MIPS processor in previous editions is replaced by the open-source hardware standard RISC-V, which is presented throughout the text.
+The sidebars that describe the x86 architecture in the previous edition now describe RISC-V.
+The previous edition contains microcode programming problems for the one-byte bus and two-byte bus versions of the Pep/9 CPU data section.
+MIPS assembly language exercises are limited to paper.
+This edition replaces the MIPS paper exercises with RISC-V assembly language programming problems.
+Students implement components of the Pep/10 computer at the Mc2 level with microcode as before.
+Now they also implement components of the Pep/10 computer at the ISA level with RISC-V assembly language code.
 
+\item New software support
+
+The suite of software for Pep/10 includes an assembler/simulator at the ISA level and a micro-assembler and simulator at the Mc2 level as before.
+The micro-assembler has a unit pre- and post-condition facility for students to test their programs.
+The suite now includes a RISC-V assembler/simulator with the same pre- and post-condition facility.
+The application maps the Pep/10 ISA registers onto a subset of the RISC-V registers for students to simulate Pep/10 at the ISA level.
+They experience the difference between CISC and RISC using RISC-V as a form of microcode to simulate Pep/10.
 
 \end{exercises}
 
@@ -309,57 +322,57 @@ The realism of the system is enhanced by moving to an existing open-source instr
 
 \begin{tabular}{ l l l l l }
 \toprule
-Instruction & Mnemonic       & Instruction                                 & Addressing    & Status\\
-Specifier   &                &                                             & Mode          & Bits\\
+Instruction & Mnemonic       & Instruction                         & Addres sing                  & Status\\
+Specifier   &                &                                      & Mode                        & Bits\\
 \midrule
 
-0000 0000   & \verb|RET|     & Return from \verb|CALL|                     & U \\
-0000 0001   & \verb|SRET|    & Return from system \verb|CALL|              & U \\
-0000 0010   & \verb|MOVSPA|  & Move SP to A                                & U \\
-0000 0011   & \verb|MOVASP|  & Move A to SP                                & U \\  
-0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$\langle12..15\rangle$  & U \\
-0000 0101   & \verb|MOVAFLG| & Move A$\langle12..15\rangle$ to NZVC flags  & U  & NZVC\\
-0000 0110   & \verb|MOVTA|   & Move T to A                                & U \\
-0000 0111   & \verb|USCALL|  & Unary system call                           & U \\
-0000 1000   & \verb|NOP|     & No operation                                & U \\
+0000 0000   & \verb|RET|     & Return from \verb|CALL|              & U \\
+0000 0001   & \verb|SRET|    & Return from system \verb|CALL|       & U \\
+0000 0010   & \verb|MOVSPA|  & Move SP to A                         & U \\
+0000 0011   & \verb|MOVASP|  & Move A to SP                         & U \\  
+0000 0100   & \verb|MOVFLGA| & Move NZVC flags to A$[12:15]$        & U \\
+0000 0101   & \verb|MOVAFLG| & Move A$[12:15]$ to NZVC flags        & U                           & NZVC\\
+0000 0110   & \verb|MOVTA|   & Move T to A                          & U \\
+0000 0111   & \verb|USCALL|  & Unary system call                    & U \\
+0000 1000   & \verb|NOP|     & No operation                         & U \\
  \\
-0001 000r   & \verb|NOTr|    & Bitwise invert r                            & U                    & NZ \\
-0001 001r   & \verb|NEGr|    & Negate r                                    & U                    & NZV \\
-0001 010r   & \verb|ASLr|    & Arithmetic shift left r                     & U                    & NZVC \\
-0001 011r   & \verb|ASRr|    & Arithmetic shift right r                    & U                    & NZC \\
-0001 100r   & \verb|ROLr|    & Rotate left r                               & U                    & C \\
-0001 101r   & \verb|RORr|    & Rotate right r                              & U                    & C \\
+0001 000r   & \verb|NOTr|    & Bitwise invert r                     & U                           & NZ \\
+0001 001r   & \verb|NEGr|    & Negate r                             & U                           & NZV \\
+0001 010r   & \verb|ASLr|    & Arithmetic shift left r              & U                           & NZVC \\
+0001 011r   & \verb|ASRr|    & Arithmetic shift right r             & U                           & NZC \\
+0001 100r   & \verb|ROLr|    & Rotate left r                        & U                           & C \\
+0001 101r   & \verb|RORr|    & Rotate right r                       & U                           & C \\
  \\
-0001 110a   & \verb|BR|      & Branch unconditional                        & i, x \\
-0001 111a   & \verb|BRLE|    & Branch if less than or equal to             & i, x \\ 
-0010 000a   & \verb|BRLT|    & Branch if less than                         & i, x \\
-0010 001a   & \verb|BREQ|    & Branch if equal to                          & i, x \\ 
-0010 010a   & \verb|BRNE|    & Branch if not equal to                      & i, x \\ 
-0010 011a   & \verb|BRGE|    & Branch if greater than or equal to          & i, x \\ 
-0010 100a   & \verb|BRGT|    & Branch if greater than                      & i, x \\ 
-0010 101a   & \verb|BRV|     & Branch if V                                 & i, x \\ 
-0010 110a   & \verb|BRC|     & Branch if C                                 & i, x \\ 
-0010 111a   & \verb|CALL|    & Call subroutine                             & i, x \\ 
+0001 110a   & \verb|BR|      & Branch unconditional                 & i, x \\
+0001 111a   & \verb|BRLE|    & Branch if less than or equal to      & i, x \\ 
+0010 000a   & \verb|BRLT|    & Branch if less than                  & i, x \\
+0010 001a   & \verb|BREQ|    & Branch if equal to                   & i, x \\ 
+0010 010a   & \verb|BRNE|    & Branch if not equal to               & i, x \\ 
+0010 011a   & \verb|BRGE|    & Branch if greater than or equal to   & i, x \\ 
+0010 100a   & \verb|BRGT|    & Branch if greater than               & i, x \\ 
+0010 101a   & \verb|BRV|     & Branch if V                          & i, x \\ 
+0010 110a   & \verb|BRC|     & Branch if C                          & i, x \\ 
+0010 111a   & \verb|CALL|    & Call subroutine                      & i, x \\ 
  \\
-0011 0aaa   & \verb|SCALL|   & System call                                 & i, d, n, s, sf, x, sx, sfx \\
-0011 1aaa   & \verb|LDWT|    & Load word T from memory                     & i \\
+0011 0aaa   & \verb|SCALL|   & System call                          & i, d, n, s, sf, x, sx, sfx \\
+0011 1aaa   & \verb|LDWT|    & Load word T from memory              & i \\
  \\
-0100 raaa   & \verb|LDWr|    & Load word r from memory                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
-0101 raaa   & \verb|LDBr|    & Load byte r$\langle8..15\rangle$ from memory& i, d, n, s, sf, x, sx, sfx  & NZ \\
-0110 raaa   & \verb|STWr|    & Store word r to memory                      & d, n, s, sf, x, sx, sfx \\
-0111 raaa   & \verb|STBr|    & Store byte r$\langle8..15\rangle$ to memory & d, n, s, sf, x, sx, sfx \\
+0100 raaa   & \verb|LDWr|    & Load word r from memory              & i, d, n, s, sf, x, sx, sfx  & NZ \\
+0101 raaa   & \verb|LDBr|    & Load byte r$[8:15]$ from memory      & i, d, n, s, sf, x, sx, sfx  & NZ \\
+0110 raaa   & \verb|STWr|    & Store word r to memory               & d, n, s, sf, x, sx, sfx \\
+0111 raaa   & \verb|STBr|    & Store byte r$[8:15]$ to memory       & d, n, s, sf, x, sx, sfx \\
 \\
-1000 raaa   & \verb|CPWr|    & Compare word to r                           & i, d, n, s, sf, x, sx, sfx  & NZVC \\
-1001 raaa   & \verb|CPBr|    & Compare byte to r$\langle8..15\rangle$      & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1000 raaa   & \verb|CPWr|    & Compare word to r                    & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1001 raaa   & \verb|CPBr|    & Compare byte to r$[8:15]$            & i, d, n, s, sf, x, sx, sfx  & NZVC \\
  \\
-1010 raaa   & \verb|ADDr|    & Add to r                                    & i, d, n, s, sf, x, sx, sfx  & NZVC \\
-1011 raaa   & \verb|SUBr|    & Subtract from r                             & i, d, n, s, sf, x, sx, sfx  & NZVC \\
-1100 raaa   & \verb|ANDr|    & Bitwise AND to r                            & i, d, n, s, sf, x, sx, sfx  & NZ \\
-1101 raaa   & \verb|ORr|     & Bitwise OR to r                             & i, d, n, s, sf, x, sx, sfx  & NZ \\
-1110 raaa   & \verb|XORr|    & Bitwise XOR to r                            & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1010 raaa   & \verb|ADDr|    & Add to r                             & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1011 raaa   & \verb|SUBr|    & Subtract from r                      & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1100 raaa   & \verb|ANDr|    & Bitwise AND to r                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1101 raaa   & \verb|ORr|     & Bitwise OR to r                      & i, d, n, s, sf, x, sx, sfx  & NZ \\
+1110 raaa   & \verb|XORr|    & Bitwise XOR to r                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
  \\
-1111 0aaa   & \verb|ADDSP|   & Add to SP                                   & i, d, n, s, sf, x, sx, sfx  & NZVC \\
-1111 1aaa   & \verb|SUBSP|   & Subtract from SP                            & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1111 0aaa   & \verb|ADDSP|   & Add to SP                            & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1111 1aaa   & \verb|SUBSP|   & Subtract from SP                     & i, d, n, s, sf, x, sx, sfx  & NZVC \\
 \bottomrule
 \end{tabular}
 
@@ -373,11 +386,11 @@ Instruction & Register transfer language specification\\
 \midrule
 
 \verb|RET|     & $\textrm{PC}\leftarrow \textrm{Mem}[\textrm{SP}]\; ; \;\textrm{SP}\leftarrow\textrm{SP}+2$ \\
-\verb|SRET|    & $\textrm{NZVC}\leftarrow\textrm{Mem}[\textrm{SP}]\langle 4..7\rangle \; ; \; \textrm{A}\leftarrow\textrm{Mem}[\textrm{SP}+1] \; ; \; \textrm{X}\leftarrow\textrm{Mem}[\textrm{SP}+3] \; ; \; \textrm{PC}\leftarrow\textrm{Mem}[\textrm{SP}+5] \; ; \; \textrm{SP}\leftarrow\textrm{Mem}[\textrm{SP}+7]$\\
+\verb|SRET|    & $\textrm{NZVC}\leftarrow\textrm{Mem}[\textrm{SP}][ 4:7] \; ; \; \textrm{A}\leftarrow\textrm{Mem}[\textrm{SP}+1] \; ; \; \textrm{X}\leftarrow\textrm{Mem}[\textrm{SP}+3] \; ; \; \textrm{PC}\leftarrow\textrm{Mem}[\textrm{SP}+5] \; ; \; \textrm{SP}\leftarrow\textrm{Mem}[\textrm{SP}+7]$\\
 \verb|MOVSPA|  & $\textrm{A}\leftarrow \textrm{SP}$\\
 \verb|MOVASP|  & $\textrm{SP}\leftarrow \textrm{A}$\\
-\verb|MOVFLGA| & $\textrm{A}\langle 8..11\rangle\leftarrow 0 \; , \; \textrm{A}\langle 12..15\rangle\leftarrow \textrm{NZVC}$\\
-\verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}\langle 12..15\rangle$\\
+\verb|MOVFLGA| & $\textrm{A}[ 8:11]\leftarrow 0 \; , \; \textrm{A}[ 12:15]\leftarrow \textrm{NZVC}$\\
+\verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}[ 12:15]$\\
 \verb|MOVTA|   & $\textrm{A}\leftarrow \textrm{T}$\\
 \verb|USCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
 \textrm{Mem}[\textrm{Y}-2]\leftarrow\textrm{SP} \; ; \;
@@ -385,17 +398,17 @@ Instruction & Register transfer language specification\\
 \textrm{Mem}[\textrm{Y}-6]\leftarrow\textrm{X} \; ; \;$\\
  & 
 $\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
-\textrm{Mem}[\textrm{Y}-9]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
+\textrm{Mem}[\textrm{Y}-9][ 4:7]\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-9 \; ; \;
 \textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
 \verb|NOP|     & \{\textit{No operation}\}\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}\langle 0\rangle \; , \; \textrm{r}\langle 0..14\rangle\leftarrow\textrm{r}\langle 1..15\rangle \; , \;\textrm{r}\langle 15\rangle\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}\langle 15\rangle \; , \; \textrm{r}\langle 1..15\rangle\leftarrow\textrm{r}\langle 0..14\rangle \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
-\verb|ROLr|    & $\textrm{C}\leftarrow \textrm{r}\langle 0\rangle \; , \; \textrm{r}\langle 0..14\rangle\leftarrow\textrm{r}\langle 1..15\rangle \; , \;{r}\langle 15\rangle\leftarrow \textrm{C}$\\
-\verb|RORr|    & $\textrm{C}\leftarrow \textrm{r}\langle 15\rangle \; , \; \textrm{r}\langle 1..15\rangle\leftarrow\textrm{r}\langle 0..14\rangle \; , \;{r}\langle 0\rangle\leftarrow \textrm{C}$\\
+\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;\textrm{r}[ 15]\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
+\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|ROLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;{r}[ 15]\leftarrow \textrm{C}$\\
+\verb|RORr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; , \;{r}[ 0]\leftarrow \textrm{C}$\\
 \\
 \verb|BR|      & $\textrm{PC}\leftarrow \textrm{Oprnd}$\\
 \verb|BRLE|    & $\textrm{N}=1\lor\textrm{Z}=1\impl\textrm{PC}\leftarrow \textrm{Oprnd}$\\
@@ -409,24 +422,24 @@ $\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
 \verb|CALL|    & $\textrm{SP}\leftarrow\textrm{SP}-2 \; ; \; \textrm{Mem}[\textrm{SP}]\leftarrow \textrm{PC} \; ; \; \textrm{PC}\leftarrow \textrm{Oprnd}$\\
 \\
 \verb|SCALL|   & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
-\textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}\langle 0..7\rangle \; ; \;
+\textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}[ 0:7] \; ; \;
 \textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
 \textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
 \textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{X} \; ; \;$\\
  & 
 $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
-\textrm{Mem}[\textrm{Y}-10]\langle 4..7\rangle\leftarrow\textrm{NZVC} \; ; \;
+\textrm{Mem}[\textrm{Y}-10][ 4:7]\leftarrow\textrm{NZVC} \; ; \;
 \textrm{SP}\leftarrow\textrm{Y}-10 \; ; \;
 \textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
 \verb|LDWT|    & $\textrm{T}\leftarrow \textrm{Oprnd}$\\
 \\
 \verb|LDWr|    & $\textrm{r} \leftarrow \textrm{Oprnd} \; ; \; \textrm{N}\leftarrow \textrm{r}<0 \; , \; \textrm{Z}\leftarrow \textrm{r}=0$\\
-\verb|LDBr|    & $\textrm{r}\langle 8..15\rangle \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow 0 \; , \; \textrm{Z}\leftarrow \textrm{r}\langle 8..15\rangle=0$\\
+\verb|LDBr|    & $\textrm{r}[ 8:15] \leftarrow \textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow 0 \; , \; \textrm{Z}\leftarrow \textrm{r}[ 8:15]=0$\\
 \verb|STWr|    & $\textrm{Oprnd} \leftarrow \textrm{r}$\\
-\verb|STBr|    & $\textrm{byte Oprnd} \leftarrow \textrm{r}\langle 8..15\rangle$\\
+\verb|STBr|    & $\textrm{byte Oprnd} \leftarrow \textrm{r}[ 8:15]$\\
 \\
 \verb|CPWr|    & $\textrm{Y}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
-\verb|CPBr|    & $\textrm{Y}\leftarrow \textrm{r}\langle 8..15\rangle -\textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow 0 \; , \; \textrm{C}\leftarrow 0$\\
+\verb|CPBr|    & $\textrm{Y}\leftarrow \textrm{r}[ 8:15] -\textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow 0 \; , \; \textrm{C}\leftarrow 0$\\
 \\
 \verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
 \verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
