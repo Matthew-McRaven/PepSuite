@@ -1,7 +1,8 @@
-#ifndef NGRAPH_PRUNE_H
-#define NGRAPH_PRUNE_H
+#pragma once
 
-#include "ngraph.h"
+
+
+#include "ngraph.hpp"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
@@ -9,6 +10,8 @@
 #include <cmath>
 #include "setops.hpp"
 
+namespace NGraph
+{
 // removes terminal branches from graph
 //
 // only works for directed graphs at the moment
@@ -118,4 +121,5 @@ NGraph::tGraph<T> reduce(const NGraph::tGraph<T>& input)
     NGraph::tGraph<T> retVal = reduceList<T>(input, ignoreList);
     return  retVal;
 }
-#endif // NGRAPH_PRUNE_H
+
+}
