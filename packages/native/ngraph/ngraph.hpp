@@ -136,7 +136,6 @@ class tGraph
 
     using iterator = typename adj_graph::iterator;
     using const_iterator = typename adj_graph::const_iterator;
-    using size_t = typename std::size_t;
 
     using node_iterator = iterator;
     using const_node_iterator = const_iterator;

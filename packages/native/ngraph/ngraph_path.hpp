@@ -1,8 +1,9 @@
-#ifndef NGRAPH_PATH_H
-#define NGRAPH_PATH_H
-#include "ngraph.h"
+#pragma once
+
+#include "ngraph.hpp"
 #include <list>
 
+namespace NGraph {
 template <class T>
 std::list<T> path(typename NGraph::tGraph<T> graph,
                   typename NGraph::tGraph<T>::vertex from,
@@ -68,5 +69,4 @@ std::list<T> path(typename NGraph::tGraph<T> graph,
     }
 }
 
-
-#endif // NGRAPH_PATH_H
+}
