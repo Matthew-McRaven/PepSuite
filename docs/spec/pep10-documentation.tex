@@ -22,7 +22,7 @@
 \usepackage{ifplatform}
 
 % Fontspec behaves terribly on linux with proprietary fonts. 
-\ifmacosx
+%\ifmacosx
    \usepackage{fontspec}
    \defaultfontfeatures{Mapping=tex-text}
    \setmainfont{Times}[%
@@ -31,7 +31,7 @@
       BoldItalicFont={* Bold Italic}]
    \setsansfont{Helvetica}
    \setmonofont[Scale=.95]{Courier}
-\fi
+%\fi
 
 % Layout parameters in picas
 \setlength{\voffset}{-3pc}
@@ -278,7 +278,7 @@ In another bid towards a more realistic system model, the loader now takes its i
 
 \item New instruction \verb|XORr|
 
-Deletion of the trap instructions from Pep/9 opened up the opcode space for new instructions.
+Deletion of the trap instructions from Pep/9 opens up the opcode space for new instructions.
 Finally, the exclusive OR instruction \verb|XORr| is a native ISA instruction.
 
 \item Improved instruction set
@@ -312,6 +312,13 @@ MIPS assembly language exercises are limited to paper.
 This edition replaces the MIPS paper exercises with RISC-V assembly language programming problems.
 Students implement components of the Pep/10 computer at the Mc2 level with microcode as before.
 Now they also implement components of the Pep/10 computer at the ISA level with RISC-V assembly language code.
+
+\item Improved register transfer language
+
+The register transfer language syntax more closely follows industry practice.
+Pep/10, which is a big endian machine, indexes the most significant bit on the left as 0, and increases from left to right.
+RISC-V, which is a little endian machine, indexes the least significant bit on the right as 0, and increases from right to left.
+Bit ranges now use the standard syntax with square brackets and a colon.
 
 \item New software support
 
@@ -475,16 +482,10 @@ Because of the new components, Pep/10 has nnine machine vectors at addresses FFE
 
 \fancyhf[ORH,ERH]{\bfseries \sffamily CPU data section}
 \noindent Here is the data section of the Pep/10 CPU.
-Compared to the Pep/9 data section, Pep/10 has two additional components -- a shadow carry bit, denoted S in the figure below, and an additional multiplexer with its associated control line CSMux.
-The shadow carry bit is not visible at the ISA level and is used for internal address calculations in the microcode.
-This design solves a major headache present in Pep/9, which requires the saving and restoration of the C bit when an internal address addition would wipe it out.
-A step towards a more realistic model is the requirement of three consecutive MemRead/MemWrite assertions for memory access as opposed to two with Pep/9.\\
+The only difference from P/9 is the addition of the trap register T and the labels for the scratch registers R0 -- R4 and the constant registers C0 -- C4.
+\\
 \begin{center}
 \includegraphics{pep10-1-byte-bus}
-\end{center}
-
-\begin{center}
-\includegraphics[scale=0.95]{pep10-2-byte-bus.pdf}
 \end{center}
 
 \end{document}
