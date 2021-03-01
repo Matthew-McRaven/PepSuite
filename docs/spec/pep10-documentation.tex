@@ -290,6 +290,13 @@ Both Pep/9 and Pep/10 have 40 ISA instructions, but the Pep/10 set is more regul
 The opcode space is cleaner, with all the unary instructions followed by all the branch instructions with two addressing modes
 followed by the remaining instructions with eight addressing modes.
 
+\item Improved dot command set
+
+The \verb|.ADDRSS| pseudo-op is deleted and replaced by the existing \verb|.WORD| pseudo-op.
+They both perform the same function, inserting a two-byte value into the object code.
+Previously, \verb|.WORD| was limited to a constant arguments, and \verb|.ADDRSS| was limited to symbol arguments, which are addresses.
+Now \verb|.WORD| accepts both constant and symbol arguments.
+
 \item Modified CPU
 
 At the ISA level, the only difference in the CPU is the new 16-bit Trap register, which is necessary to make system calls.
@@ -475,14 +482,6 @@ A step towards a more realistic model is the requirement of three consecutive Me
 \begin{center}
 \includegraphics{pep10-1-byte-bus}
 \end{center}
-
-\newpage
-
-\fancyhf[ORH,ERH]{\bfseries \sffamily CPU data section with two-byte data bus}
-\noindent Here is the data section of the Pep/10 CPU with the two-byte data bus.
-The fifth edition of \textit{Computer Systems} drops the discussion of the MAR Incrementer in favor of a more extensive discussion of increasing the data bus width to improve performance.
-The material is improved by incorporating it into the Pep9CPU software.
-Students can toggle between the two models, with and without the wider data bus, test their solutions with the software, and use the UnitPre and UnitPost tests in the Help system.
 
 \begin{center}
 \includegraphics[scale=0.95]{pep10-2-byte-bus.pdf}
