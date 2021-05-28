@@ -471,9 +471,10 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \fancyhf[ORH,ERH]{\bfseries \sffamily Memory map}
 \noindent Here is the memory map of the Pep/10 system.
 The shaded portion is ROM.
-Compared to the Pep/9 memory map, this map has several additional components -- a disk input port at address 3333, a power off port at address 6666, and a dispatcher at address 7777.
-Pep/9 has six machine vectors from FFF4 to FFFE.
-Because of the new components, Pep/10 has nnine machine vectors at addresses FFEE to FFFE.\\
+Compared to the Pep/9 memory map, this map has several additional components -- a disk input port, a power off port, and a dispatcher.
+Pep/9 has six machine vectors at addresses FFF4 to FFFE.
+Pep/10 also has six machine vectors at addresses FFF4 to FFFE, but for a different set of points in the system.
+\\
 \begin{center}
 \includegraphics{pep10-memory-map}
 \end{center}
