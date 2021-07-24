@@ -328,6 +328,12 @@ The suite now includes a RISC-V assembler/simulator with the same pre- and post-
 The application maps the Pep/10 ISA registers onto a subset of the RISC-V registers for students to simulate Pep/10 at the ISA level.
 They experience the difference between CISC and RISC using RISC-V as a form of microcode to simulate Pep/10.
 
+\item Step backwards support
+
+The Pep/10 CPU and ISA models have gained the capability to undo the execution of instructions.
+Undo maintains a consistent simulation state, even in the presence of a cache, memory-mappped IO, and the visual stack trace.
+The advanced debugger stepping features (i.e., step-over) are not supported at this time; only single step back will be available.
+
 \end{exercises}
 
 \newpage
