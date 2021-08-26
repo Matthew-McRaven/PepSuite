@@ -412,14 +412,15 @@ Instruction & Register transfer language specification\\
 \verb|MOVFLGA| & $\textrm{A}[ 8:11]\leftarrow 0 \; , \; \textrm{A}[ 12:15]\leftarrow \textrm{NZVC}$\\
 \verb|MOVAFLG| & $\textrm{NZVC}\leftarrow \textrm{A}[ 12:15]$\\
 \verb|MOVTA|   & $\textrm{A}\leftarrow \textrm{T}$\\
-\verb|USCALL|  & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
-\textrm{Mem}[\textrm{Y}-2]\leftarrow\textrm{SP} \; ; \;
-\textrm{Mem}[\textrm{Y}-4]\leftarrow\textrm{PC} \; ; \;
-\textrm{Mem}[\textrm{Y}-6]\leftarrow\textrm{X} \; ; \;$\\
+\verb|USCALL|   & $\textrm{Y}\leftarrow\textrm{Mem}[\textrm{FFF0}] \; ; \;
+\textrm{Mem}[\textrm{Y}-1]\leftarrow\textrm{IR}[ 0:7] \; ; \;
+\textrm{Mem}[\textrm{Y}-3]\leftarrow\textrm{SP} \; ; \;
+\textrm{Mem}[\textrm{Y}-5]\leftarrow\textrm{PC} \; ; \;
+\textrm{Mem}[\textrm{Y}-7]\leftarrow\textrm{X} \; ; \;$\\
  & 
-$\textrm{Mem}[\textrm{Y}-8]\leftarrow\textrm{A} \; ; \;
-\textrm{Mem}[\textrm{Y}-9][ 4:7]\leftarrow\textrm{NZVC} \; ; \;
-\textrm{SP}\leftarrow\textrm{Y}-9 \; ; \;
+$\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
+\textrm{Mem}[\textrm{Y}-10][ 4:7]\leftarrow\textrm{NZVC} \; ; \;
+\textrm{SP}\leftarrow\textrm{Y}-10 \; ; \;
 \textrm{PC}\leftarrow\textrm{Mem}[\textrm{FFFE}]$\\
 \verb|NOP|     & \{\textit{No operation}\}\\
 \\
