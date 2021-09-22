@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <elfio/elfio.hpp>
+#include <magic_enum.hpp>
 
 #include "masm/elf/mmio.hpp"
 #include "masm/project/section.hpp"
@@ -73,11 +74,31 @@ auto masm::elf::pack_image(std::shared_ptr<masm::project::project<addr_size_t> >
 		// Create symbol table writer
 		symbol_section_accessor sym_ac(writer, sym_tab);
 		for(auto symbol : symbols) {
+			using namespace magic_enum::ostream_operators; 
+			std::cout << symbol->value->type() << std::endl;
 			auto binding = STB_LOCAL;
 			if(symbol->binding == symbol::binding_t::kGlobal) binding = STB_GLOBAL;
 			else if(symbol->binding == symbol::binding_t::kImported) binding = STB_WEAK;
-			// TODO: Handle types, section pointer correctly.
-			auto index = sym_ac.add_symbol(str_ac, symbol->name.data(), symbol->value->value(), 0, binding, STT_NOTYPE, 0, SHN_ABS);
+			
+			int type = STT_NOTYPE;
+			int symbol_section_index = SHN_UNDEF;
+			switch(symbol->value->type()) {
+			case symbol::Type::kObject: 
+				type = STT_OBJECT;
+				symbol_section_index = elf_section->get_index();
+				break;
+			case symbol::Type::kCode: 
+				type = STT_FUNC;
+				symbol_section_index = elf_section->get_index();
+				break;
+			case symbol::Type::kConstant: 
+				type = STT_OBJECT;
+				symbol_section_index = SHN_ABS;
+				break;
+			}
+
+			auto index = sym_ac.add_symbol(str_ac, symbol->name.data(), symbol->value->value(), symbol->value->size(), 
+				binding, type, 0, symbol_section_index);
 			// If the symbol is an MMIO location, insert an MMIO definition into the list.
 			if(auto x = inout_mappings.find(symbol->name); x != inout_mappings.end()) {
 				// NOTE: While indecies are 32 bit, I don't expect to ever have more than 2^16 bit symbols.
