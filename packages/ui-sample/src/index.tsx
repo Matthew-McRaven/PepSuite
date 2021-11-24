@@ -1,3 +1,4 @@
 import Button from "./components/Button"
+import StoriedComponent from "./components/StoriedComponent"
 
-export { Button }
+export { Button, StoriedComponent }
