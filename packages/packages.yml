@@ -24,7 +24,7 @@ stages:
 .test: &test
   stage: test
   script:
-    - npm run test
+    - npm run test:ci
     - cp ./junit.xml ../junit.xml
   artifacts:
     expire_in: 1 week
