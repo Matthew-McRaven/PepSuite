@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**node_modules": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  "launch": {
+    "configurations": [],
+    "compounds": []
+  },
+  "editor.formatOnSave": true,
+  "eslint.run": "onSave"
+}
