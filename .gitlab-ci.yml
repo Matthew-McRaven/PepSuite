@@ -29,7 +29,7 @@ versions:bump:
     - git fetch && git symbolic-ref -q HEAD > /dev/null || (git branch -d ${CI_COMMIT_REF_NAME} || true && git checkout -b ${CI_COMMIT_REF_NAME} && git branch --set-upstream-to=origin/${CI_COMMIT_REF_NAME} ${CI_COMMIT_REF_NAME})
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
-    - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset conventional-changelog-eslint"
+    - "npx lerna publish -m \"Chore: Release %v \[skip ci\]\" --conventional-commits --changelog-preset conventional-changelog-eslint --force-publish"
 
 include:
   - template: Security/SAST.gitlab-ci.yml
