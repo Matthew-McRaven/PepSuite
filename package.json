@@ -36,6 +36,7 @@
   "workspaces": [
     "packages/ui-core",
     "packages/ui-sample",
-    "bin/hello-world"
+    "bin/hello-world",
+    "packages"
   ]
 }
