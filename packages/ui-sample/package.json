@@ -8,8 +8,15 @@
     "dist"
   ],
   "devDependencies": {
+    "@jest/globals": "^27.3.1",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@types/enzyme": "^3.10.10",
+    "@types/jest": "^27.0.3",
     "@types/react": "^17.0.36",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
+    "jest": "^27.3.1",
     "rimraf": "~3.0.2",
+    "ts-jest": "^27.0.7",
     "typescript": "~4.4.0"
   },
   "scripts": {
@@ -17,7 +24,7 @@
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
-    "test": "npm run build"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
