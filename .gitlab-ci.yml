@@ -27,6 +27,8 @@ versions:bump:
     - apt-get install git-lfs
     - npm ci
     - git fetch && git symbolic-ref -q HEAD > /dev/null || (git branch -d ${CI_COMMIT_REF_NAME} || true && git checkout -b ${CI_COMMIT_REF_NAME} && git branch --set-upstream-to=origin/${CI_COMMIT_REF_NAME} ${CI_COMMIT_REF_NAME})
+    - git config --global user.email "${GITLAB_USER_EMAIL}""
+    - git config --global user.name "${GITLAB_USER_NAME}""
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
     - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset eslint --force-publish --yes"
