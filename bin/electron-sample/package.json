@@ -4,6 +4,7 @@
   "main": "build/electron/main.js",
   "description": "",
   "dependencies": {
+    "@pep10/ui-sample": "^1.0.2",
     "@types/electron-devtools-installer": "^2.2.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^2.0.0",
