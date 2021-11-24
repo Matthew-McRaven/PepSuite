@@ -39,6 +39,7 @@
     "packages/ui-core",
     "packages/ui-sample",
     "bin/hello-world",
+    "bin/electron-example",
     "packages"
   ]
 }

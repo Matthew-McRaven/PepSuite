@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./components/app";
+import { StoriedComponent } from "@pep10/ui-sample"
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <h1>Hello World</h1>
+    <StoriedComponent />
   </React.StrictMode>,
   document.getElementById("root")
 );
