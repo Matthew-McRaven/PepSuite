@@ -17,10 +17,12 @@ stages:
 
 # Commands
 .build: &build
+  stage: build
   script:
     - npm run build
 
 .test: &test
+  stage: test
   script:
     - npm run test
     - cp ./junit.xml ../junit.xml
@@ -32,6 +34,7 @@ stages:
         - packages/junit.xml
 
 .publish: &publish
+  stage: deploy
   script:
     - apt update
     - apt-get install git-lfs
