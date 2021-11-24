@@ -29,6 +29,9 @@ versions:bump:
     - git fetch && git symbolic-ref -q HEAD > /dev/null || (git branch -d ${CI_COMMIT_REF_NAME} || true && git checkout -b ${CI_COMMIT_REF_NAME} && git branch --set-upstream-to=origin/${CI_COMMIT_REF_NAME} ${CI_COMMIT_REF_NAME})
     - git config --global user.email "${GITLAB_USER_EMAIL}"
     - git config --global user.name "${GITLAB_USER_NAME}"
+    # Needed to push from CI pipeline
+    # See https://stackoverflow.com/questions/65234416/gitlab-ci-cd-cannot-git-push-from-gitlab-ci-yml
+    - git remote set-url origin "https://gitlab-ci-token:$PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
     - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset eslint --force-publish --yes"
