@@ -27,7 +27,7 @@ versions:bump:
     - apt-get install git-lfs
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
-    - "npx lerna publish -m \"Chore: Release %v\" --conventional-commits --changelog-preset conventional-changelog-eslint"
+    - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset conventional-changelog-eslint"
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
