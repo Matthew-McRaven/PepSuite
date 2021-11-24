@@ -28,8 +28,8 @@
     "type": "git",
     "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Matthew McRaven",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://gitlab.com/pep10/pepsuite/issues"
   },
