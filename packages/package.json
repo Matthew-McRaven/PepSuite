@@ -2,7 +2,6 @@
   "name": "packages",
   "version": "1.0.0",
   "description": "Helper to make storybooks from subrepos.",
-  "main": " ",
   "devDependencies": {
     "@mdx-js/react": "^1.6.22",
     "@babel/core": "^7.16.0",
