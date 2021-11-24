@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.build.json",
-  "types": [
-    "@types/jest",
-    "jest",
-    "@testing-library/jest-dom"
-  ],
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": [
+      "@types/jest",
+      "jest",
+      "@testing-library/jest-dom"
+    ],
   },
   "include": [
     "src/**/*"
