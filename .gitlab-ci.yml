@@ -18,6 +18,13 @@ packages:
       - packages/packages.yml
     strategy: depend
 
+binaries:
+  stage: binaries
+  trigger:
+    include:
+      - bin/bin.yml
+    strategy: depend
+
 versions:bump:
   image: node:16.11.0
   stage: deploy
