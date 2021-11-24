@@ -1,6 +1,6 @@
 import React from "react";
 
-import Button from "@pep10/ui-sample"
+import { Button } from "@pep10/ui-sample"
 
 export const App = () => {
   return (

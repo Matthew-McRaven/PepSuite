@@ -1,8 +1,3 @@
-// eslint-disable-next-line no-console
-import React from "react";
+import Button from "./components/Button"
 
-const Button = () => {
-	console.log("Hello Button");
-	return <button>Hello Button </ button>;
-}
-export default Button;
+export { Button }
