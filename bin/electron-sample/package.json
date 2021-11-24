@@ -1,0 +1,48 @@
+{
+  "name": "@pep10/electron-sample",
+  "version": "1.0.2",
+  "description": "",
+  "dependencies": {
+    "@pep10/ui-sample": "^1.0.2",
+    "react": "~17.0.0",
+    "react-dom": "~17.0.0",
+    "sass": "^1.43.4"
+  },
+  "devDependencies": {
+    "@craco/craco": "~6.4.0",
+    "@types/node": "~16.11.0",
+    "@types/react": "~17.0.0",
+    "@types/react-dom": "~17.0.0",
+    "cross-env": "~7.0.2",
+    "fork-ts-checker-webpack-plugin": "~6.4.0",
+    "react-scripts": "~4.0.1",
+    "tsconfig-paths-webpack-plugin": "~3.5.0"
+  },
+  "scripts": {
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true craco start",
+    "build": "cross-env SKIP_PREFLIGHT_CHECK=true craco build",
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
+  },
+  "author": "Matthew McRaven",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://gitlab.com/pep10/pepsuite/issues"
+  },
+  "homepage": ".",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

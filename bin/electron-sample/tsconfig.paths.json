@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@pep10/*": [
+        "../../packages/*/src"
+      ],
+    }
+  }
+}
