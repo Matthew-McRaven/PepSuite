@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.2 (2021-11-24)</small>
+
+* Build: Add Gitlab NPM token ([10b60f2](https://gitlab.com/pep10/pepsuite/commit/10b60f2))
+
+
+
+
+
 ## <small>1.0.1 (2021-11-24)</small>
 
 * Build: Add conventional-changelog-eslint for CI pipelines ([036aa94](https://gitlab.com/pep10/pepsuite/commit/036aa94))
