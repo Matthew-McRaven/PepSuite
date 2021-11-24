@@ -17,11 +17,11 @@ stages:
 
 # Commands
 .build: &build
-  command:
+  script:
     - npm run build
 
 .test: &test
-  command:
+  script:
     - npm run test
     - cp ./junit.xml ../junit.xml
   artifacts:
@@ -32,7 +32,7 @@ stages:
         - packages/junit.xml
 
 .publish: &publish
-  command:
+  script:
     - apt update
     - apt-get install git-lfs
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
