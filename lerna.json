@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "packages/*",
+    "bin/*"
+  ],
+  "version": "0.0.0"
+}
