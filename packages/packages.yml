@@ -33,15 +33,6 @@ stages:
       junit:
         - packages/junit.xml
 
-.publish: &publish
-  stage: deploy
-  script:
-    - apt update
-    - apt-get install git-lfs
-    - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
-    - echo ${NPM_CONFIG_REGISTRY}
-    - echo "deployed"
-
 # Packages
 .ui-sample: &ui-sample
   <<: *cacheable-node
@@ -56,12 +47,3 @@ build:ui-sample:
 test:ui-sample:
   <<: *ui-sample
   <<: *test
-
-publish:ui-sample:
-  <<: *ui-sample
-  <<: *publish
-  rules:
-  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    changes:
-      - packages/ui-sample/**/*
-

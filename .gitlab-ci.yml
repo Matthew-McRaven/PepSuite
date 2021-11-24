@@ -11,12 +11,28 @@ stages:
 - test
 - deploy
 
-Package CI:
+packages:
   stage: packages
   trigger:
     include:
       - packages/packages.yml
-      
+    strategy: depend
+
+versions:bump:
+  image: node:16.11.0
+  stage: deploy
+  needs: ['packages']
+  script:
+    - apt update
+    - apt-get install git-lfs
+    - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
+    - echo ${NPM_CONFIG_REGISTRY}
+    - npx lerna publish -m "Chore: Release %v" --conventional-commits --changelog-preset conventional-changelog-eslint 
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+      - packages/**/*
+      - bin/**/*
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
