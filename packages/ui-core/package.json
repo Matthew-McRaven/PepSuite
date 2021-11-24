@@ -2,7 +2,6 @@
   "name": "@pep10/ui-core",
   "version": "1.0.0",
   "description": "Shared UI components between Pep applications",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "Echo 'I Ran'"
