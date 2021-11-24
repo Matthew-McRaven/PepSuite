@@ -1,0 +1,64 @@
+variables:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+stages:
+  - build
+  - test
+  - chromatic
+  - deploy
+
+# Enable npm caching on all stages
+.cacheable-node: &cacheable-node 
+  image: node:16.11.0
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+
+# Commands
+.build: &build
+  command:
+    - npm run build
+
+.test: &test
+  command:
+    - npm run test
+    - cp ./junit.xml ../junit.xml
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit:
+        - packages/junit.xml
+
+.publish: &publish
+  command:
+    - apt update
+    - apt-get install git-lfs
+    - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
+    - echo ${NPM_CONFIG_REGISTRY}
+    - echo "deployed"
+
+# Packages
+.ui-sample: &ui-sample
+  <<: *cacheable-node
+  before_script:
+    - cd packages/ui-sample
+    - npm ci
+
+build:ui-sample:
+  <<: *ui-sample
+  <<: *build
+
+test:ui-sample:
+  <<: *ui-sample
+  <<: *test
+
+publish:ui-sample:
+  <<: *ui-sample
+  <<: *publish
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+      - packages/ui-sample/**/*
+
