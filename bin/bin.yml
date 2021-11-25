@@ -22,16 +22,16 @@ stages:
 .hello-world: &hello-world
   <<: *cacheable-node
   before_script:
-    - npm ci && npx lerna link
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
     - cd bin/hello-world
-    - npm ci
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
 
 .electron-sample: &electron-sample
   <<: *cacheable-node
   before_script:
-    - npm ci && npx lerna link
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
     - cd bin/electron-sample
-    - npm ci
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
 
 build:hello-world:
   <<: *hello-world

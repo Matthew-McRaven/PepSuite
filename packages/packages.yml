@@ -38,7 +38,7 @@ stages:
   <<: *cacheable-node
   before_script:
     - cd packages/ui-sample
-    - npm ci
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
 
 build:ui-sample:
   <<: *ui-sample
