@@ -11,6 +11,13 @@ stages:
 - test
 - deploy
 
+native:
+  stage: native
+  trigger:
+    include:
+      - lib/lib.yml
+    strategy: depend
+
 packages:
   stage: packages
   trigger:
