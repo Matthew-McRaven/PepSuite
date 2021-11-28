@@ -115,7 +115,7 @@ TEST_CASE( "Recognize existing macros", "[asmb::pep10::preprocessor]"  ) {
 		auto section = std::static_pointer_cast<masm::elf::code_section<uint16_t> >(project->image->os);
 		auto errors = project->message_resolver->errors_for_section(section);
 		REQUIRE(errors.size() == 1);
-		CHECK(std::get<1>(*errors.begin()).message == fmt::format(masm::frontend::detail::error_does_not_exist, "HELLO1"));
+		CHECK(std::get<1>(*errors.begin()).message == fmt::vformat(masm::frontend::detail::error_does_not_exist, fmt::make_format_args("HELLO1")));
 	}
 
 	SECTION("Invoke 1-arity macro with 2 args.") {	
@@ -130,7 +130,7 @@ TEST_CASE( "Recognize existing macros", "[asmb::pep10::preprocessor]"  ) {
 		auto section = std::static_pointer_cast<masm::elf::code_section<uint16_t> >(project->image->os);
 		auto errors = project->message_resolver->errors_for_section(section);
 		REQUIRE(errors.size() == 1);
-		CHECK(std::get<1>(*errors.begin()).message == fmt::format(masm::frontend::detail::error_bad_arg_count, 2, 1));
+		CHECK(std::get<1>(*errors.begin()).message == fmt::vformat(masm::frontend::detail::error_bad_arg_count, fmt::make_format_args(2, 1)));
 	}
 
 	SECTION("Invoke 1-arity macro with 0 args.") {	
@@ -145,7 +145,7 @@ TEST_CASE( "Recognize existing macros", "[asmb::pep10::preprocessor]"  ) {
 		auto section = std::static_pointer_cast<masm::elf::code_section<uint16_t> >(project->image->os);
 		auto errors = project->message_resolver->errors_for_section(section);
 		REQUIRE(errors.size() == 1);
-		CHECK(std::get<1>(*errors.begin()).message == fmt::format(masm::frontend::detail::error_bad_arg_count, 0, 1));
+		CHECK(std::get<1>(*errors.begin()).message == fmt::vformat(masm::frontend::detail::error_bad_arg_count, fmt::make_format_args(0, 1)));
 	}
 
 	SECTION("1-macro inclusion loop") {	

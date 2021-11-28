@@ -132,13 +132,15 @@ auto masm::frontend::preprocessor<address_size_t,tokenizer_t >::preprocess(
 		if(!registry->contains(macro_name)) {
 			error_counting_args = true;
 			project->message_resolver->log_message(section, line, 
-				{masm::message_type::kError, fmt::format(detail::error_does_not_exist, macro_name)}
+				{masm::message_type::kError, fmt::vformat(detail::error_does_not_exist, 
+					fmt::make_format_args(macro_name))}
 			);
 		}
 		else if(auto macro_def = registry->macro(macro_name); macro_def->arg_count != macro_args.size()) {
 			error_counting_args = true;
 			project->message_resolver->log_message(section, line, 
-				{masm::message_type::kError, fmt::format(detail::error_bad_arg_count, macro_args.size(), macro_def->arg_count)}
+				{masm::message_type::kError, fmt::vformat(detail::error_bad_arg_count, 
+					fmt::make_format_args(macro_args.size(), macro_def->arg_count))}
 			);
 		}
 		else {

@@ -31,8 +31,8 @@ struct tokenizer : lex::lexer<Lexer>
 		identifier("[A-Za-z_][A-Za-z0-9|_]*"),
 		sym_decl("[A-Za-z_][A-Za-z0-9|_]*:"),
 		dot_command("\\.[a-zA-Z]+"),
-		ch_lit(fmt::format("'({})'", fmt::format(inner_lit, "'"))),
-		str_lit(fmt::format(R"(\"({})+\")", fmt::format(inner_lit, "\""))),
+                  ch_lit(fmt::vformat("'({})'", fmt::make_format_args(fmt::vformat(inner_lit, fmt::make_format_args("'"))))),
+                  str_lit(fmt::vformat(R"(\"({})+\")", fmt::make_format_args(fmt::vformat(inner_lit, fmt::make_format_args("\""))))),
 		comment(";[^\n]*"),
 		hex_literal("0[xX][0-9a-fA-F]+"),
 		// Must escape +- or chaos ensues.
