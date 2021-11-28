@@ -1,1 +1,1 @@
-cloc --fullpath --not-match-d="(node_modules|build|dist)/.*" --not-match-f "package-lock.*" .
+cloc --fullpath --not-match-d="(node_modules|build|dist|3rd-party)/.*" --not-match-f "package-lock.*" .
