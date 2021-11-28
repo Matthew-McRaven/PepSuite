@@ -1,0 +1,8 @@
+add_subdirectory(asmb)
+add_subdirectory(builtins)
+add_subdirectory(definitions)
+add_subdirectory(elf_tools)
+add_subdirectory(execution)
+add_subdirectory(masm)
+add_subdirectory(storage)
+add_subdirectory(symbol)
