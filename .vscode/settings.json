@@ -10,5 +10,12 @@
     "compounds": []
   },
   "editor.formatOnSave": true,
-  "eslint.run": "onSave"
+  "eslint.run": "onSave",
+  "files.associations": {
+    "*.tpp": "cpp",
+    "format": "cpp",
+    "complex": "cpp"
+  },
+  "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM, IndentWidth: 4, ColumnLimit: 120 }",
+  "C_Cpp.clang_format_path": ""
 }
