@@ -19,4 +19,4 @@ test:builtins:
     - (cd gen && python3 gen.py)
     - mkdir build && cd build
     - cmake ../
-    - make -j20 && make test
+    - make -j4 && make test
