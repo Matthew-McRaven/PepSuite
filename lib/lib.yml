@@ -2,13 +2,13 @@ stages:
 - test
 
 variables:
-  BUILD_VERSION: v0.4.0
+  BUILD_VERSION: v0.1.0
 
 test:builtins:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   stage: test
-  image: registry.gitlab.com/pep10/pepsuite/emboost:${BUILD_VERSION}
+  image: registry.gitlab.com/pep10/pepsuite/develop:${BUILD_VERSION}
   needs: []
   before_script:
     - cd lib/builtins
