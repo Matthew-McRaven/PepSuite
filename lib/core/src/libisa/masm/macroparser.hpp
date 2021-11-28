@@ -1,8 +1,8 @@
 #pragma once
 
-#include <tuple>
-#include <string>
 #include <climits>
+#include <string>
+#include <tuple>
 
 namespace masm {
 // Analyze a macro's text body, and attempt to extract header information.
