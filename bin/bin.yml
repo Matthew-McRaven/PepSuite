@@ -30,7 +30,7 @@ variables:
   stage: build
   script:
     - npm run build
-    
+
 .test: &test
   <<: *build
 
@@ -65,10 +65,12 @@ build:term:
   <<: *emscripten
   <<: *build
   script:
+    - cd bin/term
     - npm run term:build
 
 test:term:
   <<: *emscripten
   <<: *test
   script:
+    - cd bin/term
     - npm run term:test
