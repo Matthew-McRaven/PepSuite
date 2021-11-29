@@ -1,7 +1,13 @@
+
+
+#include <catch.hpp>
+
 #include "ex_registry.hpp"
 
-int main() {
-	auto fig = registry::instance().find("pep10", 5, "03");
-	if(!fig) return 1;
-	else return 0;
+TEST_CASE("Figures Present") {
+
+    SECTION("Sample figure") {
+        auto fig = registry::instance().find("pep10", 5, "03");
+        CHECK(fig);
+    }
 }
