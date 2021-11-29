@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
     "prepack:babel-lib": "npx babel build/packages/core --out-dir dist --copy-files",
     "prepack:babel-index": "npx babel index.template.js --out-file index.js",
     "prepack": "(bash build-js.sh) && npm run prepack:babel-lib && npm run prepack:babel-index",
