@@ -109,6 +109,7 @@ build:core:wasm:
   script:
     - cd lib/core
     - mkdir build && cd build
+    - echo \"{\"name\":\"build\"}\" > package.json
     - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
     - emmake make -j4
     - emmake make test -j4
