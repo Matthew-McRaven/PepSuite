@@ -95,6 +95,8 @@ build:core:native:linux:
     expire_in: 2 days
     reports:
       cobertura: coverage.xml
+      junit:
+        - lib/builtins/build/**/junit.xml
 
 build:core:wasm:
   <<: *emscripten
