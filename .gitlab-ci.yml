@@ -108,8 +108,9 @@ build:core:wasm:
   needs: []
   script:
     - cd lib/core
-    - mkdir build && cd build
     - npm run prebuild
+    - cd build
+    - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ -DENABLE_TESTING=1
     - emmake make -j4
     - emmake make test -j4
     - cd ../.. # Change back to lib/core
