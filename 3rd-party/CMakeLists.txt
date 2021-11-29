@@ -4,6 +4,7 @@ set(SKIP_PERFORMANCE_COMPARISON true)
 # Code has warnings I would like to ignore. By default, warnings are upgraded to errors.
 set(WITH_WERROR false)
 add_subdirectory(cereal)
+add_subdirectory(CLI11)
 add_subdirectory(ELFIO)
 add_subdirectory(fmt)
 add_subdirectory(magic_enum)
