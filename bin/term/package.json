@@ -8,9 +8,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "./build-linux-rel.sh",
-    "term:build": "npm run build",
-    "term:test:linux": "npm run build && cd build/linux && make -j4 test"
+    "build:linux": "./build-linux-rel.sh",
+    "term:build:linux": "npm run build:linux",
+    "term:test:linux": "npm run build:linux && cd build/linux && make -j4 test"
   },
   "repository": {
     "type": "git",

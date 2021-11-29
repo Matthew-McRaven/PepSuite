@@ -66,11 +66,11 @@ build:term:
   <<: *build
   script:
     - cd bin/term
-    - npm run term:build
+    - npm run term:build:linux
 
 test:term:
   <<: *emscripten
   <<: *test
   script:
     - cd bin/term
-    - npm run term:test
+    - npm run term:test:linux
