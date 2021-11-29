@@ -38,7 +38,8 @@ test:core:native:
     - python3 llvm-cov-helper.py build
     - python3 lcov_cobertura.py coverage.lcov
     # Job output must contain code coverage.
-    - lcov --summary coverage.lcov 
+    - lcov --summary coverage.lcov
+    - mv coverage.xml ../../coverage.xml
   coverage: '/^\s*lines.*/'
   artifacts:
     name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
