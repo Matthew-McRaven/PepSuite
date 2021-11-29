@@ -1,0 +1,46 @@
+variables:
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+stages:
+  - build
+
+# Enable npm caching on all stages
+.cacheable-node: &cacheable-node 
+  image: node:16.11.0
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+
+# Commands
+.build: &build
+  stage: build
+  script:
+    - npm run build
+
+# Packages
+.hello-world: &hello-world
+  <<: *cacheable-node
+  before_script:
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - cd bin/hello-world
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+
+.electron-sample: &electron-sample
+  <<: *cacheable-node
+  before_script:
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - cd bin/electron-sample
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+
+build:hello-world:
+  <<: *hello-world
+  <<: *build
+  script:
+    - npm run build
+
+build:electron-sample:
+  <<: *electron-sample
+  <<: *build
+  script:
+    - npm run electron:build

@@ -1,0 +1,3 @@
+// the configured options and settings for Tutorial
+#define RTL_Model_VERSION_MAJOR @RTL - Model_VERSION_MAJOR @
+#define RTL_Model_VERSION_MINOR @RTL - Model_VERSION_MINOR @

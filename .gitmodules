@@ -1,0 +1,12 @@
+[submodule "3rd-party/cereal"]
+	path = 3rd-party/cereal
+	url = https://github.com/USCiLab/cereal.git
+[submodule "3rd-party/moxygen"]
+	path = 3rd-party/moxygen
+	url = https://github.com/sourcey/moxygen
+[submodule "3rd-party/ELFIO"]
+	path = 3rd-party/ELFIO
+	url = https://github.com/serge1/ELFIO
+[submodule "3rd-party/fmt"]
+	path = 3rd-party/fmt
+	url = https://github.com/fmtlib/fmt.git
