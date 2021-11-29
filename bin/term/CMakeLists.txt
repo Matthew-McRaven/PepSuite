@@ -15,7 +15,20 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-enable_testing()
+
+
+if(DEFINED ENABLE_TESTING AND ENABLE_TESTING)
+  set(_ENABLE_TESTING_TERM 1)
+  set(ENABLE_TESTING 0 CACHE BOOL "" FORCE)
+endif()
 add_subdirectory(../../lib/core/ build/core)
+if(DEFINED _ENABLE_TESTING_TERM)
+  set(ENABLE_TESTING ${_ENABLE_TESTING_TERM})
+endif()
+
+if(ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()
+
 add_subdirectory(src)
-add_subdirectory(test)
