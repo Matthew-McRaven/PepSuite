@@ -41,6 +41,7 @@
     "bin/hello-world",
     "bin/electron-example",
     "packages",
-    "lib/builtins"
+    "lib/builtins",
+    "lib/core"
   ]
 }
