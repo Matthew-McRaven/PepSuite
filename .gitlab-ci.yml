@@ -21,6 +21,10 @@ native:
     include:
       - lib/lib.yml
     strategy: depend
+  rules:
+    -  changes:
+        - 3rd-party/**/*
+        - libe/**/*
 
 packages:
   stage: packages
