@@ -59,7 +59,7 @@ test:core:wasm:
 docs:core:
   <<: *emscripten
   stage: docs 
-  needs: [test:core:native]
+  needs: ["test:core:native"]
   script:
     - npm install moxygen -g
     - mkdir -p ../build/docs 
