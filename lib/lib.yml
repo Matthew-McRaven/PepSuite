@@ -68,8 +68,8 @@ docs:core:
     - cd lib/core
     - npm install moxygen -g
     - (cd docs && doxygen)
-    - ls ../../..
-    - cd ../../../build/docs/md
+    - ls ../../
+    - cd ../../build/docs/md
     - moxygen ../xml
   artifacts:
     expire_in: 1 week
