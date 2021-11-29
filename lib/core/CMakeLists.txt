@@ -31,7 +31,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_subdirectory(src)
-add_subdirectory(../../3rd-party build/3rd-party)
+
+if(!LINKED_3RD_PARTY)
+  add_subdirectory(../../3rd-party build/3rd-party)
+  set(LINKED_3RD_PARTY)
+endif()
+
 add_subdirectory(../ngraph build/ngraph)
 add_subdirectory(../builtins build/builtins)
 #find_package(catch REQUIRED HINTS 3rd-party/catch/CMakeLists.txt)
