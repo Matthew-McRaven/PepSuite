@@ -68,7 +68,6 @@ docs:core:
     - npm install moxygen -g
     - mkdir -p ../../build/docs 
     - (cd docs && doxygen)
-    - exit 1
     - mkdir -p ../../build/docs/md && cd ../../build/docs/md
     - moxygen ../../xml
   artifacts:
