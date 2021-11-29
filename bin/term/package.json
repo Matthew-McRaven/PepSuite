@@ -10,7 +10,7 @@
   "scripts": {
     "build": "./build-linux-rel.sh",
     "term:build": "npm run build",
-    "term:test": "npm run build && cd build && make -j4 test"
+    "term:test:linux": "npm run build && cd build/linux && make -j4 test"
   },
   "repository": {
     "type": "git",
