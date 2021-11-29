@@ -30,7 +30,7 @@ test:core:native:
   stage: test
   needs: []
   script:
-    - cd lib/builtins
+    - cd lib/core
     # lcov_cobertura expects python3 to be named python.
     - ln -s $(which python3) /usr/bin/python
     - mkdir build
@@ -53,7 +53,7 @@ test:core:wasm:
   stage: test
   needs: []
   script:
-    - cd lib/builtins
+    - cd lib/core
     - mkdir build && cd build
     - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
     - emmake make -j4
@@ -64,7 +64,7 @@ docs:core:
   stage: docs 
   needs: ["test:core:native"]
   script:
-    - cd lib/builtins
+    - cd lib/core
     - npm install moxygen -g
     - mkdir -p ../build/docs 
     - (cd docs && doxygen)
