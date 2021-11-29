@@ -1,6 +1,6 @@
 mkdir -p build
 cd build
-
+echo '{"name":"build"}' > package.json
 (
 	source /emsdk/emsdk_env.sh
 	mkdir -p js
