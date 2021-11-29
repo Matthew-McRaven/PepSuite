@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-elf_tools RTL-Lib catch magic_enum builtins elfio)
 
-add_test (NAME test-elf_tools COMMAND test-elf_tools)
+add_test (NAME test-elf_tools COMMAND test-elf_tools -r junit --out junit.xml)

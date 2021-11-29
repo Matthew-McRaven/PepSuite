@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-isa-prevalidation-Pep10 RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-isa-prevalidation-Pep10 COMMAND test-isa-prevalidation-Pep10)
+add_test (NAME test-isa-prevalidation-Pep10 COMMAND test-isa-prevalidation-Pep10 -r junit --out junit.xml)
