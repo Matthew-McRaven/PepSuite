@@ -220,14 +220,6 @@ build:term:linux:
   needs: ['build:core:native:linux']
   script:
     - cd bin/term
-    - npm run term:build:linux
-
-test:term:linux:
-  <<: *emscripten
-  stage: test
-  needs: ['build:term:linux']
-  script:
-    - cd bin/term
     - npm run term:test:linux
 
 #################
