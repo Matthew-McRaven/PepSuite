@@ -113,6 +113,8 @@ build:core:wasm:
     - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
     - emmake make -j4
     - emmake make test -j4
+    - npm run prepack:babel-lib
+    - npm run prepack:babel-index
   artifacts:
     name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
     expire_in: 2 days
