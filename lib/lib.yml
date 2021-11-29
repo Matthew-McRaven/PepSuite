@@ -1,5 +1,6 @@
 stages:
 - test
+- docs
 
 variables:
   BUILD_VERSION: v0.1.0
@@ -24,10 +25,41 @@ test:builtins:
     - cmake ../
     - make -j4 && make test
 
+test:core:native:
+  <<: *emscripten
+  stage: test
+  needs: []
+  script:
+    # lcov_cobertura expects python3 to be named python.
+    - ln -s $(which python3) /usr/bin/python
+    - mkdir build
+    - cmake -B build -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DCMAKE_BUILD_TYPE=Debug -Dcode_coverage=1
+    - (cd build && make -j4 && make test -j4)
+    - python3 llvm-cov-helper.py build
+    - python3 lcov_cobertura.py coverage.lcov
+    # Job output must contain code coverage.
+    - lcov --summary coverage.lcov 
+  coverage: '/^\s*lines.*/'
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 2 days
+    reports:
+      cobertura: coverage.xml
+
+test:core:wasm:
+  <<: *emscripten
+  stage: test
+  needs: []
+  script:
+    - mkdir build && cd build
+    - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
+    - emmake make -j4
+    - emmake make test -j4
+
 docs:core:
   <<: *emscripten
-  stage: build library
-  needs: []
+  stage: docs 
+  needs: [test:core:native]
   script:
     - npm install moxygen -g
     - mkdir -p ../build/docs 
@@ -42,45 +74,3 @@ docs:core:
       - build/docs/latex/
       - build/docs/xml/
       - build/docs/md/
-
-test:core:native:
-  <<: *emscripten
-  stage: test
-  needs: []
-  script:
-    - mkdir build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
-    - make -j4 && make test -j4
-
-test:core:wasm:
-  <<: *emscripten
-  stage: test
-  needs: []
-  script:
-    - mkdir build && cd build
-    - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ 
-    - emmake make -j4
-    - emmake make test -j4
-
-test:core:coverage:
-  <<: *emscripten
-  stage: test
-  needs: []
-  script:
-    # lcov_cobertura expects python3 to be named python.
-    - ln -s $(which python3) /usr/bin/python
-    - export CXX=$(which clang++)
-    - export C=$(which clang)
-    - mkdir build
-    - cmake -B build -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DCMAKE_BUILD_TYPE=Debug -Dcode_coverage=1
-    - (cd build && make -j20 && make test -j20)
-    - python3 llvm-cov-helper.py build
-    - python3 lcov_cobertura.py coverage.lcov
-    # Job output must contain code coverage.
-    - lcov --summary coverage.lcov 
-  coverage: '/^\s*lines.*/'
-  artifacts:
-    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
-    expire_in: 2 days
-    reports:
-      cobertura: coverage.xml
