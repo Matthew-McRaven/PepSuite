@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-isa-validation-Pep10 RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-isa-validation-Pep10 COMMAND test-isa-validation-Pep10 -r junit --out junit.xml)
+add_test (NAME test-isa-validation-Pep10 COMMAND test-isa-validation-Pep10)
