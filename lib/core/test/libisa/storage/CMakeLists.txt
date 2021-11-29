@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-storage RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-storage COMMAND test-storage)
+add_test (NAME test-storage COMMAND test-storage -r junit --out junit.xml)

@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-isa-definitions RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-isa-definitions COMMAND test-isa-definitions)
+add_test (NAME test-isa-definitions COMMAND test-isa-definitions -r junit --out junit.xml)
