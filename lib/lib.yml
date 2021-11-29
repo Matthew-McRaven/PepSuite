@@ -66,11 +66,11 @@ docs:core:
   script:
     - cd lib/core
     - npm install moxygen -g
-    - mkdir -p ../build/docs 
+    - mkdir -p ../../build/docs 
     - (cd docs && doxygen)
-    - mkdir -p ../build/docs/md && cd ../build/docs/md
-    - moxygen ../xml
     - exit 1
+    - mkdir -p ../../build/docs/md && cd ../../build/docs/md
+    - moxygen ../../xml
   artifacts:
     expire_in: 1 week
     paths:
