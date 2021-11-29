@@ -114,7 +114,7 @@ build:core:wasm:
     - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ -DENABLE_TESTING=1
     - emmake make -j4
     - emmake make test -j4
-    - cd ../.. # Change back to lib/core
+    - cd .. # Change back to lib/core
     - npm run prepack:babel-lib
     - npm run prepack:babel-index
   artifacts:
