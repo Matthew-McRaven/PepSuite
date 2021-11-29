@@ -30,6 +30,9 @@ variables:
   stage: build
   script:
     - npm run build
+    
+.test: &test
+  <<: *build
 
 # Packages
 .hello-world: &hello-world
