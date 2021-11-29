@@ -73,6 +73,7 @@ versions:bump:
       changes:
         - packages/**/*
         - bin/**/*
+        - lib/**/*
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
