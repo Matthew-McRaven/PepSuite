@@ -3,6 +3,19 @@ variables:
 
 stages:
   - build
+  - test
+
+variables:
+  BUILD_VERSION: v0.1.0
+
+.emscripten: &emscripten
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  image: registry.gitlab.com/pep10/pepsuite/develop:${BUILD_VERSION}
+  before_script:
+    - source /emsdk/emsdk_env.sh
+    - export CXX=$(which clang++)
+    - export C=$(which clang)
 
 # Enable npm caching on all stages
 .cacheable-node: &cacheable-node 
@@ -44,3 +57,15 @@ build:electron-sample:
   <<: *build
   script:
     - npm run electron:build
+
+build:term:
+  <<: *emscripten
+  <<: *build
+  script:
+    - npm run term:build
+
+test:term:
+  <<: *emscripten
+  <<: *test
+  script:
+    - npm run term:test
