@@ -64,12 +64,12 @@ docs:core:
   stage: docs 
   needs: ["test:core:native"]
   script:
+    - mkdir -p build/docs && mkdir -p build/docs/md
     - cd lib/core
     - npm install moxygen -g
-    - mkdir -p ../../build/docs 
     - (cd docs && doxygen)
-    - mkdir -p ../../build/docs/md && cd ../../build/docs/md
-    - moxygen ../../xml
+    - cd ../../../build/docs/md
+    - moxygen ../xml
   artifacts:
     expire_in: 1 week
     paths:
