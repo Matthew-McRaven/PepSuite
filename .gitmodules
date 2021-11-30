@@ -10,3 +10,6 @@
 [submodule "3rd-party/fmt"]
 	path = 3rd-party/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "3rd-party/CLI11"]
+	path = 3rd-party/CLI11
+	url = https://github.com/CLIUtils/CLI11

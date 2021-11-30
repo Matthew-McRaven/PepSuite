@@ -9,50 +9,229 @@ stages:
 - packages
 - binaries
 - test
+- chromatic
+- docs
 - deploy
 
 variables:
   BUILD_VERSION: v0.1.0
+  GIT_LFS_SKIP_SMUDGE: '1'
 
-
-native:
-  stage: native
-  trigger:
-    include:
-      - lib/lib.yml
-    strategy: depend
-  rules:
-    -  changes:
-        - 3rd-party/**/*
-        - libe/**/*
-
-packages:
-  stage: packages
-  trigger:
-    include:
-      - packages/packages.yml
-    strategy: depend
-
-binaries:
-  stage: binaries
-  trigger:
-    include:
-      - bin/bin.yml
-    strategy: depend
-
-versions:bump:
+##################
+# Helper anchors #
+##################
+# A well-configured emscripten environment
+.emscripten: &emscripten
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   image: registry.gitlab.com/pep10/pepsuite/develop:${BUILD_VERSION}
   before_script:
+    - apt update
+    - apt-get install git-lfs
     - source /emsdk/emsdk_env.sh
     - export CXX=$(which clang++)
     - export C=$(which clang)
-  stage: deploy
-  needs: ['packages']
+
+# Enable npm caching on all stages
+.cacheable-node: &cacheable-node 
+  image: node:16.11.0
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+
+# JS commands
+.build: &build
+  needs: ["build:core:wasm"]
+  stage: packages
   script:
-    - apt update
-    - apt-get install git-lfs
+    - npm run build
+
+.test: &test
+  stage: test
+  script:
+    - npm run test:ci
+    - cp ./junit.xml ../junit.xml
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit:
+        - packages/junit.xml
+
+####################
+# Native Libraries #
+####################
+build:builtins:
+  <<: *emscripten
+  stage: native
+  needs: []
+  script:
+    - cd lib/builtins
+    - (cd gen && python3 gen.py)
+    - mkdir build && cd build
+    - cmake ../ -DENABLE_TESTING=1
+    - make -j4 && make test
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 1 week
+    reports:
+      junit: lib/builtins/build/**/junit.xml
+
+build:core:native:linux:
+  <<: *emscripten
+  stage: native
+  needs: []
+  script:
+    - cd lib/core
+    # lcov_cobertura expects python3 to be named python.
+    - ln -s $(which python3) /usr/bin/python
+    - mkdir build
+    - cmake -B build -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) -DCMAKE_BUILD_TYPE=Debug -Dcode_coverage=1 -DENABLE_TESTING=1
+    - (cd build && make -j4 && make test -j4)
+    - python3 llvm-cov-helper.py build
+    - python3 lcov_cobertura.py coverage.lcov
+    # Job output must contain code coverage.
+    - lcov --summary coverage.lcov
+    - mv coverage.xml ../../coverage.xml
+  coverage: '/^\s*lines.*/'
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 2 days
+    reports:
+      cobertura: coverage.xml
+      junit: lib/core/build/**/junit.xml
+
+build:core:wasm:
+  <<: *emscripten
+  stage: native
+  needs: []
+  script:
+    - cd lib/core
+    - npm ci
+    - npm run prebuild
+    - cd build
+    - emcmake cmake -DBoost_INCLUDE_DIR=/boost/ -DCMAKE_BUILD_TYPE=RelWithDebInfo ../ -DENABLE_TESTING=1
+    - emmake make -j4
+    - emmake make test -j4
+    - cd .. # Change back to lib/core
+    - npm run prepack:babel-lib
+    - npm run prepack:babel-index
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 2 days
+    paths:
+      - lib/core/dist/
+
+docs:core:
+  <<: *emscripten
+  stage: docs 
+  needs: ["build:core:native:linux"]
+  script:
+    - mkdir -p build/docs && mkdir -p build/docs/md
+    - cd lib/core
+    - npm install moxygen -g
+    - (cd docs && doxygen)
+    - ls ../../
+    - cd ../../build/docs/md
+    - moxygen ../xml
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build/docs/html/
+      - build/docs/latex/
+      - build/docs/xml/
+      - build/docs/md/
+
+###############
+# TS Packages #
+###############
+
+# Package helpers
+.ui-sample: &ui-sample
+  <<: *cacheable-node
+  before_script:
+    - cd packages/ui-sample
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+
+build:ui-sample:
+  <<: *ui-sample
+  <<: *build
+
+test:ui-sample:
+  needs: ["build:ui-sample"]
+  <<: *ui-sample
+  <<: *test
+
+# Chromatic test
+test:chromatic:
+  <<: *cacheable-node
+  stage: chromatic
+  needs: ['test:ui-sample']
+  script:
+    - cd packages
+    - npm ci
+    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == 'dev'
+      when: on_success
+      changes:
+        - packages/**/*
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit:
+        - packages/junit.xml
+
+##################
+# Build Binaries #
+##################
+
+.hello-world: &hello-world
+  <<: *cacheable-node
+  before_script:
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - cd bin/hello-world
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+
+.electron-sample: &electron-sample
+  <<: *cacheable-node
+  before_script:
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - cd bin/electron-sample
+    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+
+build:hello-world:
+  <<: *hello-world
+  stage: binaries
+  needs: ['build:ui-sample', 'build:core:wasm']
+  script:
+    - npm run build
+
+build:electron-sample:
+  <<: *electron-sample
+  stage: binaries
+  needs: ['build:ui-sample']
+  script:
+    - npm run electron:build
+
+build:term:linux:
+  <<: *emscripten
+  stage: binaries
+  needs: ['build:core:native:linux']
+  script:
+    - cd bin/term
+    - npm run term:test:linux
+
+#################
+# Version Bumps #
+#################
+versions:bump:
+  <<: *emscripten
+  stage: deploy
+  needs: ['build:core:wasm', 'build:ui-sample', 'build:term:linux']
+  script:
     - npm ci
     - |
       {

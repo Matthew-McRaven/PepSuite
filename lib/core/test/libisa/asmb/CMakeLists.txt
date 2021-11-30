@@ -27,4 +27,4 @@ endif()
 
 target_link_libraries(test-asmb RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-asmb COMMAND test-asmb)
+add_test (NAME test-asmb COMMAND test-asmb -r junit --out junit.xml)

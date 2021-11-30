@@ -1,0 +1,25 @@
+{
+  "name": "@pep10/term",
+  "version": "1.0.0",
+  "description": "Native terminal implementation of the Pep/10 system.",
+  "main": " ",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build:linux": "./build-linux-rel.sh",
+    "term:build:linux": "npm run build:linux",
+    "term:test:linux": "npm run build:linux && cd build/linux && make -j4 test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
+  },
+  "author": "Matthew McRaven",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://gitlab.com/pep10/pepsuite/issues"
+  },
+  "homepage": "https://gitlab.com/pep10/pepsuite#readme"
+}

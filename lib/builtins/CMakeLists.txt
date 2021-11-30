@@ -6,6 +6,11 @@ find_package( PythonInterp 3.7 REQUIRED )
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+if(NOT DEFINED LINKED_3RD_PARTY)
+  add_subdirectory(../../3rd-party build/3rd-party)
+  set(LINKED_3RD_PARTY)
+endif()
+
 # Generate the registration code at configure time rather than build time
 execute_process(COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/gen/gen.py")
 
@@ -16,5 +21,7 @@ set_property(SOURCE ${sources} APPEND PROPERTY  GENERATED)
 add_library (builtins OBJECT ${sources})
 target_include_directories(builtins PUBLIC "${PROJECT_SOURCE_DIR}/src")
 
-enable_testing()
-add_subdirectory(test)
+if(ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()

@@ -3,3 +3,4 @@ build/
 storybook-static/
 dist/
 .DS_Store
+*.tgz

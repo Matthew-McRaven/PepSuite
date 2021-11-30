@@ -4,6 +4,5 @@ build
 *.code-workspace
 __pycache__
 .DS_Store
-coverage
-
-*.tgz
+# Ignore the generated header for about.txt
+gen_about.h

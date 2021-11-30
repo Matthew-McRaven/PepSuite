@@ -1,12 +1,15 @@
 {
   "name": "@pep10/core",
+  "main": "index.js",
   "version": "1.0.0",
   "description": "Core library implementing simulator and assembler for Pep/10 and others.",
   "config": {
     "unsafe-perm": true
   },
   "files": [
-    "build/packages/core"
+    "dist",
+    "index.js",
+    "index.d.ts"
   ],
   "directories": {
     "test": "test"
@@ -16,13 +19,25 @@
     "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
   },
   "scripts": {
-    "postpack": "./build-js.sh",
+    "start": "node index.js",
+    "prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
+    "build": "bash ./build-js.sh",
+    "prepack:babel-lib": "npx babel build/packages/core --out-dir dist --copy-files",
+    "prepack:babel-index": "npx babel index.template.js --out-file index.js",
+    "prepack": "npm run prepack:babel-lib && npm run prepack:babel-index",
+    "postpack": "cp pep10* ../../",
     "publish": ""
   },
   "author": "Matthew McRaven",
   "license": "GPL-3.0",
+  "type": "module",
   "bugs": {
     "url": "https://gitlab.com/pep10/pepsuite/issues"
   },
-  "homepage": "https://gitlab.com/pep10/pepsuite#readme"
+  "homepage": "https://gitlab.com/pep10/pepsuite#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/cli": "^7.16.0",
+    "@babel/preset-env": "^7.16.4"
+  }
 }

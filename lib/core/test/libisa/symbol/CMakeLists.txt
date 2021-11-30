@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-symbol RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-symbol COMMAND test-symbol)
+add_test (NAME test-symbol COMMAND test-symbol -r junit --out junit.xml)

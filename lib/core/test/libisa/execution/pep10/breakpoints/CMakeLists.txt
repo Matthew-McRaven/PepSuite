@@ -24,4 +24,4 @@ endif()
 
 target_link_libraries(test-execution-breakpoints-Pep10 RTL-Lib catch magic_enum builtins)
 
-add_test (NAME test-execution-breakpoints-Pep10 COMMAND test-execution-breakpoints-Pep10)
+add_test (NAME test-execution-breakpoints-Pep10 COMMAND test-execution-breakpoints-Pep10 -r junit --out junit.xml)
