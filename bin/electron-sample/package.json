@@ -1,6 +1,6 @@
 {
   "name": "electron-sample",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "build/electron/main.js",
   "description": "",
   "dependencies": {

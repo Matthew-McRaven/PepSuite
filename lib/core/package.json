@@ -1,7 +1,7 @@
 {
   "name": "@pep10/core",
   "main": "index.js",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Core library implementing simulator and assembler for Pep/10 and others.",
   "config": {
     "unsafe-perm": true
@@ -36,8 +36,8 @@
   },
   "homepage": "https://gitlab.com/pep10/pepsuite#readme",
   "devDependencies": {
-    "@babel/core": "^7.16.0",
     "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@pep10/hello-world",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "dependencies": {
     "@pep10/ui-sample": "file:../../packages/ui-sample",
