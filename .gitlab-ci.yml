@@ -35,10 +35,6 @@ variables:
 # Enable npm caching on all stages
 .cacheable-node: &cacheable-node 
   image: node:14
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .npm/
 
 # JS commands
 .build: &build
@@ -152,7 +148,7 @@ docs:core:
   <<: *cacheable-node
   before_script:
     - cd packages/ui-sample
-    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+    - npm ci
 
 build:ui-sample:
   <<: *ui-sample
@@ -191,16 +187,16 @@ test:chromatic:
 .hello-world: &hello-world
   <<: *cacheable-node
   before_script:
-    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - npm ci && npx lerna link
     - cd bin/hello-world
-    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+    - npm ci
 
 .electron-sample: &electron-sample
   <<: *cacheable-node
   before_script:
-    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline && npx lerna link
+    - npm ci && npx lerna link
     - cd bin/electron-sample
-    - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline
+    - npm ci
 
 build:hello-world:
   <<: *hello-world
