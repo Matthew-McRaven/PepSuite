@@ -1,3 +1,0 @@
-[submodule "dependencies/pepcore"]
-	path = dependencies/pepcore
-	url = https://gitlab.com/pep10/libsim.git
