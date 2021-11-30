@@ -1,6 +1,6 @@
 {
   "name": "@pep10/builtins",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Built in sample programs and macros for the pep/10 edition of the book.",
   "directories": {
     "test": "test"
