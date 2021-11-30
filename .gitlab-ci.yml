@@ -246,7 +246,7 @@ versions:bump:
     - git remote set-url origin "https://gitlab-ci-token:$PROJECT_ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
-    - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset eslint --force-publish --yes"
+    - "npx lerna publish -m \"Chore: Release %v [skip ci]\" --conventional-commits --changelog-preset eslint --yes"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:
