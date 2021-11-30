@@ -16,7 +16,7 @@ find_package( PythonInterp 3.7 REQUIRED )
 # Generate the registration code at configure time rather than build time
 execute_process(COMMAND ${PYTHON_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/gen.py")
 
-configure_file(term_version.hpp.in term_version.hpp)
+configure_file(term_version.hpp.in term_version.hpp ESCAPE_QUOTES)
 find_package(Git)
 # the commit's SHA1, and whether the building workspace was dirty or not
 execute_process(COMMAND
