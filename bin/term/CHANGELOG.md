@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.4 (2021-11-30)</small>
+
+* Update: Remove unused CI pipeline fille ([964f62b](https://gitlab.com/pep10/pepsuite/commit/964f62b))
+* Fix: unsafePerm due to container ownership issues ([87d4384](https://gitlab.com/pep10/pepsuite/commit/87d4384))
+
+
+
+
+
 ## <small>1.0.3 (2021-11-30)</small>
 
 * Build: Add build+test targets for CI jobs ([3c243c3](https://gitlab.com/pep10/pepsuite/commit/3c243c3))

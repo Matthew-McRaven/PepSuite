@@ -1,6 +1,6 @@
 {
   "name": "@pep10/ui-sample",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Base configuration for a UI library",
   "main": "dist/index",
   "types": "dist/index",

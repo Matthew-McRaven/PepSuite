@@ -1,6 +1,6 @@
 {
   "name": "@pep10/term",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Native terminal implementation of the Pep/10 system.",
   "main": " ",
   "directories": {

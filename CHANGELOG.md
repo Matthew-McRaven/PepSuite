@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.4 (2021-11-30)</small>
+
+* Update: Remove unused CI pipeline fille ([964f62b](https://gitlab.com/pep10/pepsuite/commit/964f62b))
+* Build: Don't force republish with lerna ([fdcaeb9](https://gitlab.com/pep10/pepsuite/commit/fdcaeb9))
+* Fix: unsafePerm due to container ownership issues ([87d4384](https://gitlab.com/pep10/pepsuite/commit/87d4384))
+
+
+
+
+
 ## <small>1.0.3 (2021-11-30)</small>
 
 * Build: `cd` to `core` before building ([97556c6](https://gitlab.com/pep10/pepsuite/commit/97556c6))
