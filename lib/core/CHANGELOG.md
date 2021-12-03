@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.5 (2021-12-03)</small>
+
+* chore: Release 1.0.3 [skip ci] ([bc708e3](https://gitlab.com/pep10/pepsuite/commit/bc708e3))
+* chore: Release 1.0.4 [skip ci] ([ddd22d4](https://gitlab.com/pep10/pepsuite/commit/ddd22d4))
+* fix: unsafePerm due to container ownership issues ([bb1314b](https://gitlab.com/pep10/pepsuite/commit/bb1314b))
+* fix(term): Rename main to avoid name clashes ([87286dd](https://gitlab.com/pep10/pepsuite/commit/87286dd))
+* build: Disable nested tests ([567f0ed](https://gitlab.com/pep10/pepsuite/commit/567f0ed))
+* build(3rd-party): Add include guard for 3rd-party libs ([87810a0](https://gitlab.com/pep10/pepsuite/commit/87810a0))
+* build(3rd-party): Fix include guard for libs ([02bea48](https://gitlab.com/pep10/pepsuite/commit/02bea48))
+* build(core): Add babel as dev dependency ([9d6a335](https://gitlab.com/pep10/pepsuite/commit/9d6a335))
+* build(core): Don't rebuild core on publish ([6c84ed8](https://gitlab.com/pep10/pepsuite/commit/6c84ed8))
+* build(core): Skip JUnit report for isa validation ([0e2cc58](https://gitlab.com/pep10/pepsuite/commit/0e2cc58))
+* ci(core): Reliably generate dummy package.json ([a652e84](https://gitlab.com/pep10/pepsuite/commit/a652e84))
+* ci(core): Upload JUnit reports from core ([fddc0ae](https://gitlab.com/pep10/pepsuite/commit/fddc0ae))
+* feat(core): Wrap WASM code in NPM package ([8a60eca](https://gitlab.com/pep10/pepsuite/commit/8a60eca))
+
+
+
+
+
 ## <small>1.0.4 (2021-11-30)</small>
 
 * Fix: unsafePerm due to container ownership issues ([87d4384](https://gitlab.com/pep10/pepsuite/commit/87d4384))

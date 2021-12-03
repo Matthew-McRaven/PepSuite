@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.5 (2021-12-03)</small>
+
+* chore: Release 1.0.3 [skip ci] ([bc708e3](https://gitlab.com/pep10/pepsuite/commit/bc708e3))
+* chore: Release 1.0.4 [skip ci] ([ddd22d4](https://gitlab.com/pep10/pepsuite/commit/ddd22d4))
+* chore(builtins): Add JUnit reporting to builtins tests ([28a6f6b](https://gitlab.com/pep10/pepsuite/commit/28a6f6b))
+* fix: unsafePerm due to container ownership issues ([bb1314b](https://gitlab.com/pep10/pepsuite/commit/bb1314b))
+* fix(term): Rename main to avoid name clashes ([87286dd](https://gitlab.com/pep10/pepsuite/commit/87286dd))
+* build: Disable nested tests ([567f0ed](https://gitlab.com/pep10/pepsuite/commit/567f0ed))
+* build(3rd-party): Add include guard for 3rd-party libs ([87810a0](https://gitlab.com/pep10/pepsuite/commit/87810a0))
+* build(3rd-party): Fix include guard for libs ([02bea48](https://gitlab.com/pep10/pepsuite/commit/02bea48))
+* build(builtins): Move CMake include guard to root of builtins ([a91f117](https://gitlab.com/pep10/pepsuite/commit/a91f117))
+
+
+
+
+
 ## <small>1.0.4 (2021-11-30)</small>
 
 * Fix: unsafePerm due to container ownership issues ([87d4384](https://gitlab.com/pep10/pepsuite/commit/87d4384))

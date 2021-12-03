@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.5 (2021-12-03)</small>
+
+* chore: Exclude generated files in `cloc.sh` result ([4513796](https://gitlab.com/pep10/pepsuite/commit/4513796))
+* chore: Move `cloc` script to subdirectory ([8bf8614](https://gitlab.com/pep10/pepsuite/commit/8bf8614))
+* chore: Release 1.0.3 [skip ci] ([bc708e3](https://gitlab.com/pep10/pepsuite/commit/bc708e3))
+* chore: Release 1.0.4 [skip ci] ([ddd22d4](https://gitlab.com/pep10/pepsuite/commit/ddd22d4))
+* chore: Remove unused CI pipeline file ([a032221](https://gitlab.com/pep10/pepsuite/commit/a032221))
+* chore(builtins): Add JUnit reporting to builtins tests ([28a6f6b](https://gitlab.com/pep10/pepsuite/commit/28a6f6b))
+* chore(term): Allow debug / release builds of PepTerm ([e310e07](https://gitlab.com/pep10/pepsuite/commit/e310e07))
+* chore(term): Remove specialized devcontainer for term ([bd0d5e5](https://gitlab.com/pep10/pepsuite/commit/bd0d5e5))
+* chore(term): Transition to masm::elf::AnnotatedImage ([374ca6b](https://gitlab.com/pep10/pepsuite/commit/374ca6b))
+* chore(term): Update CI/CD images ([51b4dc9](https://gitlab.com/pep10/pepsuite/commit/51b4dc9))
+* chore(term): Update core, which provides utilities for `run` ([45237a6](https://gitlab.com/pep10/pepsuite/commit/45237a6))
+* chore(term): Update to latest development image ([dd48509](https://gitlab.com/pep10/pepsuite/commit/dd48509))
+* build: Disable nested tests ([567f0ed](https://gitlab.com/pep10/pepsuite/commit/567f0ed))
+* build: Don't force republish with lerna ([dda9237](https://gitlab.com/pep10/pepsuite/commit/dda9237))
+* build(3rd-party): Add CLI11 to 3rd-party dependencies ([39591a5](https://gitlab.com/pep10/pepsuite/commit/39591a5))
+* build(3rd-party): Add include guard for 3rd-party libs ([87810a0](https://gitlab.com/pep10/pepsuite/commit/87810a0))
+* build(3rd-party): Fix include guard for libs ([02bea48](https://gitlab.com/pep10/pepsuite/commit/02bea48))
+* build(builtins): Move CMake include guard to root of builtins ([a91f117](https://gitlab.com/pep10/pepsuite/commit/a91f117))
+* build(core): Add babel as dev dependency ([9d6a335](https://gitlab.com/pep10/pepsuite/commit/9d6a335))
+* build(core): Correct path for scripts ([7636a49](https://gitlab.com/pep10/pepsuite/commit/7636a49))
+* build(core): Don't rebuild core on publish ([6c84ed8](https://gitlab.com/pep10/pepsuite/commit/6c84ed8))
+* build(core): Skip JUnit report for isa validation ([0e2cc58](https://gitlab.com/pep10/pepsuite/commit/0e2cc58))
+* build(term): Add build+test targets for CI jobs ([b0bae45](https://gitlab.com/pep10/pepsuite/commit/b0bae45))
+* build(term): Add OS suffix to build script ([ebe2605](https://gitlab.com/pep10/pepsuite/commit/ebe2605))
+* build(term): Fix build script ([5ad4b7b](https://gitlab.com/pep10/pepsuite/commit/5ad4b7b))
+* build(term): Remove nested dependencies ([96c4789](https://gitlab.com/pep10/pepsuite/commit/96c4789))
+* build(term): Track term target from Lerna ([8673e64](https://gitlab.com/pep10/pepsuite/commit/8673e64))
+* fix: unsafePerm due to container ownership issues ([bb1314b](https://gitlab.com/pep10/pepsuite/commit/bb1314b))
+* fix(term): Handle endless loop detection ([ed89e79](https://gitlab.com/pep10/pepsuite/commit/ed89e79))
+* fix(term): Include missing <fstream> header ([22fd53f](https://gitlab.com/pep10/pepsuite/commit/22fd53f))
+* fix(term): Include only `Core` and not `3rd-party` ([76dd334](https://gitlab.com/pep10/pepsuite/commit/76dd334))
+* fix(term): Link against correct CLI11 header ([b60c7e2](https://gitlab.com/pep10/pepsuite/commit/b60c7e2))
+* fix(term): Output errors from `run` command ([04861a0](https://gitlab.com/pep10/pepsuite/commit/04861a0))
+* fix(term): Rename main to avoid name clashes ([87286dd](https://gitlab.com/pep10/pepsuite/commit/87286dd))
+* ci: Add missing `cd` ([234c057](https://gitlab.com/pep10/pepsuite/commit/234c057))
+* ci: Fix missing CI anchor ([ea6e832](https://gitlab.com/pep10/pepsuite/commit/ea6e832))
+* ci: Merge child pipelines into parent ([ab54ded](https://gitlab.com/pep10/pepsuite/commit/ab54ded))
+* ci(core): Add dummy package.json to build dir ([561ec03](https://gitlab.com/pep10/pepsuite/commit/561ec03))
+* ci(core): Attempt to upload builtins JUnit reports ([057886f](https://gitlab.com/pep10/pepsuite/commit/057886f))
+* ci(core): Fix prebuild step on build:core:wasm ([5390a50](https://gitlab.com/pep10/pepsuite/commit/5390a50))
+* ci(core): Install missing packages for wasm build ([64e1032](https://gitlab.com/pep10/pepsuite/commit/64e1032))
+* ci(core): Properly copy dist files ([f191f37](https://gitlab.com/pep10/pepsuite/commit/f191f37))
+* ci(core): Reliably generate dummy package.json ([a652e84](https://gitlab.com/pep10/pepsuite/commit/a652e84))
+* ci(core): Upload JUnit reports for correct job ([84ba91f](https://gitlab.com/pep10/pepsuite/commit/84ba91f))
+* ci(core): Upload JUnit reports from core ([fddc0ae](https://gitlab.com/pep10/pepsuite/commit/fddc0ae))
+* ci(core): Upload test report as an artifact ([4c99e29](https://gitlab.com/pep10/pepsuite/commit/4c99e29))
+* ci(core): Use correct package.json for packing core ([ae251dc](https://gitlab.com/pep10/pepsuite/commit/ae251dc))
+* ci(term): Drop test:term:linux job ([9b6018f](https://gitlab.com/pep10/pepsuite/commit/9b6018f))
+* feat(core): Wrap WASM code in NPM package ([8a60eca](https://gitlab.com/pep10/pepsuite/commit/8a60eca))
+* feat(term): Implement `run` subcommand ([c3d65a2](https://gitlab.com/pep10/pepsuite/commit/c3d65a2))
+
+
+
+
+
 ## <small>1.0.4 (2021-11-30)</small>
 
 * Update: Remove unused CI pipeline fille ([964f62b](https://gitlab.com/pep10/pepsuite/commit/964f62b))

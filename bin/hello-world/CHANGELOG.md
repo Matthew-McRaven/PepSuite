@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.5 (2021-12-03)</small>
+
+* chore: Release 1.0.3 [skip ci] ([bc708e3](https://gitlab.com/pep10/pepsuite/commit/bc708e3))
+* chore: Release 1.0.4 [skip ci] ([ddd22d4](https://gitlab.com/pep10/pepsuite/commit/ddd22d4))
+* fix: unsafePerm due to container ownership issues ([bb1314b](https://gitlab.com/pep10/pepsuite/commit/bb1314b))
+* fix(term): Rename main to avoid name clashes ([87286dd](https://gitlab.com/pep10/pepsuite/commit/87286dd))
+
+
+
+
+
 ## <small>1.0.4 (2021-11-30)</small>
 
 * Fix: unsafePerm due to container ownership issues ([87d4384](https://gitlab.com/pep10/pepsuite/commit/87d4384))

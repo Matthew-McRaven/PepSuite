@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## <small>1.0.5 (2021-12-03)</small>
+
+* chore: Release 1.0.3 [skip ci] ([bc708e3](https://gitlab.com/pep10/pepsuite/commit/bc708e3))
+* chore: Release 1.0.4 [skip ci] ([ddd22d4](https://gitlab.com/pep10/pepsuite/commit/ddd22d4))
+* chore: Remove unused CI pipeline file ([a032221](https://gitlab.com/pep10/pepsuite/commit/a032221))
+* chore(term): Allow debug / release builds of PepTerm ([e310e07](https://gitlab.com/pep10/pepsuite/commit/e310e07))
+* chore(term): Remove specialized devcontainer for term ([bd0d5e5](https://gitlab.com/pep10/pepsuite/commit/bd0d5e5))
+* chore(term): Transition to masm::elf::AnnotatedImage ([374ca6b](https://gitlab.com/pep10/pepsuite/commit/374ca6b))
+* chore(term): Update CI/CD images ([51b4dc9](https://gitlab.com/pep10/pepsuite/commit/51b4dc9))
+* chore(term): Update core, which provides utilities for `run` ([45237a6](https://gitlab.com/pep10/pepsuite/commit/45237a6))
+* chore(term): Update to latest development image ([dd48509](https://gitlab.com/pep10/pepsuite/commit/dd48509))
+* fix: unsafePerm due to container ownership issues ([bb1314b](https://gitlab.com/pep10/pepsuite/commit/bb1314b))
+* fix(term): Handle endless loop detection ([ed89e79](https://gitlab.com/pep10/pepsuite/commit/ed89e79))
+* fix(term): Include missing <fstream> header ([22fd53f](https://gitlab.com/pep10/pepsuite/commit/22fd53f))
+* fix(term): Include only `Core` and not `3rd-party` ([76dd334](https://gitlab.com/pep10/pepsuite/commit/76dd334))
+* fix(term): Link against correct CLI11 header ([b60c7e2](https://gitlab.com/pep10/pepsuite/commit/b60c7e2))
+* fix(term): Output errors from `run` command ([04861a0](https://gitlab.com/pep10/pepsuite/commit/04861a0))
+* fix(term): Rename main to avoid name clashes ([87286dd](https://gitlab.com/pep10/pepsuite/commit/87286dd))
+* build: Disable nested tests ([567f0ed](https://gitlab.com/pep10/pepsuite/commit/567f0ed))
+* build(term): Add build+test targets for CI jobs ([b0bae45](https://gitlab.com/pep10/pepsuite/commit/b0bae45))
+* build(term): Add OS suffix to build script ([ebe2605](https://gitlab.com/pep10/pepsuite/commit/ebe2605))
+* build(term): Fix build script ([5ad4b7b](https://gitlab.com/pep10/pepsuite/commit/5ad4b7b))
+* build(term): Remove nested dependencies ([96c4789](https://gitlab.com/pep10/pepsuite/commit/96c4789))
+* feat(term): Implement `run` subcommand ([c3d65a2](https://gitlab.com/pep10/pepsuite/commit/c3d65a2))
+
+
+
+
+
 ## <small>1.0.4 (2021-11-30)</small>
 
 * Update: Remove unused CI pipeline fille ([964f62b](https://gitlab.com/pep10/pepsuite/commit/964f62b))
