@@ -41,8 +41,7 @@
     "bundle": "lerna run bundle",
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
-    "electron": "yarn --cwd applications/electron",
-    "update:next": "ts-node scripts/update-theia-to-next.ts && lerna run update:next"
+    "electron": "yarn --cwd applications/electron"
   },
   "workspaces": [
     "applications/*",
