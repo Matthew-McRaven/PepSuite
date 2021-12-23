@@ -45,6 +45,6 @@
   },
   "workspaces": [
     "applications/*",
-    "theia-extensions/*"
+    "packages/**/*"
   ]
 }
