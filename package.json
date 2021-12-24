@@ -41,10 +41,10 @@
     "bundle": "lerna run bundle",
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
-    "electron": "yarn --cwd applications/ide"
+    "electron": "yarn --cwd bin/ide"
   },
   "workspaces": [
-    "applications/*",
+    "bin/*",
     "packages/**/*"
   ]
 }
