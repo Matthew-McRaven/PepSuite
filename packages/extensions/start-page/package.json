@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "theia-blueprint-product",
+  "name": "@pep10/start-page",
   "version": "1.21.0",
   "description": "Eclipse Theia Blueprint Product Branding",
   "dependencies": {

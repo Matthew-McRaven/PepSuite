@@ -74,7 +74,7 @@
     "@theia/workspace": "1.21.0",
     "fs-extra": "^9.0.1",
     "theia-blueprint-updater": "1.21.0",
-    "theia-blueprint-product": "1.21.0"
+    "@pep10/start-page": "1.21.0"
   },
   "devDependencies": {
     "@theia/cli": "1.21.0",
