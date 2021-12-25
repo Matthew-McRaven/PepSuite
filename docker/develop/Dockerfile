@@ -53,3 +53,6 @@ RUN cd /emsdk/llvm/git/src/compiler-rt && \
     cd ../../build_compile_rt && \
     make -j32 && \
     cp -r lib ../build_main_64/lib/clang/14.0.0/
+
+# LLD links ~2-10x faster than ld, so just delete ld.
+RUN rm -f /usr/bin/ld && ln -s /emsdk/llvm/git/build_main_64/bin/lld /usr/bin/ld
