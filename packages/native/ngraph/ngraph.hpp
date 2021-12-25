@@ -1,43 +1,38 @@
 /*
-*
-* NGraph++ : a simple graph library
-*
-* Mathematical and Computational Sciences Division
-* National Institute of Technology,
-* Gaithersburg, MD USA
-*
-*
-* This software was developed at the National Institute of Standards and
-* Technology (NIST) by employees of the Federal Government in the course
-* of their official duties. Pursuant to title 17 Section 105 of the
-* United States Code, this software is not subject to copyright protection
-* and is in the public domain. NIST assumes no responsibility whatsoever for
-* its use by other parties, and makes no guarantees, expressed or implied,
-* about its quality, reliability, or any other characteristic.
-*
-*/
-
-
-
-
+ *
+ * NGraph++ : a simple graph library
+ *
+ * Mathematical and Computational Sciences Division
+ * National Institute of Technology,
+ * Gaithersburg, MD USA
+ *
+ *
+ * This software was developed at the National Institute of Standards and
+ * Technology (NIST) by employees of the Federal Government in the course
+ * of their official duties. Pursuant to title 17 Section 105 of the
+ * United States Code, this software is not subject to copyright protection
+ * and is in the public domain. NIST assumes no responsibility whatsoever for
+ * its use by other parties, and makes no guarantees, expressed or implied,
+ * about its quality, reliability, or any other characteristic.
+ *
+ */
 
 #ifndef NGRAPH_H_
 #define NGRAPH_H_
 
-
 // DIRECTED GRAPH (with in-out adjacency list)
 //
 
-#include <iostream>
-#include <set>
-#include <map>
-#include <utility>      // for std::pair
-#include <iterator>     // for inserter()
-#include <vector>       // for exporting edge_list
-#include <string>
-#include <algorithm>
-#include <sstream>      // for I/O << and >> operators
 #include "setops.hpp"
+#include <algorithm>
+#include <iostream>
+#include <iterator> // for inserter()
+#include <map>
+#include <set>
+#include <sstream> // for I/O << and >> operators
+#include <string>
+#include <utility> // for std::pair
+#include <vector>  // for exporting edge_list
 
 /** version history
 *
@@ -84,40 +79,34 @@
 
 
 */
-namespace NGraph
-{
+namespace NGraph {
 
-template <typename T>
-class tGraph
-{
+template <typename T> class tGraph {
 
   public:
-
     using vertex = T;
     using value_type = T;
-    using edge = std::pair<vertex,vertex>;
+    using edge = std::pair<vertex, vertex>;
     using vertex_set = std::set<vertex>;
     using edge_set = std::set<edge>;
     using in_out_edge_sets = std::pair<vertex_set, vertex_set>;
     using adj_graph = std::map<vertex, in_out_edge_sets>;
 
     using edge_iterator = typename edge_set::iterator;
-    using const_edge_iterator =typename edge_set::const_iterator;
+    using const_edge_iterator = typename edge_set::const_iterator;
 
-    using vertex_iterator =typename vertex_set::iterator;
+    using vertex_iterator = typename vertex_set::iterator;
     using const_vertex_iterator = typename vertex_set::const_iterator;
 
     using vertex_neighbor_iterator = typename vertex_set::iterator;
-    using vertex_neighbor_const_iterator= typename vertex_set::const_iterator;
+    using vertex_neighbor_const_iterator = typename vertex_set::const_iterator;
 
   private:
-
     adj_graph G_;
     unsigned int num_edges_;
     bool undirected_;
 
   public:
-
     //
     //
 
@@ -149,309 +138,201 @@ class tGraph
     iterator end() { return G_.end(); }
     const_iterator end() const { return G_.end(); }
 
-    vertex_neighbor_iterator out_neighbors_begin(const vertex &a)
-    {
-      return in_neighbors(a).begin();
+    vertex_neighbor_iterator out_neighbors_begin(const vertex &a) { return in_neighbors(a).begin(); }
+
+    vertex_neighbor_const_iterator out_neighbors_begin(const vertex &a) const { return out_neighbors(a).begin(); }
+
+    vertex_neighbor_iterator out_neighbors_end(const vertex &a) { return out_neighbors(a).end(); }
+
+    vertex_neighbor_const_iterator out_neighbors_end(const vertex &a) const { return out_neighbors(a).end(); }
+
+    tGraph() : G_(), num_edges_(0), undirected_(false) {}
+    tGraph(const tGraph &B) : G_(B.G_), num_edges_(B.num_edges_), undirected_(B.undirected_) {}
+    tGraph(const edge_set &E) {
+        for (typename edge_set::const_iterator p = E.begin(); p != E.end(); p++)
+            insert_edge(*p);
     }
 
-    vertex_neighbor_const_iterator out_neighbors_begin(const vertex &a) const
-    {
-      return out_neighbors(a).begin();
-    }
+    bool is_undirected() const { return undirected_; }
 
-    vertex_neighbor_iterator out_neighbors_end(const vertex &a)
-    {
-      return out_neighbors(a).end();
-    }
+    bool is_directed() const { return !undirected_; }
 
-    vertex_neighbor_const_iterator out_neighbors_end(const vertex &a) const
-    {
-      return out_neighbors(a).end();
-    }
+    iterator find(const vertex &a) { return G_.find(a); }
 
+    const_iterator find(const vertex &a) const { return G_.find(a); }
 
-    tGraph(): G_(), num_edges_(0), undirected_(false){}
-    tGraph(const tGraph &B) : G_(B.G_), num_edges_(B.num_edges_),
-          undirected_(B.undirected_){}
-    tGraph(const edge_set &E)
-    {
-      for (typename edge_set::const_iterator p = E.begin();
-                      p != E.end(); p++)
-        insert_edge(*p);
-    }
+    const vertex_set &in_neighbors(const vertex &a) const { return (find(a))->second.first; }
+    vertex_set &in_neighbors(const vertex &a) { return (G_[a]).first; }
 
-    bool is_undirected() const
-    {
-       return undirected_;
-    }
+    const vertex_set &out_neighbors(const vertex &a) const { return find(a)->second.second; }
+    vertex_set &out_neighbors(const vertex &a) { return G_[a].second; }
 
+    unsigned int in_degree(const vertex &a) const { return in_neighbors(a).size(); }
 
-    bool is_directed() const
-    {
-        return !undirected_;
-    }
+    unsigned int out_degree(const vertex &a) const { return out_neighbors(a).size(); }
 
-     iterator find(const vertex &a)
-     {
-        return G_.find(a);
-     }
+    unsigned int degree(const vertex &a) const { return out_neighbors(a).size(); }
 
-     const_iterator find(const vertex  &a) const
-     {
-        return G_.find(a);
-     }
-
-    const vertex_set &in_neighbors(const vertex &a) const
-              { return (find(a))->second.first;}
-          vertex_set &in_neighbors(const vertex &a)
-              { return (G_[a]).first; }
-
-    const vertex_set &out_neighbors(const vertex &a)const
-                {return find(a)->second.second;}
-          vertex_set &out_neighbors(const vertex &a)
-                {return G_[a].second; }
-
-
-     unsigned int in_degree(const vertex &a) const
-     {
-        return in_neighbors(a).size();
-     }
-
-     unsigned int out_degree(const vertex &a) const
-     {
-        return out_neighbors(a).size();
-     }
-
-     unsigned int degree(const vertex &a) const
-     {
-        return out_neighbors(a).size();
-     }
-
-
-    bool isolated(const vertex &a) const
-    {
+    bool isolated(const vertex &a) const {
         const_iterator p = find(a);
-        if ( p != end() )
-          return  isolated(p) ;
+        if (p != end())
+            return isolated(p);
         else
             return false;
     }
 
-    void insert_vertex(const vertex &a)
-    {
-      G_[a];
-    }
+    void insert_vertex(const vertex &a) { G_[a]; }
 
-    void insert_new_vertex_inout_list(const vertex &a, const vertex_set &IN,
-              const vertex_set &OUT)
-    {
-      typename adj_graph::iterator p = find(a);
+    void insert_new_vertex_inout_list(const vertex &a, const vertex_set &IN, const vertex_set &OUT) {
+        typename adj_graph::iterator p = find(a);
 
-      // exit if "a" already in graph
-      if (p != G_.end())
-      {
+        // exit if "a" already in graph
+        if (p != G_.end()) {
             // remove the old number of OUT vertices
             num_edges_ -= p->second.second.size();
-      }
+        }
 
-      G_[a] = make_pair(IN, OUT);
-      num_edges_ += OUT.size();
+        G_[a] = make_pair(IN, OUT);
+        num_edges_ += OUT.size();
     }
 
-
-
-    void insert_edge_noloop(iterator pa, iterator pb)
-    {
-      if (pa==pb) return;
-      insert_edge(pa, pb);
+    void insert_edge_noloop(iterator pa, iterator pb) {
+        if (pa == pb)
+            return;
+        insert_edge(pa, pb);
     }
 
-    void insert_edge(iterator pa, iterator pb)
-    {
-      vertex a = node(pa);
-      vertex b = node(pb);
+    void insert_edge(iterator pa, iterator pb) {
+        vertex a = node(pa);
+        vertex b = node(pb);
 
-      if (is_undirected())
-      {
-          vertex smallest = ( a < b ? a : b);
-          //vertex biggest =  ( a < b ? b : a);
+        if (is_undirected()) {
+            vertex smallest = (a < b ? a : b);
+            // vertex biggest =  ( a < b ? b : a);
 
-          if (smallest == b)
-          {
-              std::swap(a,b);
-              std::swap(pa, pb);
-          }
-      }
-      size_t old_size = out_neighbors(pa).size();
+            if (smallest == b) {
+                std::swap(a, b);
+                std::swap(pa, pb);
+            }
+        }
+        size_t old_size = out_neighbors(pa).size();
 
-      out_neighbors(pa).insert(b);
-      in_neighbors(pb).insert(a);
+        out_neighbors(pa).insert(b);
+        in_neighbors(pb).insert(a);
 
-      size_t new_size = out_neighbors(a).size();
-      if (new_size > old_size)
-      {
-          num_edges_++;
-      }
-
+        size_t new_size = out_neighbors(a).size();
+        if (new_size > old_size) {
+            num_edges_++;
+        }
     }
 
-    void insert_edge_noloop(const vertex &a, const vertex &b)
-    {
-      if (a==b) return;
-      insert_edge(a, b);
+    void insert_edge_noloop(const vertex &a, const vertex &b) {
+        if (a == b)
+            return;
+        insert_edge(a, b);
     }
 
+    void insert_edge(const vertex &a, const vertex &b) {
+        iterator pa = find(a);
+        if (pa == G_.end()) {
+            insert_vertex(a);
+            pa = find(a);
+        }
 
-    void insert_edge(const vertex &a, const vertex& b)
-    {
-      iterator pa = find(a);
-      if (pa == G_.end())
-      {
-          insert_vertex(a);
-          pa = find(a);
-      }
+        iterator pb = find(b);
+        if (pb == G_.end()) {
+            insert_vertex(b);
+            pb = find(b);
+        }
 
-      iterator pb = find(b);
-      if (pb == G_.end())
-      {
-          insert_vertex(b);
-          pb = find(b);
-      }
-
-      insert_edge( pa, pb );
+        insert_edge(pa, pb);
     }
 
-   void insert_undirected_edge(const vertex &a, const vertex &b)
-   {
-      (a < b ) ?  insert_edge(a,b) : insert_edge(b,a);
-   }
+    void insert_undirected_edge(const vertex &a, const vertex &b) { (a < b) ? insert_edge(a, b) : insert_edge(b, a); }
 
+    void insert_edge(const edge &E) { insert_edge(E.first, E.second); }
 
-    void insert_edge(const edge &E)
-    {
-        insert_edge(E.first, E.second);
+    void insert_undirected_edge(const edge &E) { insert_undirected_edge(E.first, E.second); }
+
+    void remove_edge(iterator pa, iterator pb) {
+        if (pa == end() || pb == end())
+            return;
+
+        size_t old_size = out_neighbors(pa).size();
+        out_neighbors(pa).erase(node(pb));
+        in_neighbors(pb).erase(node(pa));
+        if (out_neighbors(pa).size() < old_size)
+            num_edges_--;
     }
 
-    void insert_undirected_edge(const edge &E)
-    {
-      insert_undirected_edge(E.first, E.second);
+    void remove_edge(const vertex &a, const vertex &b) {
+        iterator pa = find(a);
+        if (pa != end())
+            return;
+        iterator pb = find(b);
+        if (pb != end())
+            return;
+        remove_edge(pa, pb);
     }
 
+    void remove_edge(const edge &E) { remove_edge(E.first, E.second); }
 
+    void remove_undirected_edge(const vertex &a, const vertex &b) { (a < b) ? remove_edge(a, b) : remove_edge(b, a); }
 
-    void remove_edge(iterator pa, iterator pb)
-    {
-      if (pa == end() || pb == end())
-        return;
+    void remove_undirected_edge(const edge &e) { remove_undirected_edge(e.first, e.second); }
 
-      size_t old_size = out_neighbors(pa).size();
-      out_neighbors(pa).erase(node(pb));
-      in_neighbors(pb).erase(node(pa));
-      if (out_neighbors(pa).size() < old_size)
-        num_edges_ --;
+    void remove_vertex(iterator pa) {
+        vertex_set out_edges = out_neighbors(pa);
+        vertex_set in_edges = in_neighbors(pa);
 
+        // vertex_set & out_edges = out_neighbors(pa);
+        // vertex_set & in_edges =  in_neighbors(pa);
+
+        // remove out-going edges
+        for (typename vertex_set::iterator p = out_edges.begin(); p != out_edges.end(); p++) {
+            remove_edge(pa, find(*p));
+        }
+
+        // remove in-coming edges
+        for (typename vertex_set::iterator p = in_edges.begin(); p != in_edges.end(); p++) {
+            remove_edge(find(*p), pa);
+        }
+
+        G_.erase(node(pa));
     }
 
-    void remove_edge(const vertex &a, const vertex& b)
-    {
-      iterator pa = find(a);
-      if (pa != end())
-        return;
-      iterator pb = find(b);
-      if (pb != end())
-        return;
-      remove_edge( pa, pb );
+    void remove_vertex_set(const vertex_set &V) {
+        for (typename vertex_set::const_iterator p = V.begin(); p != V.end(); p++)
+            remove_vertex(*p);
     }
 
-    void remove_edge(const edge &E)
-    {
-        remove_edge(E.first, E.second);
-    }
-
-    void remove_undirected_edge(const vertex &a, const vertex& b)
-    {
-      (a < b) ? remove_edge(a,b) : remove_edge(b,a);
-    }
-
-    void remove_undirected_edge(const edge &e)
-    {
-      remove_undirected_edge(e.first, e.second);
-    }
-
-
-    void remove_vertex(iterator pa)
-    {
-      vertex_set  out_edges = out_neighbors(pa);
-      vertex_set  in_edges =  in_neighbors(pa);
-
-      //vertex_set & out_edges = out_neighbors(pa);
-      //vertex_set & in_edges =  in_neighbors(pa);
-
-      // remove out-going edges
-      for (typename vertex_set::iterator p = out_edges.begin();
-                  p!=out_edges.end(); p++)
-      {
-          remove_edge(pa, find(*p));
-      }
-
-
-      // remove in-coming edges
-      for (typename vertex_set::iterator p = in_edges.begin();
-                  p!=in_edges.end(); p++)
-      {
-          remove_edge(find(*p), pa);
-      }
-
-
-      G_.erase(node(pa));
-    }
-
-    void remove_vertex_set(const vertex_set &V)
-    {
-        for (typename vertex_set::const_iterator p=V.begin(); p!=V.end(); p++)
-          remove_vertex(*p);
-    }
-
-    void remove_vertex(const vertex &a)
-    {
+    void remove_vertex(const vertex &a) {
         iterator pa = find(a);
         if (pa != G_.end())
-            remove_vertex( pa);
-
+            remove_vertex(pa);
     }
 
-  /**
-        Is vertex 'a' included in graph?
+    /**
+          Is vertex 'a' included in graph?
 
-        @return true, if vertex a is present; false, otherwise.
-  */
-   bool includes_vertex(const vertex &a) const
-   {
-        return  (find(a) != G_.end());
-   }
+          @return true, if vertex a is present; false, otherwise.
+    */
+    bool includes_vertex(const vertex &a) const { return (find(a) != G_.end()); }
 
+    /**
+         Is edge (a,b) included in graph?
 
-   /**
-        Is edge (a,b) included in graph?
+         @return true, if edge is present; false, otherwise.
 
-        @return true, if edge is present; false, otherwise.
+    */
+    bool includes_edge(const vertex &a, const vertex &b) const {
+        return (includes_vertex(a)) ? includes_elm(out_neighbors(a), b) : false;
 
-   */
-   bool includes_edge(const vertex &a, const vertex &b) const
-   {
-      return (includes_vertex(a)) ?
-          includes_elm(out_neighbors(a),b): false;
+        // const vertex_set &out = out_neighbors(a);
+        //  return ( out.find(b) != out.end());
+    }
 
-      //const vertex_set &out = out_neighbors(a);
-      // return ( out.find(b) != out.end());
-
-   }
-
-
-  bool includes_edge(const edge& e) const
-  {
-    return includes_edge(e.first, e.second);
-  }
+    bool includes_edge(const edge &e) const { return includes_edge(e.first, e.second); }
 
     // convert to a simple edge list for exporting
     //
@@ -464,65 +345,53 @@ class tGraph
     std::vector<edge> edge_list() const;
 
     std::vector<vertex> vertex_list() const;
-/*
-    graph unions
-*/
+    /*
+        graph unions
+    */
 
-    tGraph & plus_eq(const tGraph &B)
-    {
+    tGraph &plus_eq(const tGraph &B) {
 
-        for (const_iterator p=B.begin(); p != B.end(); p++)
-        {
+        for (const_iterator p = B.begin(); p != B.end(); p++) {
             const vertex &this_node = node(p);
             insert_vertex(this_node);
             const vertex_set &out = out_neighbors(p);
-            for (typename vertex_set::const_iterator q= out.begin(); q != out.end(); q++)
-            {
+            for (typename vertex_set::const_iterator q = out.begin(); q != out.end(); q++) {
                 insert_edge(this_node, *q);
             }
         }
         return *this;
     }
 
-    tGraph intersect(const tGraph &B) const
-    {
-    tGraph G;
-    for (const_iterator p=begin(); p != end(); p++) {
-        const vertex &this_node = node(p);
-        if (B.includes_vertex(this_node)) {
-            G.insert_vertex(this_node);
-        }
-        const vertex_set &out = out_neighbors(p);
-        for (typename vertex_set::const_iterator q= out.begin();
-             q != out.end(); q++) {
-            if (B.includes_edge(this_node, *q)) {
-                G.insert_edge(this_node, *q);
+    tGraph intersect(const tGraph &B) const {
+        tGraph G;
+        for (const_iterator p = begin(); p != end(); p++) {
+            const vertex &this_node = node(p);
+            if (B.includes_vertex(this_node)) {
+                G.insert_vertex(this_node);
+            }
+            const vertex_set &out = out_neighbors(p);
+            for (typename vertex_set::const_iterator q = out.begin(); q != out.end(); q++) {
+                if (B.includes_edge(this_node, *q)) {
+                    G.insert_edge(this_node, *q);
+                }
             }
         }
-    }
-    return G;
-    }
-
-    tGraph operator*(const tGraph &B) const
-    {
-        return intersect(B);
+        return G;
     }
 
+    tGraph operator*(const tGraph &B) const { return intersect(B); }
 
-    tGraph minus(const tGraph &B) const
-    {
+    tGraph minus(const tGraph &B) const {
         tGraph G;
         for (const_iterator p = begin(); p != end(); p++) {
             const vertex &this_vertex = node(p);
             if (isolated(p)) {
-                if (! B.isolated(this_vertex)) {
+                if (!B.isolated(this_vertex)) {
                     G.insert_vertex(this_vertex);
                 }
-            }
-            else {
+            } else {
                 const vertex_set &out = out_neighbors(p);
-                for (typename vertex_set::const_iterator q = out.begin();
-                q != out.end(); q++) {
+                for (typename vertex_set::const_iterator q = out.begin(); q != out.end(); q++) {
                     if (!B.includes_edge(this_vertex, *q)) {
                         G.insert_edge(this_vertex, *q);
                     }
@@ -532,31 +401,18 @@ class tGraph
         return G;
     }
 
-    tGraph operator-(const tGraph &B) const
-    {
-        return minus(B);
-    }
+    tGraph operator-(const tGraph &B) const { return minus(B); }
 
-
-    tGraph plus(const tGraph &B) const
-    {
+    tGraph plus(const tGraph &B) const {
         tGraph U(*this);
 
         U.plus_eq(B);
         return U;
     }
 
-    tGraph operator+(const tGraph &B) const
-    {
-        return plus(B);
-    }
+    tGraph operator+(const tGraph &B) const { return plus(B); }
 
-    tGraph & operator+=(const tGraph &B)
-    {
-        return plus_eq(B);
-    }
-
-
+    tGraph &operator+=(const tGraph &B) { return plus_eq(B); }
 
 #if 0
 /*
@@ -602,37 +458,31 @@ class tGraph
 
 #endif
 
-
-
-
-/**
-    @param A vertex set of nodes (subset of G)
-    @return a new subgraph containing all nodes of A
-*/
-    tGraph subgraph(const vertex_set &A) const
-    {
+    /**
+        @param A vertex set of nodes (subset of G)
+        @return a new subgraph containing all nodes of A
+    */
+    tGraph subgraph(const vertex_set &A) const {
         tGraph G;
 
-        for (typename vertex_set::const_iterator p = A.begin(); p!=A.end(); p++) {
-        const_iterator t = find(*p);
-        if (t != end()) {
-            vertex_set new_in =  (A * in_neighbors(t));
-            vertex_set new_out = (A * out_neighbors(t));
+        for (typename vertex_set::const_iterator p = A.begin(); p != A.end(); p++) {
+            const_iterator t = find(*p);
+            if (t != end()) {
+                vertex_set new_in = (A * in_neighbors(t));
+                vertex_set new_out = (A * out_neighbors(t));
 
-            G.insert_new_vertex_inout_list(*p, new_in, new_out);
+                G.insert_new_vertex_inout_list(*p, new_in, new_out);
             }
         }
         return G;
     }
 
-    unsigned int subgraph_size(const vertex_set &A) const
-    {
+    unsigned int subgraph_size(const vertex_set &A) const {
         unsigned int num_edges = 0;
-        for (typename vertex_set::const_iterator p = A.begin();
-             p != A.end(); p++){
+        for (typename vertex_set::const_iterator p = A.begin(); p != A.end(); p++) {
             const_iterator pG = find(*p);
             if (pG != this->end()) {
-                num_edges +=  intersection_size(A, out_neighbors(pG) );
+                num_edges += intersection_size(A, out_neighbors(pG));
             }
         }
         return num_edges;
@@ -640,11 +490,10 @@ class tGraph
 
     // we don't need to divide by two since  we are only
     // counting out-edges in subgraph_size()
-    double subgraph_sparsity(const vertex_set &A) const
-    {
-        double N  = A.size();
+    double subgraph_sparsity(const vertex_set &A) const {
+        double N = A.size();
 
-        double sparsity =  (A.size() == 1 ? 0.0 : subgraph_size(A)/(N * (N-1)));
+        double sparsity = (A.size() == 1 ? 0.0 : subgraph_size(A) / (N * (N - 1)));
         if (is_undirected()) {
             sparsity *= 2.0;
         }
@@ -653,141 +502,70 @@ class tGraph
 
     void print() const;
 
-
     /* tGraph iterator methods */
 
     /**
         @param p tGraph::const_iterator
     */
-    static const vertex &node(const_iterator p)
-    {
-        return p->first;
-    }
+    static const vertex &node(const_iterator p) { return p->first; }
 
-    static const vertex &node(iterator p)
-    {
-        return p->first;
-    }
+    static const vertex &node(iterator p) { return p->first; }
 
-    static const vertex &node(const_vertex_iterator p)
-    {
-        return *p;
-    }
+    static const vertex &node(const_vertex_iterator p) { return *p; }
 
+    static const vertex_set &in_neighbors(const_iterator p) { return (p->second).first; }
 
-    static const vertex_set & in_neighbors(const_iterator p)
-    {
-        return (p->second).first;
-    }
+    static vertex_set &in_neighbors(iterator p) { return (p->second).first; }
 
-    static vertex_set & in_neighbors(iterator p)
-    {
-        return (p->second).first;
-    }
+    static const_vertex_iterator in_begin(const_iterator p) { return in_neighbors(p).begin(); }
 
-    static const_vertex_iterator in_begin(const_iterator p)
-    {
-        return in_neighbors(p).begin();
-    }
+    static const_vertex_iterator in_end(const_iterator p) { return in_neighbors(p).end(); }
 
-    static const_vertex_iterator in_end(const_iterator p)
-    {
-        return in_neighbors(p).end();
-    }
+    static const vertex_set &out_neighbors(const_iterator p) { return (p->second).second; }
 
+    static const_vertex_iterator out_begin(const_iterator p) { return out_neighbors(p).begin(); }
 
-    static const vertex_set& out_neighbors(const_iterator p)
-    {
-        return (p->second).second;
-    }
+    static const_vertex_iterator out_end(const_iterator p) { return out_neighbors(p).end(); }
 
-    static const_vertex_iterator out_begin(const_iterator p)
-    {
-        return out_neighbors(p).begin();
-    }
+    static vertex_set &out_neighbors(iterator p) { return (p->second).second; }
 
-    static const_vertex_iterator out_end(const_iterator p)
-    {
-        return out_neighbors(p).end();
-    }
+    static vertex_iterator out_begin(iterator p) { return out_neighbors(p).begin(); }
 
-    static vertex_set& out_neighbors(iterator p)
-    {
-        return (p->second).second;
-    }
+    static unsigned int num_edges(const_iterator p) { return out_neighbors(p).size(); }
 
-    static vertex_iterator out_begin(iterator p)
-    {
-        return out_neighbors(p).begin();
-    }
-
-
-    static  unsigned int num_edges(const_iterator p)
-    {
-        return out_neighbors(p).size();
-    }
-
-    inline static  unsigned int num_edges(iterator p)
-    {
-        return out_neighbors(p).size();
-    }
+    inline static unsigned int num_edges(iterator p) { return out_neighbors(p).size(); }
 
     /**
         @param p tGraph::const_iterator
         @return number of edges going out (out-degree) at node pointed to by p.
     */
-    inline static  unsigned int out_degree(const_iterator p)
-    {
-        return (p->second).second.size();
-    }
+    inline static unsigned int out_degree(const_iterator p) { return (p->second).second.size(); }
 
-    inline static  unsigned int out_degree(iterator p)
-    {
-        return (p->second).second.size();
-    }
+    inline static unsigned int out_degree(iterator p) { return (p->second).second.size(); }
 
     /**
         @param p tGraph::const_iterator
         @return number of edges going out (out-degree) at node pointed to by p.
     */
-    inline static  unsigned int in_degree(const_iterator p)
-    {
-        return (p->second).first.size();
-    }
+    inline static unsigned int in_degree(const_iterator p) { return (p->second).first.size(); }
 
-    inline static  unsigned int in_degree(iterator p)
-    {
-        return (p->second).first.size();
-    }
+    inline static unsigned int in_degree(iterator p) { return (p->second).first.size(); }
 
-    static  unsigned int degree(const_iterator p)
-    {
-        return out_neighbors(p).size();
-    }
+    static unsigned int degree(const_iterator p) { return out_neighbors(p).size(); }
 
-    inline static bool isolated(const_iterator p)
-    {
-        return (in_degree(p) == 0 && out_degree(p) == 0 );
-    }
+    inline static bool isolated(const_iterator p) { return (in_degree(p) == 0 && out_degree(p) == 0); }
 
-    static bool isolated(iterator p)
-    {
-        return (in_degree(p) == 0 && out_degree(p) == 0 );
-    }
-
-
+    static bool isolated(iterator p) { return (in_degree(p) == 0 && out_degree(p) == 0); }
 
     /**
           abosrb(a,b):   'a' absorbs 'b', b gets removed from graph
     */
-    void absorb(iterator pa, iterator pb)
-    {
+    void absorb(iterator pa, iterator pb) {
 
-        //std::cerr << "Graph::absorb(" << node(pa) << ", " << node(pb) << ")\n";
+        // std::cerr << "Graph::absorb(" << node(pa) << ", " << node(pb) << ")\n";
 
         if (pa == pb)
             return;
-
 
         // first remove edge (a,b) to avoid self-loops
         remove_edge(pa, pb);
@@ -796,58 +574,50 @@ class tGraph
         //
         {
             vertex_set b_out = out_neighbors(pb);
-            for (typename vertex_set::iterator p = b_out.begin();
-                 p != b_out.end(); p++){
+            for (typename vertex_set::iterator p = b_out.begin(); p != b_out.end(); p++) {
                 iterator pi = find(*p);
                 remove_edge(pb, pi);
-                //std::cerr<<"\t remove_edge("<<node(pb)<< ", " << node(pi) <<")\n";
-                    insert_edge(pa, pi);
-            //std::cerr<<"\t insert_edge("<<node(pa)<< ", " << node(pi) <<")\n";
+                // std::cerr<<"\t remove_edge("<<node(pb)<< ", " << node(pi) <<")\n";
+                insert_edge(pa, pi);
+                // std::cerr<<"\t insert_edge("<<node(pa)<< ", " << node(pi) <<")\n";
             }
         }
 
         // change edges (i,b) to (i,a)
         {
             vertex_set b_in = in_neighbors(pb);
-            for (typename vertex_set::iterator p = b_in.begin();
-             p != b_in.end(); p++) {
+            for (typename vertex_set::iterator p = b_in.begin(); p != b_in.end(); p++) {
                 iterator pi = find(*p);
                 remove_edge(pi, pb);
-                //std::cerr<<"\t remove_edge("<<node(pi)<< ", " << node(pb) <<")\n";
+                // std::cerr<<"\t remove_edge("<<node(pi)<< ", " << node(pb) <<")\n";
                 insert_edge(pi, pa);
-                //std::cerr<<"\t insert_edge("<<node(pi)<< ", " << node(pa) <<")\n";
+                // std::cerr<<"\t insert_edge("<<node(pi)<< ", " << node(pa) <<")\n";
             }
         }
 
-
-        //std::cout<<"\t about to remove vertex: "<< node(pb) << "\n";
+        // std::cout<<"\t about to remove vertex: "<< node(pb) << "\n";
 
         remove_vertex(pb);
-        //G_.erase( node(pb) );
+        // G_.erase( node(pb) );
 
-        //std::cout<<"\t removed_vertex.\n";
-
-
+        // std::cout<<"\t removed_vertex.\n";
     }
 
     /**
         c smart_abosrb(a,b):   'a' absorbs 'b', or b aborbs a, depending on
                 whichever causes the least amount of graph updates
     */
-    iterator smart_absorb(iterator pa, iterator pb)
-    {
+    iterator smart_absorb(iterator pa, iterator pb) {
         if (degree(pa) >= degree(pb)) {
             absorb(pa, pb);
             return pb;
-        }
-        else {
+        } else {
             absorb(pb, pa);
             return pb;
         }
     }
 
-    vertex smart_absorb(vertex a, vertex b)
-    {
+    vertex smart_absorb(vertex a, vertex b) {
         iterator pa = find(a);
         if (pa == end()) {
             return b;
@@ -862,10 +632,9 @@ class tGraph
         return node(pc);
     }
 
-    void absorb(vertex a, vertex b)
-    {
+    void absorb(vertex a, vertex b) {
         if (a == b)
-            return ;
+            return;
 
         iterator pa = find(a);
         if (pa == end())
@@ -875,82 +644,67 @@ class tGraph
         if (pb == end())
             return;
 
-        absorb( pa, pb );
+        absorb(pa, pb);
     }
 
-    static std::istream &read_line(std::istream &s, T &v1, T &v2,
-                                                bool &vertex_only )
-{
-    std::string line;
+    static std::istream &read_line(std::istream &s, T &v1, T &v2, bool &vertex_only) {
+        std::string line;
 
-    if (getline(s, line)) {
-        while (line[0] == '%' || line[0] == '#') {
-            if (!getline(s,line)) {
-                return s;
+        if (getline(s, line)) {
+            while (line[0] == '%' || line[0] == '#') {
+                if (!getline(s, line)) {
+                    return s;
+                }
+            }
+
+            std::istringstream L(line);
+            L >> v1;
+            if (L.eof()) {
+                vertex_only = true;
+            } else {
+                L >> v2;
+                vertex_only = false;
             }
         }
 
-        std::istringstream L(line);
-        L >> v1;
-        if (L.eof()) {
-            vertex_only = true;
-        }
-        else {
-            L >> v2;
-            vertex_only = false;
-        }
+        return s;
     }
-
-    return s;
-}
-
 };
 // end tGraph<T>
 
 // global functions
 //
 
-
 using Graph = tGraph<unsigned int>;
 using iGraph = tGraph<int>;
 using sGraph = tGraph<std::string>;
 
-
-template <class T>
-std::vector<typename tGraph<T>::edge> tGraph<T>::edge_list() const
-{
-    //std::vector<tGraph::edge> E(num_edges());
+template <class T> std::vector<typename tGraph<T>::edge> tGraph<T>::edge_list() const {
+    // std::vector<tGraph::edge> E(num_edges());
     std::vector<typename tGraph<T>::edge> E;
 
     for (typename tGraph::const_iterator p = begin(); p != end(); p++) {
         const vertex &a = tGraph::node(p);
         const vertex_set &out = tGraph::out_neighbors(p);
-        for (typename vertex_set::const_iterator t = out.begin();
-             t != out.end(); t++) {
-            E.push_back( edge(a, *t));
+        for (typename vertex_set::const_iterator t = out.begin(); t != out.end(); t++) {
+            E.push_back(edge(a, *t));
         }
     }
     return E;
 }
 
-template<typename T>
-std::vector<typename tGraph<T>::vertex> tGraph<T>::vertex_list() const
-{
+template <typename T> std::vector<typename tGraph<T>::vertex> tGraph<T>::vertex_list() const {
     std::vector<typename tGraph<T>::vertex> E;
     E.resize(G_.size());
     int at = 0;
-    for(auto kvPair : G_) {
+    for (auto kvPair : G_) {
         E[at] = std::get<0>(kvPair);
         at++;
     }
     return E;
 }
 
-
-
-template <typename T>
-std::istream & operator>>(std::istream &s, tGraph<T> &G)
-{
+template <typename T> std::istream &operator>>(std::istream &s, tGraph<T> &G) {
     std::string line;
 
     while (getline(s, line)) {
@@ -963,29 +717,23 @@ std::istream & operator>>(std::istream &s, tGraph<T> &G)
         L >> v1;
         if (L.eof()) {
             G.insert_vertex(v1);
-        }
-        else {
+        } else {
             L >> v2;
             G.insert_edge(v1, v2);
         }
     }
     return s;
-
 }
 
-template <typename T>
-std::ostream & operator<<(std::ostream &s, const tGraph<T> &G)
-{
-    for (typename tGraph<T>::const_node_iterator p=G.begin(); p != G.end(); p++){
+template <typename T> std::ostream &operator<<(std::ostream &s, const tGraph<T> &G) {
+    for (typename tGraph<T>::const_node_iterator p = G.begin(); p != G.end(); p++) {
         const typename tGraph<T>::vertex_set &out = tGraph<T>::out_neighbors(p);
         typename tGraph<T>::vertex v = p->first;
         if (out.size() == 0 && tGraph<T>::in_neighbors(p).size() == 0) {
             // v is an isolated node
             s << v << "\n";
-        }
-        else {
-            for (typename tGraph<T>::vertex_set::const_iterator q = out.begin();
-                 q!=out.end(); q++) {
+        } else {
+            for (typename tGraph<T>::vertex_set::const_iterator q = out.begin(); q != out.end(); q++) {
                 s << v << " " << *q << "\n";
             }
         }
@@ -993,28 +741,22 @@ std::ostream & operator<<(std::ostream &s, const tGraph<T> &G)
     return s;
 }
 
-template <typename T>
-void tGraph<T>::print() const
-{
+template <typename T> void tGraph<T>::print() const {
 
-    std::cerr << "# vertices: " <<  num_vertices()  << "\n";
-    std::cerr << "# edges:    " <<  num_edges()  << "\n";
+    std::cerr << "# vertices: " << num_vertices() << "\n";
+    std::cerr << "# edges:    " << num_edges() << "\n";
 
-    for (const_iterator p=G_.begin();
-         p != G_.end(); p++) {
-            const vertex_set   &out =  out_neighbors(p);
+    for (const_iterator p = G_.begin(); p != G_.end(); p++) {
+        const vertex_set &out = out_neighbors(p);
 
-            for (typename vertex_set::const_iterator q=out.begin();
-            q!=out.end(); q++)
+        for (typename vertex_set::const_iterator q = out.begin(); q != out.end(); q++)
             std::cerr << p->first << "  -->  " << *q << "\n";
-        }
+    }
     std::cerr << std::endl;
 }
 
-}
+} // namespace NGraph
 // namespace NGraph
-
-
 
 #endif
 // NGRAPH_H_
