@@ -13,9 +13,6 @@
 	],
 	"build": {
 		"dockerfile": "Dockerfile",
-		"args": {
-			"VARIANT": "ubuntu-20.04"
-		}
 	},
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
