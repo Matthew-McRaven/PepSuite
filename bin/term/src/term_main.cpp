@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     parameter_formatting.insert_or_assign("run", std::map<std::string, std::string>());
     auto run_subcommand = parser.add_subcommand("run", run_description);
     // TODO: Fix!!
-    detailed_descriptions["run"] = fmt::format(run_description_detailed, 1000);
+    detailed_descriptions["run"] = fmt::vformat(run_description_detailed, fmt::make_format_args(1000));
     // Batch input that will be loaded into charIn.
     run_subcommand->add_option("-i", values.i, charin_file_text)->expected(1);
     parameter_formatting["run"]["i"] = "charin_file";
@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
     parameter_formatting["run"]["o"] = "charout_file";
     run_subcommand->add_flag("--echo-output", values.had_echo_output, charout_echo_text);
     // run_subcommand->add_option("-e", obj_input_file_text);
-    //  Maximum number of instructions to be executed.
+    // Maximum number of instructions to be executed.
     std::string max_steps_text = isaMaxStepText;
     // TODO: Set correctly
     run_subcommand->add_option("-m", values.m, max_steps_text)
@@ -300,13 +300,13 @@ void handle_figure(command_line_values &values) {
 
 void handle_asm(command_line_values &values) {
     if (!std::filesystem::exists(values.s) && !is_resource(values.s))
-        throw CLI::ValidationError(fmt::format(err_fail_to_open, values.s), -1);
+        throw CLI::ValidationError(fmt::vformat(err_fail_to_open, fmt::make_format_args(values.s)), -1);
 
     auto text_source = read_file_or_resource(values.s);
     std::string text_os;
     if (!values.os.empty()) {
         if (!std::filesystem::exists(values.os))
-            throw CLI::ValidationError(fmt::format(err_fail_to_open, values.os), -1);
+            throw CLI::ValidationError(fmt::vformat(err_fail_to_open, fmt::make_format_args(values.os)), -1);
         text_os = read_file_or_resource(values.os);
     } else {
         text_os = read_default_os();

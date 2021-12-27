@@ -59,12 +59,11 @@ const std::string microMaxStepText = "Override the default value of max_steps.";
 const std::string cpuasm_input_file_text = "Input Pep/10 microcode source program for microassembler.";
 const std::string cpu_asm_log = "Override the name of the default error log file.";
 
-const std::string cpu_full_control =
-    "Assemble the microprogram with the full control section (default is partial control section).";
+const std::string cpu_full_control = "Assemble the microprogram with the full control section (default is partial control section).";
 
 const std::string cpu_preconditions = "Input Pep/10 microcode source program for microassembler.";
 const std::string cpu_run_log = "Override the name of the default error log file.";
 
 const std::string err_fail_to_open = "Could not open file: {}.";
-const std::string err_bad_source = "Errors/warnings encountered while generating output for file: {}.";
-const std::string dbg_assemble = "About to assemble {} into object file {}.";
+const std::string err_bad_source        = "Errors/warnings encountered while generating output for file: {}.";
+const std::string dbg_assemble      = "About to assemble {} into object file {}.";
