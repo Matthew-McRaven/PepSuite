@@ -33,6 +33,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(src)
 add_subdirectory(../../../3rd-party 3rd-party)
 add_subdirectory(../ngraph ngraph)
+add_subdirectory(../builtins builtins)
 
 enable_testing()
 add_subdirectory(test)
