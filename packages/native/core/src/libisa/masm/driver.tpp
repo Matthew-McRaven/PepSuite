@@ -1,8 +1,8 @@
 #include "driver.hpp"
 
-#include <algorithm>
-
 #include "masm/frontend/imagize.hpp"
+#include <algorithm>
+#include <magic_enum.hpp>
 
 template <typename address_size_t, typename stage_t>
 std::pair<bool, std::string> masm::driver<address_size_t, stage_t>::assemble_os(
