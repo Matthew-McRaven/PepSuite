@@ -69,9 +69,8 @@ std::pair<bool, std::string> masm::driver<address_size_t, stage_t>::do_loop(proj
 		if(auto transform = transforms_.find(stage); 
 		   transform == transforms_.end())  {
 			// If one stage failed to find the transform, every stage will fail. Just give up now.
-			return {false, fmt::format(";ERROR: No transform for stage {}.", target_stage)};
-		}
-		else {
+            return {false, fmt::format(";ERROR: No transform for stage {}.", magic_enum::enum_name(target_stage))};
+        } else {
 			auto [stage_success, new_work] = transform->second(project, work);
 			if(!stage_success) {
 				failed_stage = true;
