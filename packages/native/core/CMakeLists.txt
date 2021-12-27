@@ -33,8 +33,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(src)
 add_subdirectory(../../../3rd-party 3rd-party)
 add_subdirectory(../ngraph ngraph)
-#find_package(catch REQUIRED HINTS 3rd-party/catch/CMakeLists.txt)
-#ind_package(magic_enum REQUIRED)
 
 enable_testing()
 add_subdirectory(test)
