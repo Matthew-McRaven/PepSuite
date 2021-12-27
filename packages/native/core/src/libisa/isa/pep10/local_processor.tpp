@@ -1004,9 +1004,11 @@ void isa::pep10::debug_summary(const LocalProcessor<enable_history>& proc,const 
 	args["IS"] = fmt::format("{}", isa::pep10::as_string(instr.inst->mnemonic));
 	args["OS"] = fmt::format("{:04x}", read_register(proc, Register::OS));
 	args["ADDR"] = fmt::format("{}", magic_enum::enum_name(instr.addr));
-	std::cout << fmt::format(format, fmt::arg("A",args["A"]), fmt::arg("X", args["X"]), fmt::arg("SP", args["SP"]),
-		fmt::arg("PC", args["PC"]), fmt::arg("IS", args["IS"]), fmt::arg("OS", args["OS"]), 
-		fmt::arg("ADDR", args["ADDR"])) << std::endl;
+    std::cout << fmt::vformat(format, fmt::make_format_args(fmt::arg("A", args["A"]), fmt::arg("X", args["X"]),
+                                                            fmt::arg("SP", args["SP"]), fmt::arg("PC", args["PC"]),
+                                                            fmt::arg("IS", args["IS"]), fmt::arg("OS", args["OS"]),
+                                                            fmt::arg("ADDR", args["ADDR"])))
+              << std::endl;
 }
 
 template<bool enable_history>

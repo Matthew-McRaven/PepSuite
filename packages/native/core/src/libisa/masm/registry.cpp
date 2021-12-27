@@ -52,12 +52,12 @@ auto masm::macro_registry::custom_macros() const -> decltype(macro_registry::cus
 
 bool masm::macro_registry::register_unary_system_call(const std::string& macro_name, const std::string& template_text)
 {
-	std::string macro_text = fmt::format(template_text, macro_name);
+    std::string macro_text = fmt::vformat(template_text, fmt::make_format_args(macro_name));
 	return register_macro(macro_name, macro_text, MacroType::SystemMacro);
 }
 bool masm::macro_registry::register_nonunary_system_call(const std::string& macro_name, const std::string& template_text)
 {
-	std::string macro_text = fmt::format(template_text, macro_name);
+    std::string macro_text = fmt::vformat(template_text, fmt::make_format_args(macro_name));
 	return register_macro(macro_name, macro_text, MacroType::SystemMacro);
 }
 
