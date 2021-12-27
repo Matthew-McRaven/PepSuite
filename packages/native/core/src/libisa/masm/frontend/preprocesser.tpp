@@ -49,7 +49,7 @@ auto masm::frontend::preprocessor<address_size_t, tokenizer_t>::preprocess(
      */
     auto out_graph = reduce(tls->invoke_dependency_graph);
     // std::cout << out_graph;
-    //  The graph had a cycle, must signal that assembly must be aborted.
+    // The graph had a cycle, must signal that assembly must be aborted.
     if (out_graph.num_nodes() != 0) {
         auto as_macro = std::dynamic_pointer_cast<masm::elf::macro_subsection<address_size_t>>(section);
 
@@ -144,7 +144,7 @@ auto masm::frontend::preprocessor<address_size_t, tokenizer_t>::preprocess(
                  fmt::vformat(detail::error_bad_arg_count,
                               fmt::make_format_args(macro_args.size(), macro_def->arg_count))});
         } else {
-            // Delegate construction of macro to top-level section, which will maintain its own invariants.
+            // Delegate construction of macro to top-level section, which will mantain its own invariants.
             auto child_macro = tls->insert_macro(section, line, macro_name, macro_args, macro_def->macro_text);
             // Add child to top of priority queue.
             children.emplace_back(child_macro);

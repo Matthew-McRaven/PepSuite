@@ -34,64 +34,56 @@
 #include "entry.hpp"
 #include "table.hpp"
 
-namespace symbol
-{
+namespace symbol {
 
 //! Find the root of the symbol tree.
-template<typename value_t>
-struct RootVisitor
-{
-	NodeType<value_t> operator() (std::shared_ptr<BranchTable<value_t>> table);
-	NodeType<value_t> operator() (std::shared_ptr<LeafTable<value_t>> table);
+template <typename value_t> struct RootVisitor {
+    NodeType<value_t> operator()(std::shared_ptr<BranchTable<value_t>> table);
+    NodeType<value_t> operator()(std::shared_ptr<LeafTable<value_t>> table);
 };
 
 //! Gather all symbols sharing the same name into a list.
-template<typename value_t>
-class SelectByNameVisitor
-{
-public:
-	SelectByNameVisitor(std::string name);
-	std::list<std::shared_ptr<symbol::entry<value_t>>> operator()(std::shared_ptr<BranchTable<value_t>> table);
-	std::list<std::shared_ptr<symbol::entry<value_t>>> operator() (std::shared_ptr<LeafTable<value_t>> table);
-private:
-	std::string target;
+template <typename value_t> class SelectByNameVisitor {
+  public:
+    SelectByNameVisitor(std::string name);
+    std::list<std::shared_ptr<symbol::entry<value_t>>> operator()(std::shared_ptr<BranchTable<value_t>> table);
+    std::list<std::shared_ptr<symbol::entry<value_t>>> operator()(std::shared_ptr<LeafTable<value_t>> table);
+
+  private:
+    std::string target;
 };
 
-
 //! Check for the existence of a symbol by name
-template<typename value_t>
-class ExistenceVisitor
-{
-public:
-	ExistenceVisitor(std::string name);
-	
-	bool operator() (std::shared_ptr<BranchTable<value_t>> table);
-	bool operator() (std::shared_ptr<LeafTable<value_t>> table);
-private:
-	std::string target;
+template <typename value_t> class ExistenceVisitor {
+  public:
+    ExistenceVisitor(std::string name);
+
+    bool operator()(std::shared_ptr<BranchTable<value_t>> table);
+    bool operator()(std::shared_ptr<LeafTable<value_t>> table);
+
+  private:
+    std::string target;
 };
 
 //! Modify the value of all symbol::value_locations. Useful for relocation.
-template<typename value_t>
-class AdjustOffsetVisitor
-{
-public:
-	AdjustOffsetVisitor(value_t offset);
+template <typename value_t> class AdjustOffsetVisitor {
+  public:
+    AdjustOffsetVisitor(value_t offset);
     AdjustOffsetVisitor(value_t offset, value_t threshold);
-	
-	void operator() (std::shared_ptr<BranchTable<value_t>> table);
-	void operator() (std::shared_ptr<LeafTable<value_t>> table);
-private:
-	value_t offset_={0}, threshhold_={0};
+
+    void operator()(std::shared_ptr<BranchTable<value_t>> table);
+    void operator()(std::shared_ptr<LeafTable<value_t>> table);
+
+  private:
+    value_t offset_ = {0}, threshhold_ = {0};
 };
 
 /*
  * Helper methods that wrap visitor creation and std::visit invocation.
  */
-enum class TraversalPolicy
-{
-    kChildren, /*!< Only visit the current node and its children.*/
-    kSiblings, /*!< Visit the current node, its children, its siblings, and its siblings children.*/
+enum class TraversalPolicy {
+    kChildren,  /*!< Only visit the current node and its children.*/
+    kSiblings,  /*!< Visit the current node, its children, its siblings, and its siblings children.*/
     kWholeTree, /*!< Visit every node in the tree.*/
 };
 
@@ -102,12 +94,11 @@ enum class TraversalPolicy
  * \tparam value_t An unsigned integral type that is large enough to contain the largest address on the target system.
  * \sa symbol::RootVisitor
  */
-template<typename value_t>
-symbol::NodeType<uint16_t> root_table(NodeType<value_t> table);
+template <typename value_t> symbol::NodeType<uint16_t> root_table(NodeType<value_t> table);
 
-template<typename value_t>
-std::list<std::shared_ptr<symbol::entry<value_t>>> select_by_name(NodeType<value_t> table, const std::string& name,
-    TraversalPolicy policy=TraversalPolicy::kChildren);
+template <typename value_t>
+std::list<std::shared_ptr<symbol::entry<value_t>>> select_by_name(NodeType<value_t> table, const std::string &name,
+                                                                  TraversalPolicy policy = TraversalPolicy::kChildren);
 
 /*!
  * \brief Determine if any table in the hierarchical symbol table contains a symbol with a particular name.
@@ -117,22 +108,19 @@ std::list<std::shared_ptr<symbol::entry<value_t>>> select_by_name(NodeType<value
  * \tparam value_t An unsigned integral type that is large enough to contain the largest address on the target system.
  * \sa symbol::ExistenceVisitor
  */
-template<typename value_t>
-bool exists(NodeType<value_t> table, const std::string& name, TraversalPolicy policy=TraversalPolicy::kChildren);
+template <typename value_t>
+bool exists(NodeType<value_t> table, const std::string &name, TraversalPolicy policy = TraversalPolicy::kChildren);
 
 /*!
- * \brief For each symbol in table, if the value is a value_location, adjust the offset field by "offset" if the base field >= threshold.
- * \arg table A node in a hierarchical symbol table.
- * \arg offset
- * \arg threshold
- * \tparam value_t An unsigned integral type that is large enough to contain the largest address on the target system.
- * \sa symbol::AdjustOffsetVisitor
+ * \brief For each symbol in table, if the value is a value_location, adjust the offset field by "offset" if the base
+ * field >= threshold. \arg table A node in a hierarchical symbol table. \arg offset \arg threshold \tparam value_t An
+ * unsigned integral type that is large enough to contain the largest address on the target system. \sa
+ * symbol::AdjustOffsetVisitor
  */
-template<typename value_t>
-void adjust_offset(NodeType<value_t> table, value_t offset, value_t threshhold=0, 
-    TraversalPolicy policy=TraversalPolicy::kChildren);
+template <typename value_t>
+void adjust_offset(NodeType<value_t> table, value_t offset, value_t threshhold = 0,
+                   TraversalPolicy policy = TraversalPolicy::kChildren);
 
-
-} //end namespace symbol
+} // end namespace symbol
 
 #include "visit.tpp"

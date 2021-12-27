@@ -31,9 +31,22 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_subdirectory(src)
+
 add_subdirectory(../../../3rd-party 3rd-party)
+
+
+
+if(DEFINED ENABLE_TESTING AND ENABLE_TESTING)
+  set(_ENABLE_TESTING_CORE 1)
+  set(ENABLE_TESTING 0 CACHE BOOL "" FORCE)
+endif()
 add_subdirectory(../ngraph ngraph)
 add_subdirectory(../builtins builtins)
+if(DEFINED _ENABLE_TESTING_CORE)
+  set(ENABLE_TESTING ${_ENABLE_TESTING_CORE})
+endif()
 
-enable_testing()
-add_subdirectory(test)
+if(ENABLE_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()

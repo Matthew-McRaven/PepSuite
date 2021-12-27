@@ -25,7 +25,8 @@ template <typename Lexer> struct tokenizer : lex::lexer<Lexer> {
         : macro_ident("@[A-Za-z_][A-Za-z0-9_]+"), macro_arg("\\$[0-9]+"), comma(","),
           identifier("[A-Za-z_][A-Za-z0-9|_]*"), sym_decl("[A-Za-z_][A-Za-z0-9|_]*:"), dot_command("\\.[a-zA-Z]+"),
           ch_lit(fmt::vformat("'({})'", fmt::make_format_args(fmt::vformat(inner_lit, fmt::make_format_args("'"))))),
-          str_lit(fmt::vformat(R"(\"({})+\")", fmt::make_format_args(fmt::vformat(inner_lit, fmt::make_format_args("\""))))),
+          str_lit(fmt::vformat(R"(\"({})+\")",
+                               fmt::make_format_args(fmt::vformat(inner_lit, fmt::make_format_args("\""))))),
           comment(";[^\n]*"), hex_literal("0[xX][0-9a-fA-F]+"),
           // Must escape +- or chaos ensues.
           dec_literal("[\\+\\-]?[0-9]+"), empty("\\n"), whitespaces("[( \\t)]+") {
