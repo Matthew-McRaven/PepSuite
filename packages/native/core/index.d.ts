@@ -1,2 +1,2 @@
 
-export module "@pep10/core";
+declare module "@pep10/core";
