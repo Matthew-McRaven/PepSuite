@@ -42,8 +42,11 @@
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
     "ide": "yarn --cwd bin/ide",
+    "storybook:serve": "yarn --cwd packages/ui start-storybook -p 6006",
+    "storybook:build": "yarn --cwd packages/ui build-storybook",
     "wasm:build": "yarn --cwd packages/native/core wasm:build",
-    "wasm:dist": "yarn --cwd packages/native/core wasm:dist"
+    "wasm:dist": "yarn --cwd packages/native/core wasm:dist",
+    "wasm:test": "yarn --cwd packages/native/core wasm:test"
   },
   "workspaces": [
     "bin/*",
