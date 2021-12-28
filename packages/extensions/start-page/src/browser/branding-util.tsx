@@ -29,7 +29,7 @@ function ExternalBrowserLink(props: ExternalBrowserLinkProps): JSX.Element {
         role={'button'}
         tabIndex={0}
         onClick={() => openExternalLink(props.url, props.windowService)}
-        onKeyDown={(e: React.KeyboardEvent) => {
+        onKeyDown={(e: React.KeyboardEvent<HTMLAnchorElement>) => {
             if (Key.ENTER.keyCode === KeyCode.createKeyCode(e.nativeEvent).key?.keyCode) {
                 openExternalLink(props.url, props.windowService);
             }
