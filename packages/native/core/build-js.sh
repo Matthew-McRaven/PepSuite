@@ -1,6 +1,5 @@
 source /emsdk/emsdk_env.sh
-npm run prebuild
-
+yarn wasm:prebuild
 mkdir -p build
 cd build
 (
