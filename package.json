@@ -41,7 +41,9 @@
     "bundle": "lerna run bundle",
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
-    "ide": "yarn --cwd bin/ide"
+    "ide": "yarn --cwd bin/ide",
+    "wasm:build": "yarn --cwd packages/native/core wasm:build",
+    "wasm:dist": "yarn --cwd packages/native/core wasm:dist"
   },
   "workspaces": [
     "bin/*",
