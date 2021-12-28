@@ -34,6 +34,7 @@
     }
   },
   "dependencies": {
+    "@pep10/start-page": "1.21.0",
     "@theia/bulk-edit": "1.21.0",
     "@theia/callhierarchy": "1.21.0",
     "@theia/console": "1.21.0",
@@ -73,8 +74,7 @@
     "@theia/vsx-registry": "1.21.0",
     "@theia/workspace": "1.21.0",
     "fs-extra": "^9.0.1",
-    "theia-blueprint-updater": "1.21.0",
-    "@pep10/start-page": "1.21.0"
+    "theia-blueprint-updater": "1.21.0"
   },
   "devDependencies": {
     "@theia/cli": "1.21.0",
@@ -87,12 +87,15 @@
     "@wdio/sync": "^6.10.0",
     "app-builder-lib": "22.10.5",
     "chai": "^4.2.0",
+    "circular-dependency-plugin": "^5.2.2",
+    "compression-webpack-plugin": "^6.0",
     "electron-builder": "22.10.5",
     "electron-chromedriver": "9.0.0",
     "electron-mocha": "^9.3.2",
     "js-yaml": "^3.12.0",
     "mocha": "^8.2.1",
     "rimraf": "^2.7.1",
+    "source-map-loader": "^2.0",
     "ts-node": "^10.0.0",
     "wdio-chromedriver-service": "^6.0.4",
     "webdriverio": "^6.10.2",
