@@ -8,6 +8,9 @@ export default {
   },
 };
 
-const Template = () => <StoriedComponent />;
+const Template = (args) => <StoriedComponent text={args.text} />;
 
 export const withTemplate = Template.bind({});
+withTemplate.args = {
+  text: 'Hello World',
+};
