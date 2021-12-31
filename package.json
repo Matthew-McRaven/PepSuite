@@ -44,7 +44,8 @@
     "ide": "yarn --cwd bin/ide",
     "storybook:serve": "yarn --cwd packages/ui start-storybook -p 6006",
     "storybook:build": "yarn --cwd packages/ui build-storybook",
-    "wasm:build": "yarn --cwd packages/native/core wasm:build",
+    "wasm:clean": "yarn --cwd packages/native/core wasm:clean",
+    "wasm:build:js": "yarn --cwd packages/native/core wasm:build:js",
     "wasm:dist": "yarn --cwd packages/native/core wasm:dist",
     "wasm:test": "yarn --cwd packages/native/core wasm:test"
   },

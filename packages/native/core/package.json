@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "wasm:clean": "rimraf build",
     "wasm:prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
     "wasm:build:js": "yarn wasm:prebuild && bash ./build-js.sh",
     "wasm:dist:lib": "node scripts/build_out_exists.cjs && (npx babel build/packages/core --out-dir dist --copy-files)",
