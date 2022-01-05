@@ -20,12 +20,16 @@
   },
   "scripts": {
     "start": "node index.js",
-    "wasm:clean": "rimraf build",
-    "wasm:prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
-    "wasm:build:js": "yarn wasm:prebuild && bash ./build-js.sh",
-    "wasm:dist:lib": "node scripts/build_out_exists.cjs && (npx babel build/packages/core --out-dir dist --copy-files)",
-    "wasm:dist:index": "npx babel index.template.js --out-file index.js",
-    "wasm:dist": "yarn wasm:dist:lib && yarn wasm:dist:index"
+    "clean": "rimraf build",
+    "prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
+    "build:wasm": "yarn prebuild && node scripts/build.js wasm",
+    "build:native:debug": "yarn prebuild && node scripts/build.js native debug",
+    "build:native:release": "yarn prebuild && node scripts/build.js native release",
+    "build:coverage": "yarn prebuild && node scripts/build.js coverage",
+    "build:docs": "yarn prebuild && node scripts/build.js docs",
+    "dist:lib": "node scripts/build_out_exists.cjs && (npx babel build/packages/core --out-dir dist --copy-files)",
+    "dist:index": "npx babel index.template.js --out-file index.js",
+    "dist": "yarn dist:lib && yarn dist:index"
   },
   "author": "Matthew McRaven",
   "license": "GPL-3.0",
@@ -36,6 +40,7 @@
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4"
+    "@babel/preset-env": "^7.16.4",
+    "moxygen": "^0.8.0"
   }
 }
