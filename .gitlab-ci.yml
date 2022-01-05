@@ -32,7 +32,6 @@ variables:
 
 # Enable npm caching on all stages
 .cacheable-node: &cacheable-node 
-  image: node:14.15.5
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
