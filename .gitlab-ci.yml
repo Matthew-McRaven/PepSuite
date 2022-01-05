@@ -1,0 +1,103 @@
+
+stages:
+- packages/native
+- packages/ui
+- packages/theia
+- test
+- chromatic
+- binaries
+- docs
+- deploy
+
+# Variables that must be injected into every pipeline
+variables:
+  BUILD_VERSION: v0.2.5
+  GIT_LFS_SKIP_SMUDGE: '1'
+
+##################
+# Helper anchors #
+##################
+# A well-configured emscripten environment
+.emscripten: &emscripten
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  image: registry.gitlab.com/pep10/pepsuite/develop:${BUILD_VERSION}
+  before_script:
+    - apt update
+    - apt-get install git-lfs
+    - source /emsdk/emsdk_env.sh
+    - export CXX=$(which clang++-14)
+    - export C=$(which clang-14)
+    - yarn config set cache-folder ./npm
+
+# Enable npm caching on all stages
+.cacheable-node: &cacheable-node 
+  image: node:14.15.5
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+
+####################
+# Native Libraries #
+####################
+
+build:builtins:
+  <<: *emscripten
+  stage: packages/native
+  needs: []
+  script:
+    - cd packages/native/builtins
+    - (cd gen && python3 gen.py)
+    - mkdir build && cd build
+    - cmake ../ -DENABLE_TESTING=1
+    - make -j4 && make test
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 1 week
+    reports:
+      junit: packages/native/builtins/build/**/junit.xml
+
+build:core:linux:
+  <<: *emscripten
+  stage: packages/native
+  needs: []
+  script:
+    - yarn install --immutable --immutable-cache --check-cache
+    - yarn wasm build:coverage
+    - mv packages/native/core/coverage.xml coverage.xml
+  coverage: '/^\s*lines.*/'
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 2 days
+    reports:
+      cobertura: coverage.xml
+      junit: lpackages/native/core/build/**/junit.xml
+
+build:core:wasm:
+  <<: *emscripten
+  stage: packages/native
+  needs: []
+  script:
+    - yarn install --immutable --immutable-cache --check-cache
+    - yarn wasm build:wasm
+    - yarn wasm dist
+  artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
+    expire_in: 2 days
+    paths:
+      - lib/core/dist/
+
+docs:core:
+  <<: *emscripten
+  stage: docs 
+  needs: ["build:core:linux"]
+  script:
+    - yarn install --immutable --immutable-cache --check-cache
+    - yarn wasm build:docs
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - packages/native/core/build/docs/
+
+
