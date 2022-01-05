@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
+# set the project name
+project(RTL-Model VERSION 1.0)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0)
     message(FATAL_ERROR "Insufficient gcc version")
@@ -22,8 +25,7 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 
-# set the project name
-project(RTL-Model VERSION 1.0)
+
 
 configure_file(src/libisa/version.hpp.in src/libisa/version.hpp)
 
