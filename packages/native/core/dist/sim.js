@@ -1,4 +1,4 @@
-var Module = function () {
+var Module = (() => {
   var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
 
   if (typeof __filename !== 'undefined') _scriptDir = _scriptDir || __filename;
@@ -17,7 +17,9 @@ var Module = function () {
     // before the code. Then that object will be used in the code, and you
     // can continue to use Module afterwards as well.
 
-    var Module = typeof Module !== 'undefined' ? Module : {}; // Set up the promise that indicates the Module is initialized
+    var Module = typeof Module !== 'undefined' ? Module : {}; // See https://caniuse.com/mdn-javascript_builtins_object_assign
+
+    var objAssign = Object.assign; // Set up the promise that indicates the Module is initialized
 
     var readyPromiseResolve, readyPromiseReject;
     Module['ready'] = new Promise(function (resolve, reject) {
@@ -32,19 +34,11 @@ var Module = function () {
     // the current environment's defaults to avoid having to be so
     // defensive during initialization.
 
-    var moduleOverrides = {};
-    var key;
-
-    for (key in Module) {
-      if (Module.hasOwnProperty(key)) {
-        moduleOverrides[key] = Module[key];
-      }
-    }
-
+    var moduleOverrides = objAssign({}, Module);
     var arguments_ = [];
     var thisProgram = './this.program';
 
-    var quit_ = function (status, toThrow) {
+    var quit_ = (status, toThrow) => {
       throw toThrow;
     }; // Determine the runtime environment we are in. You can customize this by
     // setting the ENVIRONMENT setting at compile time (see settings.js).
@@ -69,9 +63,23 @@ var Module = function () {
     } // Hooks that are implemented differently in different runtime environments.
 
 
-    var read_, readAsync, readBinary, setWindowTitle;
-    var nodeFS;
+    var read_, readAsync, readBinary, setWindowTitle; // Normally we don't log exceptions but instead let them bubble out the top
+    // level where the embedding environment (e.g. the browser) can handle
+    // them.
+    // However under v8 and node we sometimes exit the process direcly in which case
+    // its up to use us to log the exception before exiting.
+    // If we fix https://github.com/emscripten-core/emscripten/issues/15080
+    // this may no longer be needed under node.
+
+    function logExceptionOnExit(e) {
+      if (e instanceof ExitStatus) return;
+      let toLog = e;
+      err('exiting due to exception: ' + toLog);
+    }
+
+    var fs;
     var nodePath;
+    var requireNodeFS;
 
     if (ENVIRONMENT_IS_NODE) {
       if (ENVIRONMENT_IS_WORKER) {
@@ -81,11 +89,20 @@ var Module = function () {
       } // include: node_shell_read.js
 
 
+      requireNodeFS = function () {
+        // Use nodePath as the indicator for these not being initialized,
+        // since in some environments a global fs may have already been
+        // created.
+        if (!nodePath) {
+          fs = require('fs');
+          nodePath = require('path');
+        }
+      };
+
       read_ = function shell_read(filename, binary) {
-        if (!nodeFS) nodeFS = require('fs');
-        if (!nodePath) nodePath = require('path');
+        requireNodeFS();
         filename = nodePath['normalize'](filename);
-        return nodeFS['readFileSync'](filename, binary ? null : 'utf8');
+        return fs.readFileSync(filename, binary ? null : 'utf8');
       };
 
       readBinary = function readBinary(filename) {
@@ -95,15 +112,13 @@ var Module = function () {
           ret = new Uint8Array(ret);
         }
 
-        assert(ret.buffer);
         return ret;
       };
 
       readAsync = function readAsync(filename, onload, onerror) {
-        if (!nodeFS) nodeFS = require('fs');
-        if (!nodePath) nodePath = require('path');
+        requireNodeFS();
         filename = nodePath['normalize'](filename);
-        nodeFS['readFile'](filename, function (err, data) {
+        fs.readFile(filename, function (err, data) {
           if (err) onerror(err);else onload(data.buffer);
         });
       }; // end include: node_shell_read.js
@@ -120,15 +135,23 @@ var Module = function () {
         if (!(ex instanceof ExitStatus)) {
           throw ex;
         }
-      });
-      process['on']('unhandledRejection', abort);
+      }); // Without this older versions of node (< v15) will log unhandled rejections
+      // but return 0, which is not normally the desired behaviour.  This is
+      // not be needed with node v15 and about because it is now the default
+      // behaviour:
+      // See https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode
 
-      quit_ = function (status, toThrow) {
+      process['on']('unhandledRejection', function (reason) {
+        throw reason;
+      });
+
+      quit_ = (status, toThrow) => {
         if (keepRuntimeAlive()) {
           process['exitCode'] = status;
           throw toThrow;
         }
 
+        logExceptionOnExit(toThrow);
         process['exit'](status);
       };
 
@@ -155,10 +178,12 @@ var Module = function () {
         // otherwise, slice off the final part of the url to find the script directory.
         // if scriptDirectory does not contain a slash, lastIndexOf will return -1,
         // and scriptDirectory will correctly be replaced with an empty string.
+        // If scriptDirectory contains a query (starting with ?) or a fragment (starting with #),
+        // they are removed because they could contain a slash.
 
 
         if (scriptDirectory.indexOf('blob:') !== 0) {
-          scriptDirectory = scriptDirectory.substr(0, scriptDirectory.lastIndexOf('/') + 1);
+          scriptDirectory = scriptDirectory.substr(0, scriptDirectory.replace(/[?#].*/, "").lastIndexOf('/') + 1);
         } else {
           scriptDirectory = '';
         } // Differentiate the Web Worker from the Node Worker case, as reading must
@@ -207,23 +232,14 @@ var Module = function () {
 
         }
 
-        setWindowTitle = function (title) {
-          document.title = title;
-        };
-      } else {} // Set up the out() and err() hooks, which are how we can print to stdout or
-    // stderr, respectively.
-
+        setWindowTitle = title => document.title = title;
+      } else {}
 
     var out = Module['print'] || console.log.bind(console);
     var err = Module['printErr'] || console.warn.bind(console); // Merge back in the overrides
 
-    for (key in moduleOverrides) {
-      if (moduleOverrides.hasOwnProperty(key)) {
-        Module[key] = moduleOverrides[key];
-      }
-    } // Free the object hierarchy contained in the overrides, this lets the GC
+    objAssign(Module, moduleOverrides); // Free the object hierarchy contained in the overrides, this lets the GC
     // reclaim data used e.g. in memoryInitializerRequest, which is a large typed array.
-
 
     moduleOverrides = null; // Emit code to handle expected values on the Module object. This applies Module.x
     // to the proper local x. This has two benefits: first, we only emit it if it is
@@ -235,6 +251,7 @@ var Module = function () {
     if (Module['quit']) quit_ = Module['quit']; // perform assertions in shell.js after we set up out() and err(), as otherwise if an assertion fails it cannot print the message
 
     var STACK_ALIGN = 16;
+    var POINTER_SIZE = 4;
 
     function getNativeTypeSize(type) {
       switch (type) {
@@ -260,7 +277,7 @@ var Module = function () {
         default:
           {
             if (type[type.length - 1] === '*') {
-              return 4; // A pointer
+              return POINTER_SIZE;
             } else if (type[0] === 'i') {
               var bits = Number(type.substr(1));
               assert(bits % 8 === 0, 'getNativeTypeSize invalid bits ' + bits + ', type ' + type);
@@ -386,22 +403,26 @@ var Module = function () {
       }
 
       return wasmTable.length - 1;
-    } // Add a wasm function to the table.
+    }
+
+    function updateTableMap(offset, count) {
+      for (var i = offset; i < offset + count; i++) {
+        var item = getWasmTableEntry(i); // Ignore null values.
+
+        if (item) {
+          functionsInTableMap.set(item, i);
+        }
+      }
+    } // Add a function to the table.
+    // 'sig' parameter is required if the function being added is a JS function.
 
 
-    function addFunctionWasm(func, sig) {
+    function addFunction(func, sig) {
       // Check if the function is already in the table, to ensure each function
       // gets a unique index. First, create the map if this is the first use.
       if (!functionsInTableMap) {
         functionsInTableMap = new WeakMap();
-
-        for (var i = 0; i < wasmTable.length; i++) {
-          var item = wasmTable.get(i); // Ignore null values.
-
-          if (item) {
-            functionsInTableMap.set(item, i);
-          }
-        }
+        updateTableMap(0, wasmTable.length);
       }
 
       if (functionsInTableMap.has(func)) {
@@ -413,14 +434,14 @@ var Module = function () {
 
       try {
         // Attempting to call this with JS function will cause of table.set() to fail
-        wasmTable.set(ret, func);
+        setWasmTableEntry(ret, func);
       } catch (err) {
         if (!(err instanceof TypeError)) {
           throw err;
         }
 
         var wrapped = convertJsFunctionToWasm(func, sig);
-        wasmTable.set(ret, wrapped);
+        setWasmTableEntry(ret, wrapped);
       }
 
       functionsInTableMap.set(func, ret);
@@ -428,14 +449,8 @@ var Module = function () {
     }
 
     function removeFunction(index) {
-      functionsInTableMap.delete(wasmTable.get(index));
+      functionsInTableMap.delete(getWasmTableEntry(index));
       freeTableIndexes.push(index);
-    } // 'sig' parameter is required for the llvm backend but only when func is not
-    // already a WebAssembly function.
-
-
-    function addFunction(func, sig) {
-      return addFunctionWasm(func, sig);
     } // end include: runtime_functions.js
     // include: runtime_debug.js
     // end include: runtime_debug.js
@@ -477,7 +492,7 @@ var Module = function () {
 
     function setValue(ptr, value, type, noSafe) {
       type = type || 'i8';
-      if (type.charAt(type.length - 1) === '*') type = 'i32'; // pointers are 32-bit
+      if (type.charAt(type.length - 1) === '*') type = 'i32';
 
       switch (type) {
         case 'i1':
@@ -519,7 +534,7 @@ var Module = function () {
 
     function getValue(ptr, type, noSafe) {
       type = type || 'i8';
-      if (type.charAt(type.length - 1) === '*') type = 'i32'; // pointers are 32-bit
+      if (type.charAt(type.length - 1) === '*') type = 'i32';
 
       switch (type) {
         case 'i1':
@@ -541,7 +556,7 @@ var Module = function () {
           return HEAPF32[ptr >> 2];
 
         case 'double':
-          return HEAPF64[ptr >> 3];
+          return Number(HEAPF64[ptr >> 3]);
 
         default:
           abort('invalid type for getValue: ' + type);
@@ -567,7 +582,10 @@ var Module = function () {
 
     function assert(condition, text) {
       if (!condition) {
-        abort('Assertion failed: ' + text);
+        // This build was created without ASSERTIONS defined.  `assert()` should not
+        // ever be called in this configuration but in case there are callers in
+        // the wild leave this simple abort() implemenation here for now.
+        abort(text);
       }
     } // Returns the C function with a specified identifier (for C++, you need to do manual name mangling)
 
@@ -575,7 +593,6 @@ var Module = function () {
     function getCFunc(ident) {
       var func = Module['_' + ident]; // closure exported function
 
-      assert(func, 'Cannot call unknown function ' + ident + ', make sure it is exported');
       return func;
     } // C calling interface.
 
@@ -777,6 +794,7 @@ var Module = function () {
 
 
     function UTF8ToString(ptr, maxBytesToRead) {
+      ;
       return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
     } // Copies the given Javascript String object 'str' to the given byte array at address 'outIdx',
     // encoded in UTF8 form and null-terminated. The copy will require at most str.length*4+1 bytes of space in the HEAP.
@@ -1266,15 +1284,18 @@ var Module = function () {
     /** @param {string|number=} what */
 
     function abort(what) {
-      if (Module['onAbort']) {
-        Module['onAbort'](what);
+      {
+        if (Module['onAbort']) {
+          Module['onAbort'](what);
+        }
       }
+      what = 'Aborted(' + what + ')'; // TODO(sbc): Should we remove printing and leave it up to whoever
+      // catches the exception?
 
-      what += '';
       err(what);
       ABORT = true;
       EXITSTATUS = 1;
-      what = 'abort(' + what + '). Build with -s ASSERTIONS=1 for more info.'; // Use a wasm runtime error, because a JS error might be seen as a foreign
+      what += '. Build with -s ASSERTIONS=1 for more info.'; // Use a wasm runtime error, because a JS error might be seen as a foreign
       // exception, which means we'd run destructors on it. We need the error to
       // simply make the program stop.
 
@@ -1469,14 +1490,21 @@ var Module = function () {
 
         if (typeof func === 'number') {
           if (callback.arg === undefined) {
-            wasmTable.get(func)();
+            getWasmTableEntry(func)();
           } else {
-            wasmTable.get(func)(callback.arg);
+            getWasmTableEntry(func)(callback.arg);
           }
         } else {
           func(callback.arg === undefined ? null : callback.arg);
         }
       }
+    }
+
+    function withStackSave(f) {
+      var stack = stackSave();
+      var ret = f();
+      stackRestore(stack);
+      return ret;
     }
 
     function demangle(func) {
@@ -1488,31 +1516,30 @@ var Module = function () {
       var __cxa_demangle_func = Module['___cxa_demangle'] || Module['__cxa_demangle'];
 
       assert(__cxa_demangle_func);
-      var stackTop = stackSave();
+      return withStackSave(function () {
+        try {
+          var s = func;
+          if (s.startsWith('__Z')) s = s.substr(1);
+          var len = lengthBytesUTF8(s) + 1;
+          var buf = stackAlloc(len);
+          stringToUTF8(s, buf, len);
+          var status = stackAlloc(4);
 
-      try {
-        var s = func;
-        if (s.startsWith('__Z')) s = s.substr(1);
-        var len = lengthBytesUTF8(s) + 1;
-        var buf = stackAlloc(len);
-        stringToUTF8(s, buf, len);
-        var status = stackAlloc(4);
+          var ret = __cxa_demangle_func(buf, 0, 0, status);
 
-        var ret = __cxa_demangle_func(buf, 0, 0, status);
+          if (HEAP32[status >> 2] === 0 && ret) {
+            return UTF8ToString(ret);
+          } // otherwise, libcxxabi failed
 
-        if (HEAP32[status >> 2] === 0 && ret) {
-          return UTF8ToString(ret);
-        } // otherwise, libcxxabi failed
+        } catch (e) {} finally {
+          _free(ret);
 
-      } catch (e) {} finally {
-        _free(ret);
-
-        stackRestore(stackTop);
-        if (demangle.recursionGuard < 2) --demangle.recursionGuard;
-      } // failure when using libcxxabi, don't demangle
+          if (demangle.recursionGuard < 2) --demangle.recursionGuard;
+        } // failure when using libcxxabi, don't demangle
 
 
-      return func;
+        return func;
+      });
     }
 
     function demangleAll(text) {
@@ -1521,6 +1548,32 @@ var Module = function () {
         var y = demangle(x);
         return x === y ? x : y + ' [' + x + ']';
       });
+    }
+
+    var wasmTableMirror = [];
+
+    function getWasmTableEntry(funcPtr) {
+      var func = wasmTableMirror[funcPtr];
+
+      if (!func) {
+        if (funcPtr >= wasmTableMirror.length) wasmTableMirror.length = funcPtr + 1;
+        wasmTableMirror[funcPtr] = func = wasmTable.get(funcPtr);
+      }
+
+      return func;
+    }
+
+    function handleException(e) {
+      // Certain exception types we do not treat as errors since they are used for
+      // internal control flow.
+      // 1. ExitStatus, which is thrown by exit()
+      // 2. "unwind", which is thrown by emscripten_unwind_to_js_event_loop() and others
+      //    that wish to return to JS event loop.
+      if (e instanceof ExitStatus || e == 'unwind') {
+        return EXITSTATUS;
+      }
+
+      quit_(1, e);
     }
 
     function jsStackTrace() {
@@ -1541,6 +1594,11 @@ var Module = function () {
       }
 
       return error.stack.toString();
+    }
+
+    function setWasmTableEntry(idx, func) {
+      wasmTable.set(idx, func);
+      wasmTableMirror[idx] = func;
     }
 
     function stackTrace() {
@@ -1710,7 +1768,7 @@ var Module = function () {
 
         if (destructor) {
           // In Wasm, destructors return 'this' as in ARM
-          wasmTable.get(destructor)(info.excPtr);
+          getWasmTableEntry(destructor)(info.excPtr);
         }
 
         ___cxa_free_exception(info.excPtr);
@@ -2099,39 +2157,48 @@ var Module = function () {
       Module['get_first_emval'] = get_first_emval;
     }
 
-    function __emval_register(value) {
-      switch (value) {
-        case undefined:
-          {
-            return 1;
-          }
+    var Emval = {
+      toValue: function (handle) {
+        if (!handle) {
+          throwBindingError('Cannot use deleted val. handle = ' + handle);
+        }
 
-        case null:
-          {
-            return 2;
-          }
+        return emval_handle_array[handle].value;
+      },
+      toHandle: function (value) {
+        switch (value) {
+          case undefined:
+            {
+              return 1;
+            }
 
-        case true:
-          {
-            return 3;
-          }
+          case null:
+            {
+              return 2;
+            }
 
-        case false:
-          {
-            return 4;
-          }
+          case true:
+            {
+              return 3;
+            }
 
-        default:
-          {
-            var handle = emval_free_list.length ? emval_free_list.pop() : emval_handle_array.length;
-            emval_handle_array[handle] = {
-              refcount: 1,
-              value: value
-            };
-            return handle;
-          }
+          case false:
+            {
+              return 4;
+            }
+
+          default:
+            {
+              var handle = emval_free_list.length ? emval_free_list.pop() : emval_handle_array.length;
+              emval_handle_array[handle] = {
+                refcount: 1,
+                value: value
+              };
+              return handle;
+            }
+        }
       }
-    }
+    };
 
     function simpleReadValueFromPointer(pointer) {
       return this['fromWireType'](HEAPU32[pointer >> 2]);
@@ -2142,14 +2209,14 @@ var Module = function () {
       registerType(rawType, {
         name: name,
         'fromWireType': function (handle) {
-          var rv = emval_handle_array[handle].value;
+          var rv = Emval.toValue(handle);
 
           __emval_decref(handle);
 
           return rv;
         },
         'toWireType': function (destructors, value) {
-          return __emval_register(value);
+          return Emval.toHandle(value);
         },
         'argPackAdvance': 8,
         'readValueFromPointer': simpleReadValueFromPointer,
@@ -2200,12 +2267,8 @@ var Module = function () {
           return value;
         },
         'toWireType': function (destructors, value) {
-          // todo: Here we have an opportunity for -O3 level "unsafe" optimizations: we could
-          // avoid the following if() and assume value is of proper type.
-          if (typeof value !== "number" && typeof value !== "boolean") {
-            throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + this.name);
-          }
-
+          // The VM will perform JS to Wasm value conversion, according to the spec:
+          // https://www.w3.org/TR/wasm-js-api-1/#towebassemblyvalue
           return value;
         },
         'argPackAdvance': 8,
@@ -2267,22 +2330,29 @@ var Module = function () {
       }
 
       var isUnsignedType = name.includes('unsigned');
+
+      var checkAssertions = function (value, toTypeName) {};
+
+      var toWireType;
+
+      if (isUnsignedType) {
+        toWireType = function (destructors, value) {
+          checkAssertions(value, this.name);
+          return value >>> 0;
+        };
+      } else {
+        toWireType = function (destructors, value) {
+          checkAssertions(value, this.name); // The VM will perform JS to Wasm value conversion, according to the spec:
+          // https://www.w3.org/TR/wasm-js-api-1/#towebassemblyvalue
+
+          return value;
+        };
+      }
+
       registerType(primitiveType, {
         name: name,
         'fromWireType': fromWireType,
-        'toWireType': function (destructors, value) {
-          // todo: Here we have an opportunity for -O3 level "unsafe" optimizations: we could
-          // avoid the following two if()s and assume value is of proper type.
-          if (typeof value !== "number" && typeof value !== "boolean") {
-            throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + this.name);
-          }
-
-          if (value < minRange || value > maxRange) {
-            throw new TypeError('Passing a number "' + _embind_repr(value) + '" from JS side to C/C++ side to an argument of type "' + name + '", which is outside the valid range [' + minRange + ', ' + maxRange + ']!');
-          }
-
-          return isUnsignedType ? value >>> 0 : value | 0;
-        },
+        'toWireType': toWireType,
         'argPackAdvance': 8,
         'readValueFromPointer': integerReadValueFromPointer(name, shift, minRange !== 0),
         destructorFunction: null // This type does not need a destructor
@@ -2526,7 +2596,7 @@ var Module = function () {
     }
 
     function _abort() {
-      abort();
+      abort('');
     }
 
     function _emscripten_memcpy_big(dest, src, num) {
@@ -2643,6 +2713,12 @@ var Module = function () {
     /** @type {function(...*):?} */
 
 
+    var _setThrew = Module["_setThrew"] = function () {
+      return (_setThrew = Module["_setThrew"] = Module["asm"]["setThrew"]).apply(null, arguments);
+    };
+    /** @type {function(...*):?} */
+
+
     var stackSave = Module["stackSave"] = function () {
       return (stackSave = Module["stackSave"] = Module["asm"]["stackSave"]).apply(null, arguments);
     };
@@ -2657,12 +2733,6 @@ var Module = function () {
 
     var stackAlloc = Module["stackAlloc"] = function () {
       return (stackAlloc = Module["stackAlloc"] = Module["asm"]["stackAlloc"]).apply(null, arguments);
-    };
-    /** @type {function(...*):?} */
-
-
-    var _setThrew = Module["_setThrew"] = function () {
-      return (_setThrew = Module["_setThrew"] = Module["asm"]["setThrew"]).apply(null, arguments);
     };
     /** @type {function(...*):?} */
 
@@ -2693,7 +2763,7 @@ var Module = function () {
       var sp = stackSave();
 
       try {
-        wasmTable.get(index)();
+        getWasmTableEntry(index)();
       } catch (e) {
         stackRestore(sp);
         if (e !== e + 0 && e !== 'longjmp') throw e;
@@ -2706,7 +2776,7 @@ var Module = function () {
       var sp = stackSave();
 
       try {
-        wasmTable.get(index)(a1, a2);
+        getWasmTableEntry(index)(a1, a2);
       } catch (e) {
         stackRestore(sp);
         if (e !== e + 0 && e !== 'longjmp') throw e;
@@ -2719,7 +2789,7 @@ var Module = function () {
       var sp = stackSave();
 
       try {
-        return wasmTable.get(index)(a1);
+        return getWasmTableEntry(index)(a1);
       } catch (e) {
         stackRestore(sp);
         if (e !== e + 0 && e !== 'longjmp') throw e;
@@ -2732,7 +2802,7 @@ var Module = function () {
       var sp = stackSave();
 
       try {
-        return wasmTable.get(index)(a1, a2);
+        return getWasmTableEntry(index)(a1, a2);
       } catch (e) {
         stackRestore(sp);
         if (e !== e + 0 && e !== 'longjmp') throw e;
@@ -2745,7 +2815,7 @@ var Module = function () {
       var sp = stackSave();
 
       try {
-        wasmTable.get(index)(a1, a2, a3);
+        getWasmTableEntry(index)(a1, a2, a3);
       } catch (e) {
         stackRestore(sp);
         if (e !== e + 0 && e !== 'longjmp') throw e;
@@ -2851,7 +2921,7 @@ var Module = function () {
     run();
     return Module.ready;
   };
-}();
+})();
 
 if (typeof exports === 'object' && typeof module === 'object') module.exports = Module;else if (typeof define === 'function' && define['amd']) define([], function () {
   return Module;
