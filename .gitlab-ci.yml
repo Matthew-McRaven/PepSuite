@@ -101,3 +101,47 @@ docs:core:
       - packages/native/core/build/docs/
 
 
+###############
+# UI Packages #
+###############
+
+build:ui:
+  <<: *cacheable-node
+  stage: packages/ui
+  script:
+    - yarn install --immutable --immutable-cache --check-cache
+    - yarn ui:build
+
+test:ui:
+  <<: *cacheable-node
+  stage: test
+  needs: ["build:ui"]
+  script:  
+    - yarn ui:test
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit:
+        - packages/**/junit.xml
+
+# Chromatic test
+test:chromatic:
+  <<: *cacheable-node
+  stage: chromatic
+  needs: ['test:ui']
+  script:
+    - yarn install --immutable --immutable-cache --check-cache
+    - cd packages/ui
+    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == 'dev'
+      when: on_success
+      changes:
+        - packages/ui/**/*
+  artifacts:
+    expire_in: 1 week
+    when: always
+    reports:
+      junit:
+        - packages/ui/junit.xml
