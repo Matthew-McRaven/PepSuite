@@ -72,7 +72,7 @@ build:core:linux:
     expire_in: 2 days
     reports:
       cobertura: coverage.xml
-      junit: lpackages/native/core/build/**/junit.xml
+      junit: packages/native/core/build/**/junit.xml
 
 build:core:wasm:
   <<: *emscripten
@@ -86,7 +86,7 @@ build:core:wasm:
     name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
     expire_in: 2 days
     paths:
-      - lib/core/dist/
+      - packages/native/core/dist/
 
 docs:core:
   <<: *emscripten
