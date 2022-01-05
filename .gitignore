@@ -7,3 +7,4 @@
 **/gen-webpack.config.js
 **/tsconfig.tsbuildinfo
 *.log
+**/junit.xml
