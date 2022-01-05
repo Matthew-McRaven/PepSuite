@@ -31,6 +31,7 @@ configure_file(src/libisa/version.hpp.in src/libisa/version.hpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(LDFLAGS "${LDFLAGS} -fuse-ld=ldd")
 
 add_subdirectory(src)
 
