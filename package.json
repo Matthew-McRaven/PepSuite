@@ -43,6 +43,8 @@
     "watch": "lerna run --parallel watch",
     "test": "lerna run test",
     "ide": "yarn --cwd bin/ide",
+    "ui:build": "lerna run build --scope \"@pep10/ui-*\"",
+    "ui:test": "lerna run test:ci --scope \"@pep10/ui-*\"",
     "storybook:serve": "yarn --cwd packages/ui start-storybook -p 6006",
     "storybook:build": "yarn --cwd packages/ui build-storybook",
     "wasm": "yarn --cwd packages/native/core"
