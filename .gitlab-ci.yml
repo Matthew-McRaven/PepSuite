@@ -116,7 +116,8 @@ test:ui:
   <<: *cacheable-node
   stage: test
   needs: ["build:ui"]
-  script:  
+  script:
+    - yarn install --immutable --immutable-cache --check-cache  
     - yarn ui:test
   artifacts:
     expire_in: 1 week
