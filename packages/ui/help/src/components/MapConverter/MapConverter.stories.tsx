@@ -1,13 +1,19 @@
 import React from 'react';
-import MapConverter from './MapConverter';
+import { default as _MapConverter } from './MapConverter';
 
 export default {
-  title: 'MapConverter',
-  component: MapConverter,
+  title: 'Help/MapConverter',
+  component: _MapConverter,
   argTypes: {
   },
 };
 
-const Template = () => <MapConverter />;
+const Template = (args: { state: number, map: Array<string> }) => {
+  return <_MapConverter {...args} />;
+}
 
-export const withTemplate = Template.bind({});
+export const MapConverter = Template.bind({});
+MapConverter.args = {
+  state: 5,
+  map: Array.from({ length: 256 }, (e, i) => `${i}`)
+}

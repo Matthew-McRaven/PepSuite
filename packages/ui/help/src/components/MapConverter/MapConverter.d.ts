@@ -1,6 +1,8 @@
 import React from 'react';
 
 export interface MapConverterProps {
-  heading: string;
-  content: React.ReactNode;
+  // Must contain exactly 256 elements
+  map: Array<string>
+  // Will always be in [0, 255]
+  state: number
 }
