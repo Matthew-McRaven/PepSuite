@@ -1,6 +1,7 @@
 import React from 'react';
 
+export type HigherOrderConverter = (props: { state: number, setState: (newState: number) => void }) => React.Element
 export interface ConverterContainerProps {
-  heading: string;
-  content: React.ReactNode;
+  startState?: number
+  children: Array<HigherOrderConverter>;
 }
