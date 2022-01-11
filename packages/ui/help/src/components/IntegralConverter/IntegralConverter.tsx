@@ -24,6 +24,13 @@ const regexFromBase = (base: number): RegExp => {
   }
 };
 
+export const toHigherOrder = (base: number) => {
+  return (props: { state: number, setState: (arg0: number) => void }) => {
+    const { state, setState } = props;
+    return <IntegralConverter base={base} state={state} setState={setState} />
+  }
+}
+
 // Component that displays a byte in different bases.
 // If multiple components are linked to the same state, it would have the effect of converting between bases.
 const IntegralConverter = (props: IntegralConverterProps) => {
