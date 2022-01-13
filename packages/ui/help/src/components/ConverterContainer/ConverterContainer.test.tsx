@@ -6,7 +6,7 @@ import ConverterContainer from './ConverterContainer';
 import { toHigherOrder as IntegralToHigher } from "../IntegralConverter"
 
 describe('Integral <ConverterContainer />', () => {
-  const children = [IntegralToHigher(2), IntegralToHigher(10), IntegralToHigher(16)]
+  const children = [IntegralToHigher(2, 1), IntegralToHigher(10, 1), IntegralToHigher(16, 1)]
   it('has been mounted', () => {
     const component = shallow(<ConverterContainer children={children} />);
     expect(component.length).toBe(1);
