@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './UnicodeConverter.scss';
-import { TextEncoder } from 'util';
 import type { UnicodeConverterProps } from './UnicodeConverter.d';
 import type { HigherOrderConverterProps } from '../BaseConverter';
 // eslint-disable-next-line import/prefer-default-export
@@ -35,10 +34,12 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
     if (localState.length === 0) {
       setLocalState(parseValue(0));
       setState(0);
+      return undefined;
     }
-
+    console.log(TextEncoder);
     const encoder = new TextEncoder();
     const bytes = encoder.encode(localState);
+    console.log(bytes);
 
     let accumulator = 0n;
 
