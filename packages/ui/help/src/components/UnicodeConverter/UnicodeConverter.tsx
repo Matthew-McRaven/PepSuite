@@ -24,6 +24,12 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 
   // Keep track of the string without clobbering global state
   const [localState, setLocalState] = useState(parseValue(state));
+  // Track if state has changed externally
+  const [lastSeenState, setLastSeenState] = useState(state);
+  if (lastSeenState !== state) {
+    setLastSeenState(state);
+    setLocalState(parseValue(state));
+  }
 
   // If localState is bad, reset to known-good external state
   const resetValue = () => { setLocalState(parseValue(state)); };
