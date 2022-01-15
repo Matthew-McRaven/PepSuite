@@ -2,6 +2,7 @@ import React from 'react';
 
 import { toHigherOrder as AsciiToHigher } from '../AsciiMapConverter';
 import { toHigherOrder as IntegralToHigher } from '../IntegralConverter';
+import { toHigherOrder as UnicodeToHigher } from '../UnicodeConverter';
 import ConverterContainer from './ConverterContainer';
 import type { HigherOrderConverter } from '../BaseConverter';
 
@@ -34,5 +35,15 @@ AsciiGroup.args = {
     IntegralToHigher(10, 1),
     IntegralToHigher(16, 1),
     AsciiToHigher(),
+  ],
+};
+
+export const UnicodeGroup = Template.bind({});
+UnicodeGroup.args = {
+  children: [
+    IntegralToHigher(2, 1),
+    IntegralToHigher(10, 1),
+    IntegralToHigher(16, 1),
+    UnicodeToHigher(1),
   ],
 };
