@@ -1,7 +1,7 @@
 import React from 'react';
 import './MapConverter.scss';
 import type { MapConverterProps, MappingFunction } from './MapConverter.d';
-import { BaseConverterProps } from '../BaseConverter';
+import { HigherOrderConverterProps } from '../BaseConverter';
 
 export const MapConverter = (props: MapConverterProps) => {
   const { map, state } = props;
@@ -13,7 +13,7 @@ export const MapConverter = (props: MapConverterProps) => {
   );
 };
 
-export const toHigherOrder = (map: MappingFunction) => (props: BaseConverterProps) => {
-  const { byteLength, state, setState } = props;
+export const toHigherOrder = (map: MappingFunction, byteLength: number) => (props: HigherOrderConverterProps) => {
+  const { state, setState } = props;
   return <MapConverter map={map} state={state} byteLength={byteLength} setState={setState} />;
 };

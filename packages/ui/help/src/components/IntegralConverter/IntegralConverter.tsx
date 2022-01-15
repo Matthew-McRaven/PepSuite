@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import './IntegralConverter.scss';
 
 import type { IntegralConverterProps } from './IntegralConverter.d';
+import type { HigherOrderConverterProps } from '../BaseConverter';
 
 const basePrefix = (base: number): string => {
   switch (base) {
@@ -111,7 +112,7 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
 
 // ESLint keeps trying to "fix" this line, and breaking it worse than it originally was.
 // eslint-disable-next-line max-len
-export const toHigherOrder = (base: number, byteLength: number, readOnly?: boolean, isSigned?: boolean) => (props: { state: number, setState: (arg0: number) => void }) => {
+export const toHigherOrder = (base: number, byteLength: number, readOnly?: boolean, isSigned?: boolean) => (props: HigherOrderConverterProps) => {
   const { state, setState } = props;
   return (
     <IntegralConverter

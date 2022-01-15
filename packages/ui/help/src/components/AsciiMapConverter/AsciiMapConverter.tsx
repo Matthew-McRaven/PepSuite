@@ -3,6 +3,7 @@ import './AsciiMapConverter.scss';
 import { MapConverter } from '../MapConverter';
 import type { MappingFunction } from '../MapConverter';
 import type { AsciiMapConverterProps } from './AsciiMapConverter.d';
+import type { HigherOrderConverterProps } from '../BaseConverter';
 
 const consecutive = Array.from({ length: 256 }, (e, i) => String.fromCharCode(i));
 
@@ -19,7 +20,7 @@ export const AsciiMapConverter = (props: AsciiMapConverterProps) => {
   return <MapConverter map={map} state={state} byteLength={1} setState={() => { }} />;
 };
 
-export const toHigherOrder = () => (props: { state: number, }) => {
+export const toHigherOrder = () => (props: HigherOrderConverterProps) => {
   const { state } = props;
   return <AsciiMapConverter state={state} />;
 };

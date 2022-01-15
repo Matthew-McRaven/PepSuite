@@ -12,6 +12,10 @@ export interface BaseConverterProps {
   setState: (newState: number) => void;
 }
 
-export type HigherOrderConverter =
+export interface HigherOrderConverterProps {
+  state: number
   // eslint-disable-next-line no-unused-vars
-  (props: { state: number, setState: (newState: number) => void }) => React.ReactElement
+  setState: (newState: number) => void
+}
+// eslint-disable-next-line no-unused-vars
+export type HigherOrderConverter = (props: HigherOrderConverterProps) => React.ReactElement
