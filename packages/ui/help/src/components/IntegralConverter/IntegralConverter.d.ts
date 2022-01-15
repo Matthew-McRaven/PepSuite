@@ -1,6 +1,6 @@
-import type { BaseConveterProps } from '../BaseConverter';
+import type { BaseConverterProps } from '../BaseConverter';
 
-export interface IntegralConverterProps extends BaseConveterProps {
+export interface IntegralConverterProps extends BaseConverterProps {
   // Only makes sense when working with base10
   isSigned?: boolean;
   // Currently supported bases [2, 10, 16]

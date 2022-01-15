@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface BaseConveterProps {
+export interface BaseConverterProps {
   // Are edits allowed?
   isReadOnly?: boolean;
   // Must be strictly positive
