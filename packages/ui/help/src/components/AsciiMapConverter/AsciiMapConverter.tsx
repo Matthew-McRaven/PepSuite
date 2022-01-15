@@ -1,18 +1,25 @@
 import React from 'react';
 import './AsciiMapConverter.scss';
-import MapConverter from '../MapConverter/MapConverter';
-import type { AsciiMapConverterProps } from './AsciiMapConverter.d'
+import { MapConverter } from '../MapConverter';
+import type { MappingFunction } from '../MapConverter';
+import type { AsciiMapConverterProps } from './AsciiMapConverter.d';
 
-export const toHigherOrder = () => {
-	return (props: { state: number, setState: (arg0: number) => void }) => {
-		const { state } = props;
-		return <AsciiMapConverter state={state} />
-	}
-}
+const consecutive = Array.from({ length: 256 }, (e, i) => String.fromCharCode(i));
 
 export const AsciiMapConverter = (props: AsciiMapConverterProps) => {
-	const { state } = props;
-	const consecutive = Array.from({ length: 256 }, (e, i) => String.fromCharCode(i))
-	return <MapConverter map={consecutive} state={state} />
-}
-export default AsciiMapConverter;
+  const { state } = props;
+
+  const errorMap = (value: number) => {
+    if (value < 0 || value > 255) throw new Error(`${value} outside the range of valid ASCII characters.`);
+    return consecutive.at(value);
+  };
+  // errorMap can return undefined, but in that case it raises an error, so being undefined is
+  // the least of our worries.
+  const map = errorMap as MappingFunction;
+  return <MapConverter map={map} state={state} byteLength={1} setState={() => { }} />;
+};
+
+export const toHigherOrder = () => (props: { state: number, }) => {
+  const { state } = props;
+  return <AsciiMapConverter state={state} />;
+};

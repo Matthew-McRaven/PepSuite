@@ -1,23 +1,19 @@
 import React from 'react';
 import './MapConverter.scss';
-import type { MapConverterProps } from "./MapConverter.d"
+import type { MapConverterProps, MappingFunction } from './MapConverter.d';
+import { BaseConveterProps } from '../BaseConverter';
 
-export const toHigherOrder = (map: string[]) => {
-	return (props: { state: number, setState: (arg0: number) => void }) => {
-		const { state } = props;
-		return <MapConverter map={map} state={state} />
-	}
-}
+export const MapConverter = (props: MapConverterProps) => {
+  const { map, state } = props;
 
-const MapConverter = (props: MapConverterProps) => {
-	const { map, state } = props;
+  return (
+    <div className="MapConverter" data-testid="MapConverter">
+      {map(state)}
+    </div>
+  );
+};
 
-	if (map.length != 256) throw Error("Map must contain exactly 256 entries.")
-
-	return <div className="MapConverter" data-testid="MapConverter" >
-		{/*TODO: Convert to Array.at() when more widely supported.*/}
-		{map[state]}
-	</div>;
-}
-
-export default MapConverter
+export const toHigherOrder = (map: MappingFunction) => (props: BaseConveterProps) => {
+  const { byteLength, state, setState } = props;
+  return <MapConverter map={map} state={state} byteLength={byteLength} setState={setState} />;
+};

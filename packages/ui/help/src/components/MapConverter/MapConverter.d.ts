@@ -1,8 +1,7 @@
-import React from 'react';
+import type { BaseConveterProps } from '../BaseConverter';
 
-export interface MapConverterProps {
-  // Must contain exactly 256 elements
-  map: Array<string>
-  // Will always be in [0, 255]
-  state: number
+// eslint-disable-next-line no-unused-vars
+export type MappingFunction = (key: number) => string
+export interface MapConverterProps extends BaseConveterProps {
+  map: MappingFunction
 }

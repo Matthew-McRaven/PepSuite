@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import AsciiMapConverter from './AsciiMapConverter';
+import { AsciiMapConverter } from './AsciiMapConverter';
 
 describe('<AsciiMapConverter />', () => {
   it('has been mounted', () => {

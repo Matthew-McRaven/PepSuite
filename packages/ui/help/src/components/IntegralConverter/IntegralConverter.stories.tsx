@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import IntegralConverter from './IntegralConverter';
+import { IntegralConverter } from './IntegralConverter';
 
 export default {
   title: 'Help/IntegralConverter',
@@ -7,11 +7,27 @@ export default {
 
 };
 
-const Template = (args: { base: 2 | 10 | 16, byteLength: 1 | 2 | 3 | 4, isSigned?: boolean, isReadOnly?: boolean }) => {
-  const { base, byteLength, isSigned, isReadOnly } = args;
+interface TemplateArgs {
+  base: 2 | 10 | 16;
+  byteLength: 1 | 2 | 3 | 4;
+  isSigned?: boolean;
+  isReadOnly?: boolean;
+}
+const Template = (args: TemplateArgs) => {
+  const {
+    base, byteLength, isSigned, isReadOnly,
+  } = args;
   const [state, setState] = useState(0);
-  return <IntegralConverter byteLength={byteLength} state={state} setState={setState} base={base}
-    isSigned={isSigned || false} isReadOnly={isReadOnly || false} />;
+  return (
+    <IntegralConverter
+      byteLength={byteLength}
+      state={state}
+      setState={setState}
+      base={base}
+      isSigned={isSigned || false}
+      isReadOnly={isReadOnly || false}
+    />
+  );
 };
 
 // Decimal converters

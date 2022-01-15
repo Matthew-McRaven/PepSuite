@@ -1,2 +1,1 @@
-// eslint-disable-next-line no-restricted-exports
-export { default, toHigherOrder } from './AsciiMapConverter';
+export { AsciiMapConverter, toHigherOrder } from './AsciiMapConverter';

@@ -1,17 +1,28 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import MapConverter from './MapConverter';
+import { MapConverter } from './MapConverter';
 
 describe('Integral <MapConverter />', () => {
-  const map = Array.from({ length: 256 }, (e, i) => `${i}`);
+  const mapValues = Array.from({ length: 256 }, (e, i) => `${i}`);
+  const map = (key: number) => mapValues[key] || '';
   it('has been mounted', () => {
-    const component = shallow(<MapConverter state={5} map={map} />);
+    const component = shallow(<MapConverter
+      byteLength={1}
+      state={5}
+      map={map}
+      setState={() => { }}
+    />);
     expect(component.length).toBe(1);
   });
   it('renders each character correctly', () => {
-    for (const i of Array(256).keys()) {
-      const component = shallow(<MapConverter state={i} map={map} />);
-      expect(component.getElement().props.children).toBe(`${i}`)
-    }
+    Array.from(Array(256).keys()).forEach((i) => {
+      const component = shallow(<MapConverter
+        byteLength={1}
+        state={i}
+        map={map}
+        setState={() => { }}
+      />);
+      expect(component.getElement().props.children).toBe(`${i}`);
+    });
   });
 });

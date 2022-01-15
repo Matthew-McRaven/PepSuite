@@ -1,2 +1,3 @@
 // eslint-disable-next-line no-restricted-exports
-export { default, toHigherOrder } from './MapConverter';
+export { MapConverter, toHigherOrder } from './MapConverter';
+export type { MappingFunction } from './MapConverter.d';
