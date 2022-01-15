@@ -7,17 +7,29 @@ export default {
 
 };
 
-const Template = (args: { base: 2 | 10 | 16 }) => {
-  const { base } = args;
+const Template = (args: { base: 2 | 10 | 16, byteLength: 1 | 2 | 3 | 4, isSigned?: boolean, isReadOnly?: boolean }) => {
+  const { base, byteLength, isSigned, isReadOnly } = args;
   const [state, setState] = useState(0);
-  return <IntegralConverter state={state} setState={setState} base={base} />;
+  return <IntegralConverter byteLength={byteLength} state={state} setState={setState} base={base}
+    isSigned={isSigned || false} isReadOnly={isReadOnly || false} />;
 };
 
-export const Decimal = Template.bind({});
-Decimal.args = { base: 10 };
+// Decimal converters
+export const UnsignedDecimal1Byte = Template.bind({});
+UnsignedDecimal1Byte.args = { base: 10, byteLength: 1 };
+export const UnsignedDecimal2Byte = Template.bind({});
+UnsignedDecimal2Byte.args = { base: 10, byteLength: 2 };
+
+export const SignedDecimal1Byte = Template.bind({});
+SignedDecimal1Byte.args = { base: 10, byteLength: 1, isSigned: true };
+export const SignedDecimal2Byte = Template.bind({});
+SignedDecimal2Byte.args = { base: 10, byteLength: 2, isSigned: true };
 
 export const Binary = Template.bind({});
-Binary.args = { base: 2 };
+Binary.args = { base: 2, byteLength: 1 };
 
-export const Hex = Template.bind({});
-Hex.args = { base: 16 };
+// Binary converters
+export const Hex1Byte = Template.bind({});
+Hex1Byte.args = { base: 16, byteLength: 1 };
+export const Hex2Byte = Template.bind({});
+Hex2Byte.args = { base: 16, byteLength: 2 };

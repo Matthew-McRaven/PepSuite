@@ -39,7 +39,10 @@ export const toHigherOrder = (base: number, byteLength: number, readOnly?: boole
 // If multiple components are linked to the same state, it would have the effect of converting between bases.
 const IntegralConverter = (props: IntegralConverterProps) => {
   const { base, byteLength, isReadOnly, isSigned, state, setState } = props;
+
+  // Preconditions
   if (isSigned && base != 10) throw Error("isSigned can only be true in base 10")
+  else if (!byteLength) throw Error("byteLength must be defined")
   else if (byteLength <= 0) throw Error("byteLength must be positive")
   else if (byteLength > 4) throw Error("byteLength must be less or equal to than 4. Only 32-bit integers are supported")
 
@@ -67,6 +70,7 @@ const IntegralConverter = (props: IntegralConverterProps) => {
     // Mask out bits beyond byteLength if given a signed value, and shift zero point.
     if (isSigned) {
       // TODO: Check that this works for 32 bit values.
+      // TODO: If stringValue has leading -, keep it in the render.
       // In theory, min/max values are floats, so this should be safe.
       if (bitValue > signedMaxValue || bitValue < signedMinValue) return
       bitValue = (bitValue & allOnes) >>> 0;

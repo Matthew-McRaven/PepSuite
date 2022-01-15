@@ -27,9 +27,9 @@ IntegralGroup.args = {
 export const AsciiGroup = Template.bind({});
 AsciiGroup.args = {
   children: [
-    IntegralToHigher(2),
-    IntegralToHigher(10),
-    IntegralToHigher(16),
+    IntegralToHigher(2, 1),
+    IntegralToHigher(10, 1),
+    IntegralToHigher(16, 1),
     AsciiToHigher(),
   ]
 }
