@@ -98,7 +98,10 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
   );
 };
 
-export const toHigherOrder = (byteLength: number) => (props: HigherOrderConverterProps) => {
-  const { error, state, setState } = props;
-  return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
-};
+export const toHigherOrder = (byteLength: number) => {
+  const localFn = (props: HigherOrderConverterProps) => {
+    const { error, state, setState } = props;
+    return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
+  };
+  return localFn
+}
