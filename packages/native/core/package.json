@@ -21,7 +21,7 @@
   "scripts": {
     "start": "node index.js",
     "clean": "rimraf build",
-    "prebuild": "mkdir -p build && echo '{\"name\":\"build\"}' > build/package.json",
+    "prebuild": "mkdir -p build && echo '{\"name\":\"build\", \"version\": \"0.0.1\"}' > build/package.json",
     "build:wasm": "yarn prebuild && node scripts/build.js wasm",
     "build:native:debug": "yarn prebuild && node scripts/build.js native debug",
     "build:native:release": "yarn prebuild && node scripts/build.js native release",
