@@ -12,4 +12,9 @@ import 'jest';
 
 import Adapter from 'enzyme-adapter-react-16';
 
+// Needed for TextEncoder to work correctly
+import { TextEncoder } from 'util';
+
+global.TextEncoder = TextEncoder;
+
 configure({ adapter: new Adapter() });
