@@ -37,6 +37,9 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 
   // Call when wanting to commit `localState` to global `state`
   const onValidate = () => {
+    // Reject changes when read only
+    if (isReadOnly) return undefined;
+
     // If string is empty, set to 0.
     if (localState.length === 0) {
       setLocalState(parseValue(0));
