@@ -1,7 +1,14 @@
 import React from 'react';
 import './MapConverter.scss';
-import type { MapConverterProps, MappingFunction } from './MapConverter.d';
 import { HigherOrderConverterProps } from '../BaseConverter';
+
+import type { BaseConverterProps } from '../BaseConverter';
+
+// eslint-disable-next-line no-unused-vars
+export type MappingFunction = (key: number) => string
+export interface MapConverterProps extends BaseConverterProps {
+  map: MappingFunction
+}
 
 export const MapConverter = (props: MapConverterProps) => {
   const { map, state } = props;

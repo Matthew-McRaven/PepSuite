@@ -1,5 +1,5 @@
 import React from 'react';
-import type { MappingFunction } from './MapConverter.d';
+import type { MappingFunction } from './MapConverter';
 import { MapConverter as LocalMapConverter } from './MapConverter';
 
 export default {

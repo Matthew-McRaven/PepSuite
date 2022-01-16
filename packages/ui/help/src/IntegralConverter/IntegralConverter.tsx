@@ -1,8 +1,17 @@
 import React, { ChangeEvent } from 'react';
 import './IntegralConverter.scss';
 
-import type { IntegralConverterProps } from './IntegralConverter.d';
-import type { HigherOrderConverterProps } from '../BaseConverter';
+import type { HigherOrderConverterProps, BaseConverterProps } from '../BaseConverter';
+
+export interface IntegralConverterProps extends BaseConverterProps {
+  // Only makes sense when working with base10
+  isSigned?: boolean;
+  // Currently supported bases [2, 10, 16]
+  base: number;
+  // Must enforce that newState is in (unsigned) [0, 2**byteLength - 1].
+  // eslint-disable-next-line no-unused-vars
+  setState: (newState: number) => void;
+}
 
 const basePrefix = (base: number): string => {
   switch (base) {

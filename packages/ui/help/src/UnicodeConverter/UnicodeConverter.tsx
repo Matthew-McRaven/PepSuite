@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './UnicodeConverter.scss';
-import type { UnicodeConverterProps } from './UnicodeConverter.d';
-import type { HigherOrderConverterProps } from '../BaseConverter';
+import type { HigherOrderConverterProps, BaseConverterProps } from '../BaseConverter';
+
+export interface UnicodeConverterProps extends BaseConverterProps {
+
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export const UnicodeConverter = (props: UnicodeConverterProps) => {
   const {
@@ -103,5 +107,5 @@ export const toHigherOrder = (byteLength: number) => {
     const { error, state, setState } = props;
     return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
   };
-  return localFn
-}
+  return localFn;
+};

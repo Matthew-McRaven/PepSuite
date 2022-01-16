@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import './ConverterContainer.scss';
-import type { ConverterContainerProps } from './ConverterContainer.d';
+
+import { HigherOrderConverter } from '../BaseConverter';
+
+export interface ConverterContainerProps {
+  startState?: number
+  children: Array<HigherOrderConverter>;
+  // eslint-disable-next-line no-unused-vars
+  error: (message: string) => void
+}
 
 const ConverterContainer = (props: ConverterContainerProps) => {
   const { children, error, startState } = props;

@@ -1,9 +1,14 @@
 import React from 'react';
+import type { MappingFunction } from '../MapConverter';
+import type { HigherOrderConverterProps, BaseConverterProps } from '../BaseConverter';
+
 import './AsciiMapConverter.scss';
 import { MapConverter } from '../MapConverter';
-import type { MappingFunction } from '../MapConverter';
-import type { AsciiMapConverterProps } from './AsciiMapConverter.d';
-import type { HigherOrderConverterProps } from '../BaseConverter';
+
+export interface AsciiMapConverterProps extends BaseConverterProps {
+  state: number;
+  byteLength: 1
+}
 
 const consecutive = Array.from({ length: 256 }, (e, i) => String.fromCharCode(i));
 
