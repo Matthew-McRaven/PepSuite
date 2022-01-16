@@ -117,10 +117,11 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
     // Add prefix to value if necessary
     return `${basePrefix(base)}${state.toString(base).toUpperCase()}`;
   };
-
+  // TODO: Derive better solution for this...
+  const maxLen = () => basePrefix(2).length + 8 * byteLength;
   return (
     <div className="IntegralConverter" data-testid="IntegralConverter">
-      <input value={formatValue()} onChange={onChange} />
+      <input value={formatValue()} onChange={onChange} style={{ width: '100%', maxWidth: `${maxLen()}ch` }} />
     </div>
   );
 };
