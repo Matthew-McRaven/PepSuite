@@ -11,6 +11,7 @@ describe('Binary <IntegralConverter />', () => {
   it('has been mounted', () => {
     const component = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -22,6 +23,7 @@ describe('Binary <IntegralConverter />', () => {
   it('defaults to 0 ', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -34,6 +36,7 @@ describe('Binary <IntegralConverter />', () => {
   it('accepts uppercase B ', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -45,6 +48,7 @@ describe('Binary <IntegralConverter />', () => {
   it('accepts lowercase b ', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -56,6 +60,7 @@ describe('Binary <IntegralConverter />', () => {
   it('can have it\'s value set in [0,255]', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -70,6 +75,7 @@ describe('Binary <IntegralConverter />', () => {
   it('rejects negative numbers', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -81,6 +87,7 @@ describe('Binary <IntegralConverter />', () => {
   it('rejects numbers larger than 255', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -95,6 +102,7 @@ describe('Binary <IntegralConverter />', () => {
   it('rejects decimal strings', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}
@@ -106,6 +114,7 @@ describe('Binary <IntegralConverter />', () => {
   it('rejects hexadecimal strings', () => {
     const wrapper = shallow(<IntegralConverter
       byteLength={1}
+      error={() => { }}
       state={state}
       setState={setState}
       base={2}

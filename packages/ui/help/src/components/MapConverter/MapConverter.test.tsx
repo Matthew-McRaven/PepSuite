@@ -8,6 +8,7 @@ describe('Integral <MapConverter />', () => {
   it('has been mounted', () => {
     const component = shallow(<MapConverter
       byteLength={1}
+      error={() => { }}
       state={5}
       map={map}
       setState={() => { }}
@@ -18,6 +19,7 @@ describe('Integral <MapConverter />', () => {
     Array.from(Array(256).keys()).forEach((i) => {
       const component = shallow(<MapConverter
         byteLength={1}
+        error={() => { }}
         state={i}
         map={map}
         setState={() => { }}

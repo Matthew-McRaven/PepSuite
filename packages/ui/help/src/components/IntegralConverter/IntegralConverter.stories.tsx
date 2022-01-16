@@ -21,6 +21,7 @@ const Template = (args: TemplateArgs) => {
   return (
     <IntegralConverter
       byteLength={byteLength}
+      error={() => { }}
       state={state}
       setState={setState}
       base={base}

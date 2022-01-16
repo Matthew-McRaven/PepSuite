@@ -11,7 +11,7 @@ export default {
 const Template = (args: { byteLength: number }) => {
   const { byteLength } = args;
   const [state, setState] = useState(65);
-  return <UnicodeConverter state={state} setState={setState} byteLength={byteLength} />;
+  return <UnicodeConverter error={() => { }} state={state} setState={setState} byteLength={byteLength} />;
 };
 
 export const UnicodeConverter1Byte = Template.bind({});

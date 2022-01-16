@@ -5,8 +5,9 @@ import type { HigherOrderConverterProps } from '../BaseConverter';
 // eslint-disable-next-line import/prefer-default-export
 export const UnicodeConverter = (props: UnicodeConverterProps) => {
   const {
-    byteLength, state, setState, isReadOnly,
+    byteLength, error, isReadOnly, state, setState,
   } = props;
+
   if (typeof byteLength !== 'number') throw Error('byteLength must be a number');
   else if (byteLength < 0) throw Error('byteLength must be positive');
 
@@ -42,21 +43,28 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
       setState(0);
       return undefined;
     }
-    console.log(TextEncoder);
     const encoder = new TextEncoder();
     const bytes = encoder.encode(localState);
-    console.log(bytes);
 
     let accumulator = 0n;
 
-    if (bytes.length > byteLength) return resetValue();
+    if (bytes.length > byteLength) {
+      error(`${localState} does not fit in ${byteLength} bytes. Recieved ${byteLength} bytes.`);
+      return resetValue();
+    }
     bytes.forEach((e) => { accumulator = accumulator * 256n + BigInt(e); });
 
     const downCasted = BigInt.asUintN(8 * byteLength, accumulator);
     // Don't accept value if it doesn't fit in byteLength bytes.
-    if (downCasted !== accumulator) return resetValue();
+    if (downCasted !== accumulator) {
+      error(`${localState} does not fit in ${byteLength} bytes.`);
+      return resetValue();
+    }
     // Don't accept change if value isn't exactly representable as an int.
-    if (downCasted > Number.MAX_SAFE_INTEGER) return resetValue();
+    if (downCasted > Number.MAX_SAFE_INTEGER) {
+      error(`${localState} cannot be represented exactly as an integer`);
+      return resetValue();
+    }
     const asNumber = Number(downCasted);
     // Must also update local state, or string will not render correctly.
     setLocalState(parseValue(asNumber));
@@ -88,6 +96,6 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 };
 
 export const toHigherOrder = (byteLength: number) => (props: HigherOrderConverterProps) => {
-  const { state, setState } = props;
-  return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} />;
+  const { error, state, setState } = props;
+  return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
 };

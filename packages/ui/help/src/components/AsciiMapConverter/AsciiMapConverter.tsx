@@ -8,8 +8,8 @@ import type { HigherOrderConverterProps } from '../BaseConverter';
 const consecutive = Array.from({ length: 256 }, (e, i) => String.fromCharCode(i));
 
 export const AsciiMapConverter = (props: AsciiMapConverterProps) => {
-  const { state } = props;
-
+  const { state, error, byteLength } = props;
+  if (byteLength !== 1) throw new Error('byteLength must be 1');
   const errorMap = (value: number) => {
     if (value < 0 || value > 255) throw new Error(`${value} outside the range of valid ASCII characters.`);
     return consecutive.at(value);
@@ -17,10 +17,10 @@ export const AsciiMapConverter = (props: AsciiMapConverterProps) => {
   // errorMap can return undefined, but in that case it raises an error, so being undefined is
   // the least of our worries.
   const map = errorMap as MappingFunction;
-  return <MapConverter map={map} state={state} byteLength={1} setState={() => { }} />;
+  return <MapConverter error={error} map={map} state={state} byteLength={byteLength} setState={() => { }} />;
 };
 
 export const toHigherOrder = () => (props: HigherOrderConverterProps) => {
-  const { state } = props;
-  return <AsciiMapConverter state={state} />;
+  const { state, error } = props;
+  return <AsciiMapConverter error={error} state={state} setState={() => { }} byteLength={1} />;
 };

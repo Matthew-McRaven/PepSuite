@@ -13,7 +13,10 @@ export const MapConverter = (props: MapConverterProps) => {
   );
 };
 
-export const toHigherOrder = (map: MappingFunction, byteLength: number) => (props: HigherOrderConverterProps) => {
-  const { state, setState } = props;
-  return <MapConverter map={map} state={state} byteLength={byteLength} setState={setState} />;
+export const toHigherOrder = (map: MappingFunction, byteLength: number) => {
+  const localFn = (props: HigherOrderConverterProps) => {
+    const { error, state, setState } = props;
+    return <MapConverter map={map} error={error} state={state} byteLength={byteLength} setState={setState} />;
+  };
+  return localFn;
 };

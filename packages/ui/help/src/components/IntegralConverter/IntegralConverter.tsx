@@ -33,7 +33,7 @@ const regexFromBase = (base: number, isSigned: boolean): RegExp => {
 // it would have the effect of converting between bases.
 export const IntegralConverter = (props: IntegralConverterProps) => {
   const {
-    base, byteLength, isReadOnly, isSigned, state, setState,
+    base, byteLength, error, isReadOnly, isSigned, state, setState,
   } = props;
 
   // Preconditions
@@ -44,16 +44,17 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     // Reject changes when read only
-    if (isReadOnly) return;
+    if (isReadOnly) return undefined;
 
     const stringValue = e.currentTarget.value;
     // If the string is empty (after striping base prefix), set to 0.
     if (regexBasePrefix(base).exec(stringValue)) {
-      setState(0); return;
+      setState(0); return undefined;
     }
     // Reject values that don't match the regex
-    const match = regexFromBase(base, isSigned || false).exec(stringValue);
-    if (!match) return;
+    const regex = regexFromBase(base, isSigned || false);
+    const match = regex.exec(stringValue);
+    if (!match) return error(`${stringValue} did not match regex for base-${base}`);
 
     // I'm a C++ programmer, I know how bitwise operations work.
 
@@ -72,16 +73,21 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
       // TODO: Check that this works for 32 bit values.
       // TODO: If stringValue has leading -, keep it in the render.
       // In theory, min/max values are floats, so this should be safe.
-      if (bitValue > signedMaxValue || bitValue < signedMinValue) return;
+      if (bitValue > signedMaxValue || bitValue < signedMinValue) {
+        return error(`${stringValue} not in [${signedMinValue}, ${signedMaxValue}]`);
+      }
       // eslint-disable-next-line no-bitwise
       bitValue = (bitValue & allOnes) >>> 0;
     } else {
       // eslint-disable-next-line no-bitwise
       bitValue >>>= 0;
-      if (bitValue > unsignedMaxValue || bitValue < 0) return;
+      if (bitValue > unsignedMaxValue || bitValue < 0) {
+        return error(`${stringValue} not in [0, ${unsignedMaxValue}]`);
+      }
     }
 
     setState(bitValue);
+    return undefined;
   };
 
   const formatValue = () => {
@@ -112,16 +118,20 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
 
 // ESLint keeps trying to "fix" this line, and breaking it worse than it originally was.
 // eslint-disable-next-line max-len
-export const toHigherOrder = (base: number, byteLength: number, readOnly?: boolean, isSigned?: boolean) => (props: HigherOrderConverterProps) => {
-  const { state, setState } = props;
-  return (
-    <IntegralConverter
-      base={base}
-      byteLength={byteLength}
-      isSigned={isSigned || false}
-      isReadOnly={readOnly || false}
-      state={state}
-      setState={setState}
-    />
-  );
+export const toHigherOrder = (base: number, byteLength: number, readOnly?: boolean, isSigned?: boolean) => {
+  const localFn = (props: HigherOrderConverterProps) => {
+    const { error, state, setState } = props;
+    return (
+      <IntegralConverter
+        base={base}
+        byteLength={byteLength}
+        error={error}
+        isSigned={isSigned || false}
+        isReadOnly={readOnly || false}
+        state={state}
+        setState={setState}
+      />
+    );
+  };
+  return localFn;
 };

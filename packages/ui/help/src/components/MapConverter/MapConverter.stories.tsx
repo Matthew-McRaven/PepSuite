@@ -11,7 +11,7 @@ export default {
 
 const Template = (args: { state: number, map: MappingFunction }) => {
   const { state, map } = args;
-  return <LocalMapConverter state={state} map={map} byteLength={1} setState={() => { }} />;
+  return <LocalMapConverter state={state} map={map} byteLength={1} error={() => { }} setState={() => { }} />;
 };
 
 export const MapConverter = Template.bind({});

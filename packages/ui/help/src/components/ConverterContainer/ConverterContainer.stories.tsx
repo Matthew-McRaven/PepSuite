@@ -16,7 +16,8 @@ export default {
 interface TemplateProps { children: Array<HigherOrderConverter> }
 const Template = (args: TemplateProps) => {
   const { children } = args;
-  return <ConverterContainer>{children}</ConverterContainer>;
+  // Ignore all errors for now
+  return <ConverterContainer error={() => { }}>{children}</ConverterContainer>;
 };
 
 export const IntegralGroup = Template.bind({});

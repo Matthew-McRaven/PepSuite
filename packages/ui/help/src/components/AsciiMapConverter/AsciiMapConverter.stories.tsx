@@ -13,7 +13,7 @@ export default {
 
 const Template = (args: { state: number }) => {
   const { state } = args;
-  return <LocalAsciiMapConverter state={state} />;
+  return <LocalAsciiMapConverter error={() => { }} state={state} byteLength={1} setState={() => { }} />;
 };
 export const AsciiMapConverter = Template.bind({});
 AsciiMapConverter.args = {
