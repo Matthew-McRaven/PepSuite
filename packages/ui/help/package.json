@@ -2,10 +2,10 @@
   "name": "@pep10/ui-help",
   "version": "1.0.0",
   "description": "Components designed as part of the PepSuite help system.",
-  "main": "dist/index",
-  "types": "dist/index",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "files": [
-    "dist"
+    "src"
   ],
   "devDependencies": {
     "@jest/globals": "^27.3.1",
