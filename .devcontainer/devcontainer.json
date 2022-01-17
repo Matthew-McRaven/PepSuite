@@ -1,10 +1,11 @@
 {
     "settings": {
 		"workbench.colorTheme": "Noctis Viola",
+		"terminal.integraed.inheritEnv": true,
 		"terminal.integrated.profiles.linux": {
 			"bash": {
 				"path": "/bin/bash",
-				"args": ["--init-file", "../scripts/devcontainer-env.sh"]
+				"args": ["--init-file", "scripts/devcontainer-env.sh"]
 			}
 		},
 		"terminal.integrated.defaultProfile.linux": "bash",
