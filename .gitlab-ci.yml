@@ -153,7 +153,7 @@ test:chromatic:
 #################
 versions:bump:
   <<: *emscripten
-  <<: *cacheable-node
+  # Ignore cache, as cache seems to break chromatic  
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
   script:
