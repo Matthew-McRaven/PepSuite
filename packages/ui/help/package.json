@@ -1,6 +1,6 @@
 {
   "name": "@pep10/ui-help",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Components designed as part of the PepSuite help system.",
   "main": "src/index.ts",
   "types": "src/index.ts",
