@@ -1,7 +1,13 @@
 {
     "settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"workbench.colorTheme": "Noctis Viola"
+		"workbench.colorTheme": "Noctis Viola",
+		"terminal.integrated.profiles.linux": {
+			"bash": {
+				"path": "/bin/bash",
+				"args": ["--init-file", "../scripts/devcontainer-env.sh"]
+			}
+		},
+		"terminal.integrated.defaultProfile.linux": "bash",
 	},
     "extensions": [
 		"liviuschera.noctis",
