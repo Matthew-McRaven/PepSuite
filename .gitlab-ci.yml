@@ -107,6 +107,7 @@ build:ui:
   <<: *emscripten
   <<: *cacheable-node
   stage: packages/ui
+  needs: []
   script:
     - yarn install --immutable --immutable-cache --check-cache
     - yarn ui:build
