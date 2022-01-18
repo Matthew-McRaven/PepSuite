@@ -53,6 +53,7 @@
   },
   "workspaces": [
     "bin/*",
+    "packages/ui",
     "packages/ui/**/*",
     "packages/extensions/**/*",
     "packages/native/*"
