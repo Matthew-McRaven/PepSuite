@@ -12,6 +12,8 @@ stages:
 variables:
   BUILD_VERSION: v0.2.5
   GIT_LFS_SKIP_SMUDGE: '1'
+  # Append dist, because I have generated files there
+  SAST_EXCLUDED_PATHS: spec, test, tests, tmp, dist
 
 ##################
 # Helper anchors #
