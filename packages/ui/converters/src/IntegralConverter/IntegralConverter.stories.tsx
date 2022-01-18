@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IntegralConverter } from './IntegralConverter';
 
 export default {
-  title: 'Help/IntegralConverter',
+  title: 'Converters/IntegralConverter',
   component: IntegralConverter,
 
 };

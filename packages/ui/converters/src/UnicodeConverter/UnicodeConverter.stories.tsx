@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { UnicodeConverter } from './UnicodeConverter';
 
 export default {
-  title: 'Help/UnicodeConverter',
+  title: 'Converters/UnicodeConverter',
   component: UnicodeConverter,
   argTypes: {
   },

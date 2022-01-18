@@ -3,7 +3,7 @@ import type { MappingFunction } from './MapConverter';
 import { MapConverter as LocalMapConverter } from './MapConverter';
 
 export default {
-  title: 'Help/MapConverter',
+  title: 'Converters/MapConverter',
   component: LocalMapConverter,
   argTypes: {
   },
