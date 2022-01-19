@@ -10,7 +10,7 @@ stages:
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.2.5
+  BUILD_VERSION: v0.2.6
   GIT_LFS_SKIP_SMUDGE: '1'
 
 ##################
@@ -27,7 +27,7 @@ variables:
     - source /emsdk/emsdk_env.sh
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
-    - yarn config set cache-folder ./npm
+    - mkdir -p ./yarn
 
 # Enable npm caching on all stages
 .cacheable-node: &cacheable-node 
@@ -61,7 +61,7 @@ build:core:linux:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - yarn wasm build:coverage
     - mv packages/native/core/coverage.xml coverage.xml
   coverage: '/^\s*lines.*/'
@@ -77,7 +77,7 @@ build:core:wasm:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - yarn wasm build:wasm
     - yarn wasm dist
   artifacts:
@@ -91,7 +91,7 @@ docs:core:
   stage: docs 
   needs: ["build:core:linux"]
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - yarn wasm build:docs
   artifacts:
     expire_in: 1 week
@@ -108,7 +108,7 @@ build:ui:
   <<: *cacheable-node
   stage: packages/ui
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - yarn ui:build
 
 test:ui:
@@ -117,7 +117,7 @@ test:ui:
   stage: test
   needs: ["build:ui"]
   script:
-    - yarn install --immutable --immutable-cache --check-cache  
+    - yarn install --immutable 
     - yarn ui:test
   artifacts:
     expire_in: 1 week
@@ -133,7 +133,7 @@ test:chromatic:
   stage: chromatic
   needs: ['test:ui']
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - cd packages/ui
     - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml
   rules:
@@ -157,7 +157,7 @@ versions:bump:
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
   script:
-    - yarn install --immutable --immutable-cache --check-cache
+    - yarn install --immutable
     - |
       {
         echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"

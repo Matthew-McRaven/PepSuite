@@ -31,6 +31,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "lerna": "^4.0.0",
+    "node-gyp": "^8.4.1",
     "rimraf": "^2.7.1",
     "ts-node": "^10.0.0",
     "type-fest": "^0.20.2",
@@ -46,12 +47,12 @@
     "bundle": "npx lerna run bundle",
     "watch": "npx lerna run --parallel watch",
     "test": "npx lerna run test",
-    "ide": "yarn --cwd bin/ide",
+    "ide": "yarn worskpace theia-blueprint",
     "ui:build": "npx lerna run build --scope \"@pep10/ui-*\"",
     "ui:test": "npx lerna run test:ci --scope \"@pep10/ui-*\"",
-    "storybook:serve": "yarn --cwd packages/ui start-storybook -p 6006",
-    "storybook:build": "yarn --cwd packages/ui build-storybook",
-    "wasm": "yarn --cwd packages/native/core"
+    "storybook:serve": "yarn workspace ui start-storybook -p 6006",
+    "storybook:build": "yarn workspace ui build-storybook",
+    "wasm": "yarn workspace @pep10/core"
   },
   "workspaces": [
     "bin/*",
@@ -59,5 +60,6 @@
     "packages/ui/**/*",
     "packages/extensions/**/*",
     "packages/native/*"
-  ]
+  ],
+  "packageManager": "yarn@3.1.1"
 }
