@@ -27,7 +27,7 @@ variables:
     - source /emsdk/emsdk_env.sh
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
-    - yarn config set cache-folder ./npm
+    - yarn config set cacheFolder ./yarn
 
 # Enable npm caching on all stages
 .cacheable-node: &cacheable-node 
