@@ -47,12 +47,12 @@
     "bundle": "npx lerna run bundle",
     "watch": "npx lerna run --parallel watch",
     "test": "npx lerna run test",
-    "ide": "yarn --cwd bin/ide",
+    "ide": "yarn worskpace theia-blueprint",
     "ui:build": "npx lerna run build --scope \"@pep10/ui-*\"",
     "ui:test": "npx lerna run test:ci --scope \"@pep10/ui-*\"",
-    "storybook:serve": "yarn --cwd packages/ui start-storybook -p 6006",
-    "storybook:build": "yarn --cwd packages/ui build-storybook",
-    "wasm": "yarn --cwd packages/native/core"
+    "storybook:serve": "yarn workspace ui start-storybook -p 6006",
+    "storybook:build": "yarn workspace ui build-storybook",
+    "wasm": "yarn workspace @pep10/core"
   },
   "workspaces": [
     "bin/*",
