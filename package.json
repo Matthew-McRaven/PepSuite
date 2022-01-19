@@ -31,6 +31,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "lerna": "^4.0.0",
+    "node-gyp": "^8.4.1",
     "rimraf": "^2.7.1",
     "ts-node": "^10.0.0",
     "type-fest": "^0.20.2",
@@ -59,5 +60,6 @@
     "packages/ui/**/*",
     "packages/extensions/**/*",
     "packages/native/*"
-  ]
+  ],
+  "packageManager": "yarn@3.1.1"
 }
