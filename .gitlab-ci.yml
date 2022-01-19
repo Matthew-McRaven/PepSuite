@@ -10,7 +10,7 @@ stages:
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.2.5
+  BUILD_VERSION: v0.2.6
   GIT_LFS_SKIP_SMUDGE: '1'
 
 ##################
