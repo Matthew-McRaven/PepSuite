@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "0.2.0",
   "description": "Helper to make storybooks from subrepos.",
-  "main": " ",
+  "main": "",
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@mdx-js/react": "^1.6.22",
