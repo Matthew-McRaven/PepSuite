@@ -4434,7 +4434,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pep10/start-page@^0.2.0, @pep10/start-page@workspace:packages/extensions/start-page":
+"@pep10/start-page@^0.2.1, @pep10/start-page@workspace:packages/extensions/start-page":
   version: 0.0.0-use.local
   resolution: "@pep10/start-page@workspace:packages/extensions/start-page"
   dependencies:
@@ -26454,7 +26454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"theia-blueprint-updater@^0.2.0, theia-blueprint-updater@workspace:packages/extensions/theia-blueprint-updater":
+"theia-blueprint-updater@^0.2.1, theia-blueprint-updater@workspace:packages/extensions/theia-blueprint-updater":
   version: 0.0.0-use.local
   resolution: "theia-blueprint-updater@workspace:packages/extensions/theia-blueprint-updater"
   dependencies:
@@ -26474,7 +26474,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "theia-blueprint@workspace:bin/ide"
   dependencies:
-    "@pep10/start-page": ^0.2.0
+    "@pep10/start-page": ^0.2.1
     "@theia/bulk-edit": 1.21.0
     "@theia/callhierarchy": 1.21.0
     "@theia/cli": 1.21.0
@@ -26533,7 +26533,7 @@ __metadata:
     mocha: ^8.2.1
     rimraf: ^2.7.1
     source-map-loader: ^2.0
-    theia-blueprint-updater: ^0.2.0
+    theia-blueprint-updater: ^0.2.1
     ts-node: ^10.0.0
     wdio-chromedriver-service: ^6.0.4
     webdriverio: ^6.10.2
