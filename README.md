@@ -1,97 +1,88 @@
-<br/>
-<div id="theia-logo" align="center">
-    <br />
-    <img src="https://raw.githubusercontent.com/eclipse-theia/theia-blueprint/master/theia-extensions/theia-blueprint-product/src/browser/icons/TheiaBlueprintLogo-blue.png" alt="Theia Logo" width="300"/>
-    <h3>Eclipse Theia Blueprint</h3>
-</div>
+# What is PepSuite?
+The Pep project consists of many iterations of a 16-bit complex instruction set computer (CISC) computer.
+Within this repository, the Pep/9 and Pep/10 versions are represented across multiple levels of abstractuon
 
-<div id="badges" align="center">
+# PepSuite
+PepSuite is a suite of software for the Pep/9 and Pep/10 virtual machines.
+It consists of two applications:
 
-Eclipse Theia Blueprint is a template for building desktop-based products based on the Eclipse Theia platform.
+* [PepIDE](#pepide)
+* [PepTerm](#pepterm)
 
-</div>
+## PepIDE
+PepAsm is a simulator allowing users to interact with the Pep/10 virtual machine at the assembly, operating system, ISA levels, and microcode levels.
 
-[![Installers](https://img.shields.io/badge/download-installers-blue.svg?style=flat-curved)](https://theia-ide.org/docs/blueprint_download/)
-[![Build Status](https://ci.eclipse.org/theia/buildStatus/icon?subject=latest&job=Theia2%2Fmaster)](https://ci.eclipse.org/theia/job/Theia2/job/master/)
-[![Build Status](https://ci.eclipse.org/theia/buildStatus/icon?subject=next&job=theia-next%2Fmaster)](https://ci.eclipse.org/theia/job/theia-next/job/master/)
 
-[Main Theia Repository](https://github.com/eclipse-theia/theia)
+### Assembly
+PepIDE features an integrated text editor, error messages in red type that are inserted within the source code at the place where the error is detected, student-friendly machine language object code in hexadecimal format, the ability to code directly in machine language, bypassing the assembler.
 
-[Visit the Theia website](http://www.theia-ide.org) for more [documentation](https://theia-ide.org/docs/blueprint_documentation/).
+The Pep/9 computer features the ability to redefine the mnemonics for the unimplemented opcodes that trigger synchronous traps.
 
-## License
+The Pep/10 computer features the ability to define custom macros.
 
-- [Eclipse Public License 2.0](LICENSE)
-- [一 (Secondary) GNU General Public License, version 2 with the GNU Classpath Exception](LICENSE)
+### ISA
+The simulator features simulated ROM that is not altered by store instructions, a small operating system burned into simulated ROM that includes a loader and a trap handler system, an integrated debugger that allows for break points, single and multi step execution, CPU tracing, and memory tracing, the option to trace an application, the loader, or the operating system, the ability to recover from endless loops, and the ability to modify the operating system by designing new trap handlers for the unimplemented opcodes.
 
-## Trademark
+### Microcode
+The CPU mode is a simulator allowing users to interact with the data sections of the Pep/9 and Pep/10 CPUs.
 
-"Theia" is a trademark of the Eclipse Foundation
-https://www.eclipse.org/theia
+It contains two versions of the Pep/9 CPU data section &ndash; one with a one-byte wide data bus and another with a two-byte wide data bus. Using a GUI, students are able to set the control signals to direct the flow of data and change the state of the CPU. Alternatively, the Microcode IDE allows students to write microprogram code fragments to perform useful computations. An integrated unit test facility allows users to write pre- and post-conditions to verify correct behavior of arbitrary microprograms.
 
-## What is this?
+While debugging a microprogram fragment, the CPU simulator performs graphical tracing of data paths through the CPU. Using breakpoints, students may skip over previously debugged microstatments and resume debugging at a later point in the program.
 
-Eclipse Theia Blueprint is a **template** for building desktop-based products based on the Eclipse Theia platform, as well as to showcase Eclipse Theia capabilities. It is made up of a subset of existing Eclipse Theia features and extensions and can be easily downloaded and installed on all major operating system platforms (see below). Documentation is available to help you customize and build your own Eclipse Theia-based product.
 
-## What is it not?
+### ISA / Microcode Interface
+Contained within PepIDE is a fully microcoded implementation of the Pep/9 and Pep/10 virtual machines.
+These extensions to their repsective textbooks is dubber *PepMicro*
+PepMicro adds a control section, missing in Pep9CPU, and extends the microcode language to allow conditional microcode branches.
+It integrates all the programming features of Pep9 and the graphical CPU interaction of Pep9CPU to simulate the complete execution of assembly language programs.
 
-Eclipse Theia Blueprint is ***not*** **a production-ready product**. Therefore, it is also not meant to be a replacement for Visual Studio Code or any other IDE.
+* Extebd the assembler and CPU simulator so that complete assembly language programs can be executed at the microcode level spanning four levels of system abstraction &ndash; the assembly level, the operating system level, the ISA level, and the microcode level.
+* Runs both memory aligned and nonaligned programs. Assembly language programs that do not use optimal .ALIGN directives still execute correctly but slower.
+* Provides performance statistics in the form of statement execution counts at the microcode level and the ISA level. Students can measure the performance differences between aligned and nonaligned programs.
+* Retains the unit tests of the original Pep/9 CPU IDE so that students can write microcode fragments with the extended microinstruction format.
+* Supports new debugging features like step-into, step-out, and step-over so students can trace assembly programs more efficiently.
 
-## Development
 
-### Requirements
-Please check Theia's [prerequisites](https://github.com/eclipse-theia/theia/blob/master/doc/Developing.md#prerequisites), and keep node versions aligned between Theia Blueprint and that of the referenced Theia version.
+## PepTerm
+PepTerm is a command-line version of the Pep/9 and Pep/10 virtual machine.s
+It uses the assembler from the PepIDE application to create a .pepo file, and the simulator to execute the .pepo file.
+Teachers can script PepTerm to batch test assembly language homework submissions.
 
-### Documentation
+# What are Pep/9 and Pep/10
+## Pep/9
+The Pep/9 computer is a 16-bit complex instruction set computer (CISC).
+It is designed to teach computer architecture, assembly language programming, and computer organization principles as described in the text [_Computer Systems_, J. Stanley Warford, 5th edition](http://computersystemsbook.com/5th-edition/).
+Pep/9 instructions are based on an expanding opcode and are either unary (one byte) or nonunary (three bytes).
+The eight addressing modes and eight dot commands are designed for straightforward translation from C to assembly language.
 
-Documentation on how to package Theia as a Desktop Product may be found [here](https://theia-ide.org/docs/blueprint_documentation/)
+## Pep/10
+The Pep/10 computer is a 16-bit complex instruction set computer (CISC). 
+It is designed to teach computer architecture, assembly language programming, and computer organization principles as described in a future book. 
+Pep/10 instructions are based on an expanding opcode and are either unary (one byte) or nonunary (three bytes). 
+The eight addressing modes and eight dot commands are designed for straightforward translation from C to assembly language.
+The inclusion of macros facilities ease this translation,
 
-### Repository Structure
+# Contributing
+Please see [our Contribution Guidelines](CONTRIBUTING.md) before contributing to this project.
 
-- Root level configures mono-repo build with lerna
-- `applications` groups the different app targets
-  - `electron` contains app to package, packaging configuration, and E2E tests for the electron target.
-- `theia-extensions` groups the various custom theia extensions for Blueprint
-  - `theia-blueprint-product` contains a Theia extension contributing the product branding (about dialogue and welcome page).
-  - `theia-blueprint-updater` contains a Theia extension contributing the update mechanism and corresponding UI elements (based on the electron updater).
 
-### Build
+# Building from Sources
+It is recommended to build the application from within a development container in visual studio code.
+From visual studio code, various tasks compile different segments of the project, as will be documented here in the future.
 
-```sh
-yarn
-```
+# Help Documentation
+The programs come packaged with help documentation to describe the nature and function of the Pep virtual machines including walkthroughs on Pep assembly languages programming and debugging tools/tips.
+They also have collections of sample assembly programs from their respective textbooks
 
-### Package the Application
+# Executable Downloads
+For analytic reasons, we prefer that you download executables from the above book web site instead of GitHub.
 
-```sh
-yarn electron package
-```
+# Developers
 
-The packaged application is located in `applications/electron/dist`.
+Contribute to Pep/9 and Pep/10 development. Join the Discord chat at [https://discord.gg/Qza7QH8](https://discord.gg/Qza7QH8).
 
-### Create a Preview Application (without packaging it)
 
-```sh
-yarn electron package:preview
-```
+# License
 
-The packaged application is located in `applications/electron/dist`.
-
-### Running E2E Tests
-
-The E2E tests basic UI tests of the actual application.
-This is done based on the preview of the packaged application.
-
-```sh
-yarn electron package:preview
-yarn electron test
-```
-
-### Troubleshooting
-
-- [_"Don't expect that you can build app for all platforms on one platform."_](https://www.electron.build/multi-platform-build)
-
-### Reporting Feature Requests and Bugs
-
-The features in Eclipse Theia Blueprint are based on Theia and the included extensions/plugins. For bugs in Theia please consider opening an issue in the [Theia project on Github](https://github.com/eclipse-theia/theia/issues/new/choose).
-Eclipse Theia Blueprint only packages existing functionality into a product and installers for the product. If you believe there is a mistake in packaging, something needs to be added to the packaging or the installers do not work properly, please [open an issue on Github](https://github.com/eclipse-theia/theia-blueprint/issues/new/choose) to let us know.
+We license this project under the GPLv2 License with a classpath exception
