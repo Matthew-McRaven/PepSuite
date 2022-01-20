@@ -9,6 +9,7 @@
   ],
   "devDependencies": {
     "@jest/globals": "^27.3.1",
+    "@pep10/ui-converters": "~0.2.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@types/enzyme": "^3.10.10",
     "@types/enzyme-adapter-react-16": "^1.0.6",
