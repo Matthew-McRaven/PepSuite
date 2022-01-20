@@ -7,7 +7,7 @@ import ConverterContainer from './ConverterContainer';
 import type { HigherOrderConverter } from '../BaseConverter';
 
 export default {
-  title: 'Help/ConverterContainer',
+  title: 'Converters/ConverterContainer',
   component: ConverterContainer,
   argTypes: {
   },

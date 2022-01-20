@@ -2,7 +2,7 @@ import React from 'react';
 import { AsciiMapConverter as LocalAsciiMapConverter } from './AsciiMapConverter';
 
 export default {
-  title: 'Help/AsciiMapConverter',
+  title: 'Converters/AsciiMapConverter',
   component: LocalAsciiMapConverter,
   argTypes: {
   },
