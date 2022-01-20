@@ -143,7 +143,7 @@ test:chromatic:
     - yarn install --immutable
     - yarn storybook:build
     - cd packages/ui
-    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml storybook-static
+    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml -d storybook-static
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == 'dev'
       when: on_success
@@ -182,7 +182,7 @@ versions:bump:
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
     - echo $(git diff)
-    - "npx lerna publish -m \"build: release %v [skip ci]\" --conventional-commits --changelog-preset angular --yes"
+    - "npx lerna publish -m \"build: release %v [skip ci]\" --conventional-commits --changelog-preset angular --yes --force-publish"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:
