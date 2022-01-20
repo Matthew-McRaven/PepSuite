@@ -6,7 +6,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # 0.2.0 (2022-01-20)
 
 
-* build!: remove `prepare` lifecycle script ([9aea3d9](https://github.com/eclipse-theia/theia-blueprint/commit/9aea3d90ddb5154c78e56cfc6e11e977a7fd18f3))
+* build!: remove `prepare` lifecycle script ([9aea3d9](https://gitlab.com/pep10/pepsuite/commit/9aea3d90ddb5154c78e56cfc6e11e977a7fd18f3))
 
 
 ### BREAKING CHANGES
