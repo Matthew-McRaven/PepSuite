@@ -143,7 +143,7 @@ test:chromatic:
     - yarn install --immutable
     - yarn storybook:build
     - cd packages/ui
-    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml -d packages/ui/storybook-static
+    - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml storybook-static
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_COMMIT_BRANCH == 'dev'
       when: on_success
