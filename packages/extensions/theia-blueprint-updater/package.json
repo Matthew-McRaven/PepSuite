@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "theia-blueprint-updater",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Eclipse Theia Blueprint Updater",
   "dependencies": {
     "@theia/core": "1.21.0",

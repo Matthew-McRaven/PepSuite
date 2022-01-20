@@ -1,7 +1,7 @@
 {
   "name": "@pep10/core",
   "main": "index.js",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Core library implementing simulator and assembler for Pep/10 and others.",
   "config": {
     "unsafe-perm": true
