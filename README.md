@@ -1,3 +1,10 @@
+# Relation to Pep9Suite
+This project is a continuation of the Pep/9 computer's associated software suite, [Pep9Suite](https://github.com/StanWarford/pep9suite).
+Whille Pep9Suite is still maintained, we are interested in taking advantage of a new software stack.
+This software stack has reduced turn around time for new features, and improved reliability through increased automated testing.
+
+Using our experience from previous iterations, we hope to deliver an increasingly professional IDE for users.
+
 # What is PepSuite?
 The Pep project consists of many iterations of a 16-bit complex instruction set computer (CISC) computer.
 Within this repository, the Pep/9 and Pep/10 versions are represented across multiple levels of abstractuon
