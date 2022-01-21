@@ -127,12 +127,12 @@ test:ui:
     - yarn install --immutable 
     - yarn ui:test
     - yarn ui:globcov
-  coverage: '/^\s*Coverage percent is.*/'
+  coverage: '/^\s*Coverage .*\d+.*/'
   artifacts:
     expire_in: 1 week
     when: always
     reports:
-      cobertura: packages/**/coverage.xml
+      cobertura: packages/**/conertura-coverage.xml
       junit:
         - packages/**/junit.xml
 
