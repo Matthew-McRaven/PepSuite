@@ -132,7 +132,7 @@ test:ui:
     expire_in: 1 week
     when: always
     reports:
-      cobertura: packages/**/conertura-coverage.xml
+      cobertura: packages/**/cobertura-coverage.xml
       junit:
         - packages/**/junit.xml
 
