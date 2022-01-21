@@ -132,6 +132,7 @@ test:ui:
     reports:
       junit:
         - packages/**/junit.xml
+        - packages/**/cobertura-coverage.xml
 
 # Chromatic test
 test:chromatic:
