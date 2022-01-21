@@ -9,3 +9,4 @@
 *.log
 **/junit.xml
 .yarn/**/*
+coverage.xml

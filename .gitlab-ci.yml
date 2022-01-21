@@ -126,13 +126,15 @@ test:ui:
   script:
     - yarn install --immutable 
     - yarn ui:test
+    - yarn ui:globcov
+  coverage: '/^\s*Coverage percent is.*/'
   artifacts:
     expire_in: 1 week
     when: always
     reports:
+      cobertura: packages/**/coverage.xml
       junit:
         - packages/**/junit.xml
-        - packages/**/cobertura-coverage.xml
 
 # Chromatic test
 test:chromatic:
