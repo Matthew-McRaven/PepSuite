@@ -1,42 +1,42 @@
 {
   "name": "@pep10/core",
-  "main": "index.js",
   "version": "0.2.1",
   "description": "Core library implementing simulator and assembler for Pep/10 and others.",
-  "config": {
-    "unsafe-perm": true
+  "homepage": "https://gitlab.com/pep10/pepsuite#readme",
+  "bugs": {
+    "url": "https://gitlab.com/pep10/pepsuite/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
+  },
+  "license": "GPL-3.0",
+  "author": "Matthew McRaven",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   },
   "files": [
     "dist",
     "index.js",
     "index.d.ts"
   ],
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
-  },
   "scripts": {
-    "start": "node index.js",
-    "clean": "rimraf build",
-    "prebuild": "mkdir -p build && echo '{\"name\":\"build\", \"version\": \"0.0.1\"}' > build/package.json",
-    "build:wasm": "yarn prebuild && node scripts/build.js wasm",
-    "build:native:debug": "yarn prebuild && node scripts/build.js native debug",
-    "build:native:release": "yarn prebuild && node scripts/build.js native release",
     "build:coverage": "yarn prebuild && node scripts/build.js coverage",
     "build:docs": "yarn prebuild && node scripts/build.js docs",
-    "dist:lib": "node scripts/build_out_exists.cjs && (npx babel build/packages/core --out-dir dist --copy-files)",
+    "build:native:debug": "yarn prebuild && node scripts/build.js native debug",
+    "build:native:release": "yarn prebuild && node scripts/build.js native release",
+    "build:wasm": "yarn prebuild && node scripts/build.js wasm",
+    "clean": "rimraf build",
+    "dist": "yarn dist:lib && yarn dist:index",
     "dist:index": "npx babel index.template.js --out-file index.js",
-    "dist": "yarn dist:lib && yarn dist:index"
+    "dist:lib": "node scripts/build_out_exists.cjs && (npx babel build/packages/core --out-dir dist --copy-files)",
+    "prebuild": "mkdir -p build && echo '{\"name\":\"build\", \"version\": \"0.0.1\"}' > build/package.json",
+    "start": "node index.js"
   },
-  "author": "Matthew McRaven",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://gitlab.com/pep10/pepsuite/issues"
+  "config": {
+    "unsafe-perm": true
   },
-  "homepage": "https://gitlab.com/pep10/pepsuite#readme",
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",

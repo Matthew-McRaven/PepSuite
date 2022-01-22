@@ -2,18 +2,18 @@
   "name": "term",
   "version": "0.2.1",
   "description": "Pep terminal application",
+  "license": "GPL-3.0",
+  "author": "Matthew McRaven",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "build": "node build.js",
-    "build:windows": "exit 1",
-    "build:linux": "./build-linux-dbg.sh",
     "build:darwin": "exit 1",
+    "build:linux": "./build-linux-dbg.sh",
+    "build:windows": "exit 1",
     "pretest": "yarn build",
     "test": "exit 1"
-  },
-  "author": "Matthew McRaven",
-  "license": "GPL-3.0"
+  }
 }
