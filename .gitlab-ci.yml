@@ -63,7 +63,7 @@ build:core:linux:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
     - yarn wasm build:coverage
@@ -81,7 +81,7 @@ build:core:wasm:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
     - yarn wasm build:wasm
@@ -97,7 +97,7 @@ docs:core:
   stage: docs 
   needs: ["build:core:linux"]
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - yarn wasm build:docs
   artifacts:
     expire_in: 1 week
@@ -115,7 +115,7 @@ build:ui:
   stage: packages/ui
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - yarn ui:build
 
 test:ui:
@@ -124,7 +124,7 @@ test:ui:
   stage: test
   needs: ["build:ui"]
   script:
-    - yarn install --immutable 
+    - bash scripts/loop-install.sh
     - yarn ui:test
     - yarn ui:globcov
   coverage: '/^\s*Coverage .*\d+.*/'
@@ -143,7 +143,7 @@ test:chromatic:
   stage: chromatic
   needs: ['test:ui']
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - yarn storybook:build
     - cd packages/ui
     - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml -d storybook-static
@@ -168,7 +168,7 @@ versions:bump:
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh
     - |
       {
         echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
