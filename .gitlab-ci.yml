@@ -173,11 +173,11 @@ build:bin:linux:
     - bash scripts/loop-install.sh || exit 1
     - yarn ext:build
     # Build IDE
-    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
-    - yarn ide:fix
     # This step may fail if .browse-modules does not exist. Running it before build ensure build will pass.
     - yarn ide theia rebuild:electron || true
     - yarn ide build
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
     - yarn ide package
     # Build terminal
     # Doesn't need any packaging, as it is a static app
