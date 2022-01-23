@@ -18,10 +18,22 @@ View.args = {
   definitions: [{
     name: 'true',
     value: 1,
+    base: 10,
     sourceDefinition: 'true: .EQUATE 1',
   }, {
     name: 'false',
     value: 0,
+    base: 10,
     sourceDefinition: 'false: .EQUATE 0',
+  }, {
+    name: 'bitMsk',
+    value: 0b110110,
+    base: 2,
+    sourceDefinition: 'bitMsk: .EQUATE 0b110110',
+  }, {
+    name: 'charIn',
+    value: 0xFEED,
+    base: 16,
+    sourceDefinition: 'charIn: .BLOCK 1',
   }],
 };

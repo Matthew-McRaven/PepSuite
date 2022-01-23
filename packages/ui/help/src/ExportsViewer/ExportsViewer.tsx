@@ -5,6 +5,7 @@ import { Integral } from '@pep10/ui-converters';
 export interface ExportDefinition {
   name: string
   value: number
+  base: Integral.SupportedBases
   sourceDefinition: string
 
 }
@@ -14,14 +15,16 @@ export interface ExportsViewerProps {
 }
 
 const ExportRow = (props: ExportDefinition) => {
-  const { name, value, sourceDefinition } = props;
+  const {
+    name, base, value, sourceDefinition,
+  } = props;
   return (
     <div className="Row">
       <div>{name}</div>
       <div>
         {Integral.IntegralConverter({
           state: value,
-          base: 16,
+          base,
           setState: () => { },
           error: () => { },
           isReadOnly: true,
