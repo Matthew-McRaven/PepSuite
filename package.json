@@ -15,7 +15,7 @@
     "bin/*",
     "packages/ui",
     "packages/ui/**/*",
-    "packages/extensions/**/*",
+    "packages/extensions/*",
     "packages/native/*"
   ],
   "scripts": {
@@ -31,6 +31,8 @@
     "storybook:build": "yarn workspace ui build-storybook",
     "storybook:serve": "yarn workspace ui start-storybook -p 6006",
     "test": "npx lerna run test",
+    "term": "yarn workspace term",
+    "ext:build": "npx lerna run build --scope \"@pep10/ext-*\"",
     "ui:build": "npx lerna run build --scope \"@pep10/ui-*\"",
     "ui:globcov": "python3 scripts/merge-cobertura.py -o coverage.xml  $(find packages/ui -name 'cobertura-coverage.xml')",
     "ui:test": "npx lerna run test:ci --scope \"@pep10/ui-*\"",
