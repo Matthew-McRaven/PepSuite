@@ -30,11 +30,11 @@ const regexBasePrefix = (base: number): RegExp => RegExp(`^${basePrefix(base)}$`
 // Is signed is only followed in base10
 const regexFromBase = (base: number, isSigned: boolean): RegExp => {
   switch (base) {
-    case 2: return /0[b|B][0|1]+/;
+    case 2: return /^0[b|B][0|1]+/;
     case 10:
-      if (isSigned) return /-?[0-9]+/;
-      return /[0-9]+/;
-    case 16: return /0[x|X][0-9,a-f,A-F]+/;
+      if (isSigned) return /^-?[0-9]+/;
+      return /^[0-9]+/;
+    case 16: return /^0[x|X][0-9,a-f,A-F]+/;
     default: throw Error('Unsupported base');
   }
 };
@@ -72,7 +72,10 @@ export const IntegralConverter = (props: IntegralConverterProps) => {
     // If the string is empty (after striping base prefix), set to 0.
     if (regexBasePrefix(base).exec(stringValue)) {
       setLocalState(0); return undefined;
+    } if (isSigned && stringValue === '-') {
+      setLocalState(0); return undefined;
     }
+
     // Reject values that don't match the regex
     const regex = regexFromBase(base, isSigned || false);
     const match = regex.exec(stringValue);
