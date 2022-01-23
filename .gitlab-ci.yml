@@ -4,7 +4,7 @@ stages:
 - packages/theia
 - test
 - chromatic
-- binaries
+- bin
 - docs
 - deploy
 
@@ -158,6 +158,34 @@ test:chromatic:
     reports:
       junit:
         - packages/ui/junit.xml
+
+##################
+# Build Binaries #
+##################
+build:bin:linux:
+  <<: *emscripten
+  <<: *cacheable-node
+  stage: bin
+  tags: linux
+  needs: ['test:ui', 'build:core:linux']
+  script:
+    - bash scripts/loop-install.sh || exit 1
+    - yarn ext:build
+    # Build IDE
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
+    # This step may fail if .browse-modules does not exist. Running it before build ensure build will pass.
+    - yarn ide theia rebuild:electron || true
+    - yarn ide build
+    - yarn ide package
+    # Build terminal
+    # Doesn't need any packaging, as it is a static app
+    - yarn term build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - bin/ide/dist/PepIDE.AppImage
+      - bin/term/build/linux/src/PepTerm
 
 #################
 # Version Bumps #
