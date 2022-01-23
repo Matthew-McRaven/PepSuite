@@ -1,5 +1,5 @@
 {
-  "name": "theia-blueprint-updater",
+  "name": "@pep10/ext-updater",
   "version": "0.2.1",
   "private": true,
   "description": "Eclipse Theia Blueprint Updater",
@@ -16,7 +16,7 @@
   },
   "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
   "files": [
-    "lib",
+    "dist",
     "src"
   ],
   "scripts": {
@@ -40,8 +40,8 @@
   },
   "theiaExtensions": [
     {
-      "electronMain": "lib/electron-main/update/theia-updater-main-module",
-      "frontendElectron": "lib/electron-browser/theia-updater-frontend-module"
+      "electronMain": "dist/electron-main/update/theia-updater-main-module",
+      "frontendElectron": "dist/electron-browser/theia-updater-frontend-module"
     }
   ]
 }
