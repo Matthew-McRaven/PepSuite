@@ -166,7 +166,8 @@ build:bin:linux:
   <<: *emscripten
   <<: *cacheable-node
   stage: bin
-  tags: linux
+  tags: 
+    - linux
   needs: ['test:ui', 'build:core:linux']
   script:
     - bash scripts/loop-install.sh || exit 1
