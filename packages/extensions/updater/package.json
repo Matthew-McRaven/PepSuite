@@ -1,8 +1,8 @@
 {
-  "name": "@pep10/ext-start-page",
+  "name": "@pep10/ext-updater",
   "version": "0.2.1",
   "private": true,
-  "description": "Eclipse Theia Blueprint Product Branding",
+  "description": "Eclipse Theia Blueprint Updater",
   "keywords": [
     "theia-extension"
   ],
@@ -27,25 +27,21 @@
   },
   "dependencies": {
     "@theia/core": "1.21.0",
-    "@theia/getting-started": "1.21.0",
-    "@theia/vsx-registry": "1.21.0",
-    "@theia/workspace": "1.21.0",
-    "inversify": "^5.1.1"
+    "@theia/output": "1.21.0",
+    "@theia/preferences": "1.21.0",
+    "electron-log": "^4.3.0",
+    "electron-updater": "4.3.9",
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^8.0",
     "rimraf": "^2.7.1",
     "tslint": "^5.12.0",
     "typescript": "^3.9.2"
   },
-  "peerDependencies": {
-    "react": "^16.8.0"
-  },
   "theiaExtensions": [
     {
-      "frontendElectron": "dist/browser/theia-blueprint-frontend-module",
-      "electronMain": "dist/electron-main/theia-blueprint-main-module",
-      "backend": "dist/node/theia-blueprint-backend-module"
+      "electronMain": "dist/electron-main/update/theia-updater-main-module",
+      "frontendElectron": "dist/electron-browser/theia-updater-frontend-module"
     }
   ]
 }

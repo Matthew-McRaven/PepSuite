@@ -1,5 +1,5 @@
-appId: eclipse.theia
-productName: TheiaBlueprint
+appId: edu.cslab.pepperdine.pepide
+productName: PepIDE 
 copyright: Copyright © 2020 Eclipse Foundation, Inc
 electronDist: ../../node_modules/electron/dist
 electronVersion: 9.4.4

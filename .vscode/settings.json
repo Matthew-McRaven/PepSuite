@@ -12,6 +12,9 @@
 	},
 	"editor.formatOnSave": true,
 	"eslint.run": "onSave",
+	"eslint.validate": [
+		"json"
+	],
 	"files.associations": {
 		"*.tpp": "cpp",
 		"format": "cpp",
@@ -97,5 +100,6 @@
 	"C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM, IndentWidth: 4, ColumnLimit: 120 }",
 	"C_Cpp.clang_format_path": "",
 	"cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/",
-	"cmake.configureOnOpen": false
+	"cmake.configureOnOpen": false,
+	"json.format.enable": false
 }

@@ -57,13 +57,13 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
     }
 
     const bytes = bytesFromString(localState);
-    let accumulator = 0n;
+    let accumulator = BigInt(0);
 
     if (bytes.length > byteLength) {
       error(`${localState} does not fit in ${byteLength} bytes. Recieved ${byteLength} bytes.`);
       return resetValue();
     }
-    bytes.forEach((e) => { accumulator = accumulator * 256n + BigInt(e); });
+    bytes.forEach((e) => { accumulator = accumulator * BigInt(256) + BigInt(e); });
 
     const downCasted = BigInt.asUintN(8 * byteLength, accumulator);
     // Don't accept value if it doesn't fit in byteLength bytes.
@@ -102,7 +102,13 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 
   return (
     <div className="UnicodeConverter" data-testid="UnicodeConverter">
-      <input value={localState} onChange={onChange} onBlur={onValidate} onKeyPress={onKeyPress} />
+      <input
+        className={`Input-${(isReadOnly || false) ? 'ro' : 'edit'}`}
+        value={localState}
+        onChange={onChange}
+        onBlur={onValidate}
+        onKeyPress={onKeyPress}
+      />
     </div>
   );
 };
@@ -110,7 +116,14 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 export const toHigherOrder = (byteLength: number) => {
   const localFn = (props: HigherOrderConverterProps) => {
     const { error, state, setState } = props;
-    return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
+    return (
+      <UnicodeConverter
+        byteLength={byteLength}
+        state={state}
+        setState={setState}
+        error={error}
+      />
+    );
   };
   return localFn;
 };

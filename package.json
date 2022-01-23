@@ -1,19 +1,43 @@
 {
-  "private": true,
   "version": "0.0.1",
-  "license": "GPL-2.0 WITH Classpath-exception-2.0",
-  "author": "Matthew McRaven <matthew.mcraven@gmail.com>",
+  "private": true,
+  "homepage": "https://gitlab.com/pep10/pepsuite#readme",
+  "bugs": {
+    "url": "https://gitlab.com/pep10/pepsuite/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/pep10/pepsuite.git"
   },
-  "bugs": {
-    "url": "https://gitlab.com/pep10/pepsuite/issues"
-  },
-  "homepage": "https://gitlab.com/pep10/pepsuite#readme",
-  "engines": {
-    "yarn": "1.0.x || >=1.2.1",
-    "node": ">=14.0.0 <15"
+  "license": "GPL-2.0 WITH Classpath-exception-2.0",
+  "author": "Matthew McRaven <matthew.mcraven@gmail.com>",
+  "workspaces": [
+    "bin/*",
+    "packages/ui",
+    "packages/ui/**/*",
+    "packages/extensions/*",
+    "packages/native/*"
+  ],
+  "scripts": {
+    "build": "npx lerna run build",
+    "bundle": "npx lerna run bundle",
+    "clean": "npx lerna run clean && rimraf node_modules",
+    "ide": "yarn workspace theia-blueprint",
+    "ide:fix": "bash ./scripts/fix-install.sh",
+    "lint": "npx lerna run lint",
+    "lint:fix": "npx lerna run lint:fix",
+    "prune": "rimraf \"**/node_modules\"",
+    "prune:hard": "find . -name \"node_modules\" -type d -prune",
+    "storybook:build": "yarn workspace ui build-storybook",
+    "storybook:serve": "yarn workspace ui start-storybook -p 6006",
+    "test": "npx lerna run test",
+    "term": "yarn workspace term",
+    "ext:build": "npx lerna run build --scope \"@pep10/ext-*\"",
+    "ui:build": "npx lerna run build --scope \"@pep10/ui-*\"",
+    "ui:globcov": "python3 scripts/merge-cobertura.py -o coverage.xml  $(find packages/ui -name 'cobertura-coverage.xml')",
+    "ui:test": "npx lerna run test:ci --scope \"@pep10/ui-*\"",
+    "wasm": "yarn workspace @pep10/core",
+    "watch": "npx lerna run --parallel watch"
   },
   "devDependencies": {
     "@theia/cli": "1.21.0",
@@ -25,6 +49,7 @@
     "eslint-plugin-deprecation": "~1.2.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-no-null": "^1.0.2",
     "eslint-plugin-no-unsanitized": "^3.1.5",
@@ -37,30 +62,9 @@
     "type-fest": "^0.20.2",
     "yargs": "^17.0.2"
   },
-  "scripts": {
-    "lint": "npx lerna run lint",
-    "lint:fix": "npx lerna run lint:fix",
-    "clean": "npx lerna run clean && rimraf node_modules",
-    "build": "npx lerna run build",
-    "prune": "rimraf \"**/node_modules\"",
-    "prune:hard": "find . -name \"node_modules\" -type d -prune",
-    "bundle": "npx lerna run bundle",
-    "watch": "npx lerna run --parallel watch",
-    "test": "npx lerna run test",
-    "ide": "yarn worskpace theia-blueprint",
-    "ui:build": "npx lerna run build --scope \"@pep10/ui-*\"",
-    "ui:test": "npx lerna run test:ci --scope \"@pep10/ui-*\"",
-    "ui:globcov": "python3 scripts/merge-cobertura.py -o coverage.xml  $(find packages/ui -name 'cobertura-coverage.xml')",
-    "storybook:serve": "yarn workspace ui start-storybook -p 6006",
-    "storybook:build": "yarn workspace ui build-storybook",
-    "wasm": "yarn workspace @pep10/core"
+  "engines": {
+    "node": ">=14.0.0 <15",
+    "yarn": "1.0.x || >=1.2.1"
   },
-  "workspaces": [
-    "bin/*",
-    "packages/ui",
-    "packages/ui/**/*",
-    "packages/extensions/**/*",
-    "packages/native/*"
-  ],
   "packageManager": "yarn@3.1.1"
 }
