@@ -182,11 +182,11 @@ build:bin:linux:
     # Build terminal
     # Doesn't need any packaging, as it is a static app
     - yarn term build
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - bin/ide/dist/PepIDE.AppImage
-      - bin/term/build/linux/src/PepTerm
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/PepIDE.AppImage
+      #- bin/term/build/linux/src/PepTerm
 
 #################
 # Version Bumps #
