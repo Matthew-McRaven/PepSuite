@@ -162,13 +162,13 @@ test:chromatic:
 ##################
 # Build Binaries #
 ##################
-build:bin:linux:
+build:ide:linux:
   <<: *emscripten
   <<: *cacheable-node
   stage: bin
   tags: 
     - linux
-  needs: ['test:ui', 'build:core:linux']
+  needs: ['test:ui', 'build:core:wasm']
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn ext:build
@@ -178,15 +178,28 @@ build:bin:linux:
     - yarn ide build
     # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
     - yarn ide:fix
-    - yarn ide package
-    # Build terminal
-    # Doesn't need any packaging, as it is a static app
-    - yarn term build
+    - yarn ide packag
   #artifacts:
     #expire_in: 1 week
     #paths:
       #- bin/ide/dist/PepIDE.AppImage
-      #- bin/term/build/linux/src/PepTerm
+
+build:jsterm:
+  <<: *emscripten
+  <<: *cacheable-node
+  stage: bin
+  tags: 
+    - docker
+  needs: ['build:core:wasm']
+  script:
+    - bash scripts/loop-install.sh || exit 1
+    # Build terminal application
+    - yarn js-term:pkg
+    # Run terminal application tests
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/PepIDE.AppImage
 
 #################
 # Version Bumps #
