@@ -8,6 +8,17 @@ export default {
   },
 };
 
-const Template = () => <ObjectCodePane />;
+interface Props {
+  objectCode: string,
+  bytesPerLine: number
+}
+const Template = (args: Props) => {
+  const { objectCode, bytesPerLine } = args;
+  return <ObjectCodePane objectCode={objectCode} bytesPerLine={bytesPerLine} />;
+};
 
-export const withTemplate = Template.bind({});
+export const objectCodePane = Template.bind({});
+objectCodePane.args = {
+  objectCode: 'AA BB CC DD EE FF ZZ',
+  bytesPerLine: 2,
+};
