@@ -1,0 +1,10 @@
+import React from 'react';
+import { shallow } from 'enzyme';
+import ObjectCodePane from './ObjectCodePane';
+
+describe('<ObjectCodePane />', () => {
+  it('has been mounted', () => {
+    const component = shallow(<ObjectCodePane />);
+    expect(component.length).toBe(1);
+  });
+});
