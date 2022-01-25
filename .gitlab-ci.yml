@@ -178,7 +178,7 @@ build:ide:linux:
     - yarn ide build
     # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
     - yarn ide:fix
-    - yarn ide packag
+    - yarn ide package
   #artifacts:
     #expire_in: 1 week
     #paths:
