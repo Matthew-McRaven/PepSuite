@@ -85,7 +85,7 @@
     "chai": "^4.2.0",
     "circular-dependency-plugin": "^5.2.2",
     "compression-webpack-plugin": "^6.0",
-    "electron-builder": "22.10.5",
+    "electron-builder": "^22.10.5",
     "electron-chromedriver": "9.0.0",
     "electron-mocha": "^9.3.2",
     "js-yaml": "^3.12.0",
