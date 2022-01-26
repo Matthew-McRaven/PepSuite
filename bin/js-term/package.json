@@ -2,8 +2,8 @@
   "name": "js-term",
   "version": "0.2.1",
   "type": "commonjs",
-  "main": "dist/index.js",
-  "bin": "dist/index.js",
+  "main": "dist/bundle.js",
+  "bin": "dist/bundle.js",
   "scripts": {
     "exec": "node dist/index.js",
     "pkg": "yarn webpack && pkg . --options experimental-wasi-unstable-preview1",
@@ -37,9 +37,6 @@
     "outputPath": "dist"
   },
   "targets": {
-    "browsers": [
-      "> 0.25%"
-    ],
     "node": [
       "14"
     ]

@@ -3,7 +3,6 @@ const path = require('path');
 module.exports = {
   entry: path.resolve(__dirname, './dist/index.js'),
   module: {
-
     rules: [
       {
         test: /\.wasm/,
@@ -21,6 +20,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['*', '.js'],
+    fallback: {
+      path: false,
+      process: false,
+      fs: false,
+    },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
