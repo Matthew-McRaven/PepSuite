@@ -64,6 +64,7 @@ const handleLSMacros = (args: commandLineArgs.CommandLineOptions) => {
     error(`Unexpected option ${args._unknown[0]}`);
   } else {
     // Echo macros to console
+    console.log('Echo\'ing macro to console');
   }
 };
 
@@ -91,6 +92,7 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
   } else {
     // Print out list of figures to console.
     // Would be nice if it was organized by chapter.
+    console.log('Echo\'ing figure list');
   }
 };
 
