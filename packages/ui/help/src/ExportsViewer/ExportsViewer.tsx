@@ -22,7 +22,7 @@ const ExportRow = (props: ExportDefinition) => {
     <div className="Row">
       <div>{name}</div>
       <div>
-        {UnsignedIntegral.IntegralConverter({
+        {UnsignedIntegral.UnsignedIntegralConverter({
           state: value,
           base,
           setState: () => { },
