@@ -1,11 +1,11 @@
 import React from 'react';
 import './ExportsViewer.scss';
-import { Integral } from '@pep10/ui-converters';
+import { UnsignedIntegral } from '@pep10/ui-converters';
 
 export interface ExportDefinition {
   name: string
   value: number
-  base: Integral.SupportedBases
+  base: UnsignedIntegral.SupportedBases
   sourceDefinition: string
 
 }
@@ -22,7 +22,7 @@ const ExportRow = (props: ExportDefinition) => {
     <div className="Row">
       <div>{name}</div>
       <div>
-        {Integral.IntegralConverter({
+        {UnsignedIntegral.IntegralConverter({
           state: value,
           base,
           setState: () => { },
