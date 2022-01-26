@@ -13,8 +13,7 @@ import { gitSHA, version } from './version';
 const versionString = `${commands.toplevel.name} version ${version}\nBased on commit: ${gitSHA}`;
 
 const error = (message: string, exitCode?: number) => {
-  if (process.env.NO_COLOR || process.env.TERM === 'dumb') console.error(message);
-  else console.error(chalk.red(message));
+  console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
 const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
