@@ -6,6 +6,7 @@
 import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 import { existsSync, lstatSync } from 'fs';
+import chalk from 'chalk';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -13,7 +14,8 @@ import { gitSHA, version } from './version';
 const versionString = `${commands.toplevel.name} version ${version}\nBased on commit: ${gitSHA}`;
 
 const error = (message: string, exitCode?: number) => {
-  console.error(message);
+  if (process.env.NO_COLOR || process.env.TERM === 'dumb') console.error(message);
+  else console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
 const handleAsm = (args: commandLineArgs.CommandLineOptions) => {

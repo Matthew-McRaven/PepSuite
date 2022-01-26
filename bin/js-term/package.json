@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@wasmer/wasi": "^1.0.2",
+    "chalk": "^4.0.0",
     "command-line-args": "^5.2.0",
     "command-line-usage": "^6.1.1",
     "pkg": "^5.5.2"
@@ -25,7 +26,7 @@
     "@wasm-tool/wasi": "^0.0.4",
     "typescript": "4.4",
     "webpack": "5",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.2"
   },
   "packageManager": "yarn@3.1.1",
   "pkg": {

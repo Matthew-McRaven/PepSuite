@@ -17566,14 +17566,15 @@ __metadata:
     "@types/command-line-usage": ^5.0.2
     "@wasm-tool/wasi": ^0.0.4
     "@wasmer/wasi": ^1.0.2
+    chalk: ^4.0.0
     command-line-args: ^5.2.0
     command-line-usage: ^6.1.1
     pkg: ^5.5.2
     typescript: 4.4
     webpack: 5
-    webpack-cli: ^4.9.1
+    webpack-cli: ^4.9.2
   bin:
-    js-term: dist/index.js
+    js-term: dist/bundle.js
   languageName: unknown
   linkType: soft
 
@@ -27121,7 +27122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^4.9.1":
+"webpack-cli@npm:^4.9.2":
   version: 4.9.2
   resolution: "webpack-cli@npm:4.9.2"
   dependencies:
