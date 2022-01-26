@@ -131,7 +131,7 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
           if (lhs[1] > rhs[1]) return 1;
           return -1;
         });
-        error(`No command named '${mode.command}', did you mean '${closest[0][0]}'?`);
+        error(`No subcommand named '${mode.command}', did you mean '${closest[0][0]}'?`);
         error('Otherwise rerun with --help to view valid subcommands.');
       } else if (auxFlags.help) {
         console.log(commandLineUsage(commands.toplevel.usage));
