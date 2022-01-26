@@ -6,6 +6,7 @@
 import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
+import leven from 'leven';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -121,7 +122,18 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
     default:
       // I know auxcommands is defined on toplevel, bypass type system here.
       auxFlags = commandLineArgs(commands.toplevel.auxCommands as OptionDefinition[], { partial: true, argv });
-      if (auxFlags.help) {
+      if (mode.command) {
+        let closest = [commands.asm, commands.run, commands.macro, commands.lsmacros, commands.figure,
+        // eslint-disable-next-line indent
+        commands.lsfigures].map((element) => [element.name, leven(element.name, mode.command)]);
+        closest = closest.sort((lhs, rhs) => {
+          if (lhs[1] === rhs[1]) return 0;
+          if (lhs[1] > rhs[1]) return 1;
+          return -1;
+        });
+        error(`No command named '${mode.command}', did you mean '${closest[0][0]}'?`);
+        error('Otherwise rerun with --help to view valid subcommands.');
+      } else if (auxFlags.help) {
         console.log(commandLineUsage(commands.toplevel.usage));
       } else if (auxFlags.about) {
         console.log([versionString, aboutText].join('\n\n'));
