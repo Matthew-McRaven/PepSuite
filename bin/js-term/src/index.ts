@@ -5,7 +5,6 @@
 
 import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
-import { existsSync, lstatSync } from 'fs';
 import chalk from 'chalk';
 import aboutText from './about';
 import * as commands from './commands';
@@ -25,12 +24,6 @@ const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
     error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args['source-file']) {
     error('--source-file (or -s) is required.');
-  } else if (!existsSync(args['source-file'])) {
-    error('source_file must exist.');
-  } else if (!lstatSync(args['source-file']).isFile) {
-    error('source_file must be a file.');
-  } else if (args.os && !(existsSync(args.os) && lstatSync(args.os).isFile())) {
-    error('If present, --os must be a file.');
   } else if (!args['object-file']) {
     error('--object-file (or -o) is required.');
   } else {
