@@ -282,7 +282,7 @@ export const toplevel: Command = {
     }, {
       name: 'about',
       type: Boolean,
-      description: 'Display information about licensing and developers.',
+      description: 'Display information about support, developers, and licensing.',
     },
   ],
   detailed: 'Detailed instructions here',

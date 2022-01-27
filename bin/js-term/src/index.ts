@@ -5,8 +5,8 @@
 
 import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
-import { existsSync, lstatSync } from 'fs';
 import chalk from 'chalk';
+import leven from 'leven';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -14,8 +14,7 @@ import { gitSHA, version } from './version';
 const versionString = `${commands.toplevel.name} version ${version}\nBased on commit: ${gitSHA}`;
 
 const error = (message: string, exitCode?: number) => {
-  if (process.env.NO_COLOR || process.env.TERM === 'dumb') console.error(message);
-  else console.error(chalk.red(message));
+  console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
 const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
@@ -25,12 +24,6 @@ const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
     error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args['source-file']) {
     error('--source-file (or -s) is required.');
-  } else if (!existsSync(args['source-file'])) {
-    error('source_file must exist.');
-  } else if (!lstatSync(args['source-file']).isFile) {
-    error('source_file must be a file.');
-  } else if (args.os && !(existsSync(args.os) && lstatSync(args.os).isFile())) {
-    error('If present, --os must be a file.');
   } else if (!args['object-file']) {
     error('--object-file (or -o) is required.');
   } else {
@@ -71,6 +64,7 @@ const handleLSMacros = (args: commandLineArgs.CommandLineOptions) => {
     error(`Unexpected option ${args._unknown[0]}`);
   } else {
     // Echo macros to console
+    console.log('Echo\'ing macro to console');
   }
 };
 
@@ -98,6 +92,7 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
   } else {
     // Print out list of figures to console.
     // Would be nice if it was organized by chapter.
+    console.log('Echo\'ing figure list');
   }
 };
 
@@ -127,7 +122,18 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
     default:
       // I know auxcommands is defined on toplevel, bypass type system here.
       auxFlags = commandLineArgs(commands.toplevel.auxCommands as OptionDefinition[], { partial: true, argv });
-      if (auxFlags.help) {
+      if (mode.command) {
+        let closest = [commands.asm, commands.run, commands.macro, commands.lsmacros, commands.figure,
+        // eslint-disable-next-line indent
+        commands.lsfigures].map((element) => [element.name, leven(element.name, mode.command)]);
+        closest = closest.sort((lhs, rhs) => {
+          if (lhs[1] === rhs[1]) return 0;
+          if (lhs[1] > rhs[1]) return 1;
+          return -1;
+        });
+        error(`No subcommand named '${mode.command}', did you mean '${closest[0][0]}'?`);
+        error('Otherwise rerun with --help to view valid subcommands.');
+      } else if (auxFlags.help) {
         console.log(commandLineUsage(commands.toplevel.usage));
       } else if (auxFlags.about) {
         console.log([versionString, aboutText].join('\n\n'));
