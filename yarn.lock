@@ -3330,7 +3330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pep10/core@workspace:^, @pep10/core@workspace:packages/native/core":
+"@pep10/core@^0.2.1, @pep10/core@workspace:packages/native/core":
   version: 0.0.0-use.local
   resolution: "@pep10/core@workspace:packages/native/core"
   dependencies:
@@ -17562,7 +17562,7 @@ __metadata:
     "@babel/cli": ^7.16.8
     "@babel/preset-env": ^7.16.11
     "@babel/preset-typescript": ^7.16.7
-    "@pep10/core": "workspace:^"
+    "@pep10/core": ^0.2.1
     "@types/command-line-args": ^5.2.0
     "@types/command-line-usage": ^5.0.2
     "@wasm-tool/wasi": ^0.0.4
