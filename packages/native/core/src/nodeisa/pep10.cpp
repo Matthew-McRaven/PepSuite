@@ -7,26 +7,29 @@
 
 pep10::wrapped_isa_definition::wrapped_isa_definition() {}
 
-float lerp(float a, float b, float t)
-{
-    return (1-t)*a+t*b;
-}
-
 emscripten::val get_macro(registry& reg, std::string name) {
     auto v = reg.find(name);
     if(v.has_value()) return emscripten::val(*v);
     else return emscripten::val::undefined();
 }
 
+emscripten::val get_figure(registry& reg, std::string proc, uint16_t chapter, std::string fig) {
+    auto v = reg.find(proc, chapter, fig);
+    if(v.has_value()) return emscripten::val(*v);
+    else return emscripten::val::undefined();
+}
+
 EMSCRIPTEN_BINDINGS(pep10) {
 
-    emscripten::function("lerp", &lerp);
+    emscripten::enum_<element_type>("ElementType")
+        .value("Pep", element_type::kPep);
+    emscripten::register_map<element_type, std::string>("FigureElement");
     // Needed for figure, ls-figures.
     emscripten::class_<figure>("Figure")
         .property("processor", &figure::proc)
         .property("chapter", &figure::chapter)
-        .property("figure", &figure::fig);
-    emscripten::class_<std::optional<figure>>("Optional<Figure>");
+        .property("figure", &figure::fig)
+        .property("elements", &figure::elements);
     emscripten::class_<std::vector<figure>>("FigureVector")
         .constructor()
         .function("size", emscripten::select_overload<size_t(void) const>(&std::vector<figure>::size))
@@ -43,7 +46,7 @@ EMSCRIPTEN_BINDINGS(pep10) {
     emscripten::class_<registry>("Registry")
         .constructor(&registry::instance)
         .function("findMacro", get_macro)
-        .function("findFigure", emscripten::select_overload<std::optional<figure>(std::string, uint16_t, std::string) const>(&registry::find))
+        .function("findFigure", get_figure)
         .function("figures", &registry::figures)
         .function("macros", &registry::macros);
 }

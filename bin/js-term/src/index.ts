@@ -57,7 +57,7 @@ const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
     const mod = await pep10;
     const reg = new mod.Registry();
     const macro = reg.findMacro(args.macro);
-    if (!macro) error(`${macro} is not a valid macro.`);
+    if (!macro) error(`${args.macro} is not a valid macro.`);
     else console.log(macro.text);
     reg.delete();
   }
@@ -91,7 +91,16 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
     error('--fig is a required argument.');
   } else {
     const { fig, ch } = args;
-    console.log(`Looking for Figure ${ch}.${fig}`);
+    const mod = await pep10;
+    const reg = new mod.Registry();
+    const figure = reg.findFigure('pep10', ch, fig);
+    if (!figure) error(`${ch}.${fig} is not a valid figure.`);
+    else {
+      const text = figure.elements.get(mod.ElementType.Pep);
+      if (!text) error(`${ch}.${fig} has no assembly source code.`);
+      else console.log(text);
+    }
+    reg.delete();
   }
 };
 
