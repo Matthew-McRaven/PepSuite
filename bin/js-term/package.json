@@ -11,7 +11,7 @@
     "webpack": "yarn tsc && webpack --config webpack.config.cjs"
   },
   "dependencies": {
-    "@pep10/core": "workspace:^",
+    "@pep10/core": "^0.2.1",
     "@wasmer/wasi": "^1.0.2",
     "chalk": "^4.0.0",
     "command-line-args": "^5.2.0",
