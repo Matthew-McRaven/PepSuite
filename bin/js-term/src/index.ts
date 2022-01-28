@@ -7,6 +7,7 @@ import commandLineArgs, { OptionDefinition } from 'command-line-args';
 import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
 import leven from 'leven';
+import { pep10 } from '@pep10/core';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -17,7 +18,7 @@ const error = (message: string, exitCode?: number) => {
   console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
-const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
+const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
@@ -31,7 +32,7 @@ const handleAsm = (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
-const handleRun = (args: commandLineArgs.CommandLineOptions) => {
+const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.run.usage));
   } else if (args._unknown) {
@@ -45,7 +46,7 @@ const handleRun = (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
-const handleMacro = (args: commandLineArgs.CommandLineOptions) => {
+const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.macro.usage));
   } else if (args._unknown) {
@@ -57,18 +58,23 @@ const handleMacro = (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
-const handleLSMacros = (args: commandLineArgs.CommandLineOptions) => {
+const handleLSMacros = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.lsmacros.usage));
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
   } else {
-    // Echo macros to console
-    console.log('Echo\'ing macro to console');
+    const mod = await pep10;
+    const figures = new mod.Registry().figures();
+    console.log("Computer Systems, 6th edition figures:")
+    for (let i = 0; i < figures.size(); i += 1) {
+      if(figures.get(i).processor !== "pep10") continue
+      console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+    }
   }
 };
 
-const handleFigure = (args: commandLineArgs.CommandLineOptions) => {
+const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.figure.usage));
   } else if (args._unknown) {
@@ -84,7 +90,7 @@ const handleFigure = (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
-const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
+const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.lsfigures.usage));
   } else if (args._unknown) {
@@ -102,22 +108,22 @@ const handleLSFigures = (args: commandLineArgs.CommandLineOptions) => {
   let auxFlags: commandLineArgs.CommandLineOptions = {};
   switch (mode.command) {
     case 'asm':
-      handleAsm(commandLineArgs(commands.asm.commands, { partial: true, argv }));
+      await handleAsm(commandLineArgs(commands.asm.commands, { partial: true, argv }));
       break;
     case 'run':
-      handleRun(commandLineArgs(commands.run.commands, { partial: true, argv }));
+      await handleRun(commandLineArgs(commands.run.commands, { partial: true, argv }));
       break;
     case 'macro':
-      handleMacro(commandLineArgs(commands.macro.commands, { argv }));
+      await handleMacro(commandLineArgs(commands.macro.commands, { argv }));
       break;
     case 'ls-macros':
-      handleLSMacros(commandLineArgs(commands.lsmacros.commands, { partial: true, argv }));
+      await handleLSMacros(commandLineArgs(commands.lsmacros.commands, { partial: true, argv }));
       break;
     case 'figure':
-      handleFigure(commandLineArgs(commands.figure.commands, { partial: true, argv }));
+      await handleFigure(commandLineArgs(commands.figure.commands, { partial: true, argv }));
       break;
     case 'ls-figures':
-      handleLSFigures(commandLineArgs(commands.lsfigures.commands, { partial: true, argv }));
+      await handleLSFigures(commandLineArgs(commands.lsfigures.commands, { partial: true, argv }));
       break;
     default:
       // I know auxcommands is defined on toplevel, bypass type system here.
