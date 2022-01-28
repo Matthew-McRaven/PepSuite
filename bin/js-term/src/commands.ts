@@ -149,9 +149,9 @@ export const macro: Command = {
   name: 'macro',
   oneLine: 'Echo the text of a builtin macro to stdout.',
   commands: [{
-    name: 'positionals',
+    name: 'macro',
     defaultOption: true,
-    description: 'Arguments that must be passed',
+    description: 'Name of macro',
   }, helpCommand,
   ],
   sampleInvoke: '$ pepterm macro {underline macro_name}',

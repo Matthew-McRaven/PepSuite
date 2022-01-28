@@ -52,9 +52,14 @@ const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args.macro) {
-    error('--macro is required');
+    error('<macro> is required');
   } else {
-    console.log(`Looking for macro ${args.macro}`);
+    const mod = await pep10;
+    const reg = new mod.Registry();
+    const macro = reg.findMacro(args.macro);
+    if (!macro) error(`${macro} is not a valid macro.`);
+    else console.log(macro.text);
+    reg.delete();
   }
 };
 
@@ -65,12 +70,12 @@ const handleLSMacros = async (args: commandLineArgs.CommandLineOptions) => {
     error(`Unexpected option ${args._unknown[0]}`);
   } else {
     const mod = await pep10;
-    const figures = new mod.Registry().figures();
-    console.log("Computer Systems, 6th edition figures:")
-    for (let i = 0; i < figures.size(); i += 1) {
-      if(figures.get(i).processor !== "pep10") continue
-      console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+    const macros = new mod.Registry().macros();
+    console.log('Computer Systems, 6th edition macros:');
+    for (let i = 0; i < macros.size(); i += 1) {
+      console.log(`\t${macros.get(i).name}`);
     }
+    macros.delete();
   }
 };
 
@@ -98,11 +103,14 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
   } else {
     const mod = await pep10;
     const figures = new mod.Registry().figures();
-    console.log("Computer Systems, 6th edition figures:")
+    console.log('Computer Systems, 6th edition figures:');
     for (let i = 0; i < figures.size(); i += 1) {
-      if(figures.get(i).processor !== "pep10") continue
-      console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+      if (figures.get(i).processor === 'pep10') {
+        console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+      }
     }
+    // Must clean up C++ memory after initializing
+    figures.delete();
   }
 };
 
