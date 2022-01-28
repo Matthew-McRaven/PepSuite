@@ -96,9 +96,13 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
   } else {
-    // Print out list of figures to console.
-    // Would be nice if it was organized by chapter.
-    console.log('Echo\'ing figure list');
+    const mod = await pep10;
+    const figures = new mod.Registry().figures();
+    console.log("Computer Systems, 6th edition figures:")
+    for (let i = 0; i < figures.size(); i += 1) {
+      if(figures.get(i).processor !== "pep10") continue
+      console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+    }
   }
 };
 
