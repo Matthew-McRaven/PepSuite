@@ -8,6 +8,8 @@ import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
 import leven from 'leven';
 import { pep10 } from '@pep10/core';
+import path from 'path';
+import fs from 'fs';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -28,7 +30,82 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (!args['object-file']) {
     error('--object-file (or -o) is required.');
   } else {
-    console.log('Handling ASM');
+    const mod = await pep10;
+    const project = new mod.AssemblyProject();
+    try {
+      const sourceFileText = fs.readFileSync(args['source-file']).toString('ascii');
+      project.setUserProgram(sourceFileText);
+      const errorCode = project.assemble();
+
+      if (errorCode !== mod.AssemblyErrorCode.Complete) {
+        error(`Assembly failed to execute code ${mod.errorName(errorCode)}`);
+        return;
+      }
+
+      // Determine if there are warnings or errors.
+      const errors = project.errors();
+      // Determine max severity of message, with error blocking any forward progress
+      const maxSeverity = (errors || []).reduce(
+        (prev: typeof mod.MessageLevel, cur: typeof mod.ErrorMessage) => {
+          console.log(prev, cur);
+          return mod.maxSeverity(prev, cur.type);
+        },
+        mod.MessageLevel.Status,
+      );
+
+      // If there are errors or warning, output them to --error-file or <source_file>_errLog.txt.
+      if (errors) {
+        // Select default error file, and override if --error-file is present.
+        const defaultErrorPath = path.parse(args['source-file']);
+        let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
+        if (args['error-file']) errorFileName = args['error-file'];
+        // Remove any text from the error log
+        const errorFile = fs.openSync(errorFileName, 'w');
+        fs.ftruncateSync(errorFile, 0);
+        // And write all error messages in a ###: <message> format
+        errors.forEach((element: any) => {
+          const message = `${element.line}: ${element.message}\n`;
+          fs.writeFileSync(errorFile, message);
+        });
+        fs.closeSync(errorFile);
+      }
+
+      // If at least one message was an Error, no object code was generated, abort.
+      if (mod.MessageLevel.Error === maxSeverity) return;
+      console.log(project.formattedObjectCode());
+
+      // Clear object file if it exists, and dump formatted object code to it.
+      const objectFile = fs.openSync(args['object-file'], 'w');
+      fs.ftruncateSync(objectFile);
+      fs.writeFileSync(objectFile, project.formattedObjectCode());
+      fs.close(objectFile);
+
+      // Helper to replace the extension on the object file.
+      const changeObjectFileExtension = (newExt: string) => {
+        const objectPath = path.parse(args['object-file']);
+        return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
+      };
+
+      // Clear listing file if it exists, and dump a formatted listing of the user program to it.
+      const listingFile = fs.openSync(changeObjectFileExtension('pepl'), 'w');
+      fs.ftruncateSync(listingFile);
+      fs.writeFileSync(listingFile, project.formattedUserListing());
+      fs.close(listingFile);
+
+      if (args.elf) {
+        const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
+        fs.ftruncateSync(elfFile);
+        const arrayBytes = project.rawBytesELF();
+        const bytes = new Uint8Array(arrayBytes);
+        fs.writeFileSync(elfFile, bytes);
+        fs.close(elfFile);
+      }
+      // If there are only warnings or below, then:
+      //    output listing
+      //    If --elf, output as .elf
+    } finally {
+      project.delete();
+    }
   }
 };
 
