@@ -9,9 +9,9 @@
 namespace masm {
 
 enum class message_type {
-    kStatus,
-    kWarning,
-    kError,
+    kStatus = 0,
+    kWarning = 1,
+    kError = 2,
 };
 
 struct message {
