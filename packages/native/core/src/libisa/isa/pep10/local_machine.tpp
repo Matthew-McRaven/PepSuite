@@ -21,6 +21,12 @@ template <bool enable_history> result<step::Result> isa::pep10::LocalMachine<ena
     return ret;
 }
 
+// Load default values into SP & PC.
+template <bool enable_history> void isa::pep10::LocalMachine<enable_history>::init()
+{
+    _processor->init();
+}
+
 template <bool enable_history> void isa::pep10::LocalMachine<enable_history>::begin_simulation() {
     if (auto pwr_val = device_address("pwrOff"); pwr_val.has_value())
         _pwrOff_address = pwr_val.value();
