@@ -10,6 +10,9 @@
 
 namespace elf_tools {
 
+// Turn an elfio object into raw bytes
+std::vector<uint8_t> as_bytes(const ELFIO::elfio &image);
+
 // Return a pointer to the section with the given name, or nullptr if not found.
 // Unlike the other overload, feel free to modify the section through the returned pointer.
 ELFIO::section *find_section(ELFIO::elfio &image, const std::string &name);
