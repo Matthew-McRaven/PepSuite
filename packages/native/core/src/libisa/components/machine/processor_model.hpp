@@ -7,6 +7,7 @@
 #include <outcome.hpp>
 
 #include "outcome_helper.hpp"
+#include "components/delta/base.hpp"
 
 namespace step {
 enum class Type {
@@ -26,6 +27,7 @@ enum class Result {
     kBreakpoint, // The machine stopped execution because of a breakpoint, and may be resumed.
     kNeedsMMI, // The machine stopped execution due to lack of MMI, and it may be resumed upon enqueueing further data.
     kNominal, // The machine paused because a single step was finished. It may be immediately resumed by calling step().
+    kErrored, // The machine halted because something went wrong. It may not be resumed.
 };
 } // namespace step
 
