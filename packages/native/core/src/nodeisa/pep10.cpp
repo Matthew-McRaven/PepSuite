@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "utils/format.hpp"
-pep10::wrapped_isa_definition::wrapped_isa_definition() {}
 
 emscripten::val get_macro(registry& reg, std::string name) {
     auto v = reg.find(name);
