@@ -73,10 +73,6 @@ class ProcessorModel {
     // Needed to gather all deltas since last step() call.
     virtual uint64_t last_step_time() const = 0;
 };
-
-template <typename processor_t>
-result<step::Result> step(std::shared_ptr<processor_t> cpu, step::Type step, step::Direction direction);
-result<step::Result> step_while(std::function<bool(void)> condition);
 } // namespace components::machine
 
 #include "processor_model.tpp"
