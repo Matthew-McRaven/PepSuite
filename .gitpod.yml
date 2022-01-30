@@ -1,0 +1,5 @@
+image:
+  file: .devcontainer/Dockerfile
+  context: .
+tasks:
+- command: yarn install --immutable
