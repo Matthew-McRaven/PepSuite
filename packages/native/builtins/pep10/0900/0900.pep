@@ -57,6 +57,7 @@ callMain:LDWA    strtFlg,d  ;Reload start flags
 ;Write an arbitrary value to the power off port to shutdown the computer.
 shutdown:LDWA    0xDEAD,i
          STBA    pwrOff,d
+hang:    BR      hang
          
 ;
 retVal:  .EQUATE 0           ;Main return value #2d
@@ -173,13 +174,13 @@ arrAddr: .EQUATE 2           ;#2h Stack address of the trap array
 trapFind: MOVTA
           LDWX   0,i         ;Initialize array iterator
 trapLoop: CPWX   arrDim,s    ;Check if iterator is at end of array
-          BRGE   trapErr     ;Did not find T in array
+          BREQ   trapErr     ;Did not find T in array
           CPWA   arrAddr,sfx ;Compare A
           BREQ   trapFnd
           ADDX   2,i
           BR     trapLoop
 ;
-trapFnd:RET   
+trapFnd: RET   
 trapErr: LDWA    scErrMsg,i  ;Load the address of the loader error message.
          STWA    -2,s        ;Push address of error message
          SUBSP   2,i         ;Allocate @param #msgAddr
