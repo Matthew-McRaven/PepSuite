@@ -123,12 +123,12 @@ export const run: Command = {
     description: 'Override the default value of max_steps.',
   },
   ],
-  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} <-i {underline input_file}> <options>',
+  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} -i {underline input_file} <options>',
   detailed: 'The object_file must be a .pepo file.\n\
 If the program takes input, -i is required.\n\
 If the program produces output, -o is required.\n\
 As a guard against endless loops the program will abort after max_steps assembly instructions execute.\n\
-The default value of max_steps is 50,000',
+The default value of max_steps is 100,000',
   usage: [],
 };
 
