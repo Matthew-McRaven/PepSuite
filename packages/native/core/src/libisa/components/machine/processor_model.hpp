@@ -7,6 +7,7 @@
 #include <outcome.hpp>
 
 #include "outcome_helper.hpp"
+#include "components/delta/base.hpp"
 
 namespace step {
 enum class Type {
@@ -26,6 +27,7 @@ enum class Result {
     kBreakpoint, // The machine stopped execution because of a breakpoint, and may be resumed.
     kNeedsMMI, // The machine stopped execution due to lack of MMI, and it may be resumed upon enqueueing further data.
     kNominal, // The machine paused because a single step was finished. It may be immediately resumed by calling step().
+    kErrored, // The machine halted because something went wrong. It may not be resumed.
 };
 } // namespace step
 
@@ -73,10 +75,6 @@ class ProcessorModel {
     // Needed to gather all deltas since last step() call.
     virtual uint64_t last_step_time() const = 0;
 };
-
-template <typename processor_t>
-result<step::Result> step(std::shared_ptr<processor_t> cpu, step::Type step, step::Direction direction);
-result<step::Result> step_while(std::function<bool(void)> condition);
 } // namespace components::machine
 
 #include "processor_model.tpp"

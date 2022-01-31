@@ -8,6 +8,8 @@ import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
 import leven from 'leven';
 import { pep10 } from '@pep10/core';
+import path from 'path';
+import fs from 'fs';
 import aboutText from './about';
 import * as commands from './commands';
 import { gitSHA, version } from './version';
@@ -18,17 +20,93 @@ const error = (message: string, exitCode?: number) => {
   console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
+
 const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
-    error(`Unexpected option ${args._unknown[0]}`);
+    return error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args['source-file']) {
-    error('--source-file (or -s) is required.');
+    return error('--source-file (or -s) is required.');
   } else if (!args['object-file']) {
-    error('--object-file (or -o) is required.');
+    return error('--object-file (or -o) is required.');
   } else {
-    console.log('Handling ASM');
+    const mod = await pep10;
+    const project = new mod.AssemblyProject();
+    try {
+      const sourceFileText = fs.readFileSync(args['source-file']).toString('ascii');
+      project.setUserProgram(sourceFileText);
+      const errorCode = project.assemble();
+
+      if (errorCode !== mod.AssemblyErrorCode.Complete) {
+        return error(`Assembly failed to execute code ${mod.errorName(errorCode)}`);
+      }
+
+      // Determine if there are warnings or errors.
+      const errors = project.errors();
+      // Determine max severity of message, with error blocking any forward progress
+      const maxSeverity = (errors || []).reduce(
+        (prev: typeof mod.MessageLevel, cur: typeof mod.ErrorMessage) => {
+          console.log(prev, cur);
+          return mod.maxSeverity(prev, cur.type);
+        },
+        mod.MessageLevel.Status,
+      );
+
+      // If there are errors or warning, output them to --error-file or <source_file>_errLog.txt.
+      if (errors) {
+        // Select default error file, and override if --error-file is present.
+        const defaultErrorPath = path.parse(args['source-file']);
+        let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
+        if (args['error-file']) errorFileName = args['error-file'];
+        // Remove any text from the error log
+        const errorFile = fs.openSync(errorFileName, 'w');
+        fs.ftruncateSync(errorFile, 0);
+        // And write all error messages in a ###: <message> format
+        errors.forEach((element: any) => {
+          const message = `${element.line}: ${element.message}\n`;
+          fs.writeFileSync(errorFile, message);
+        });
+        fs.closeSync(errorFile);
+      }
+
+      // If at least one message was an Error, no object code was generated, abort.
+      if (mod.MessageLevel.Error === maxSeverity) {
+        return error('Assembly failed due to errors in the supplied program.');
+      }
+
+      // Clear object file if it exists, and dump formatted object code to it.
+      const objectFile = fs.openSync(args['object-file'], 'w');
+      fs.ftruncateSync(objectFile);
+      fs.writeFileSync(objectFile, project.formattedObjectCode());
+      fs.close(objectFile);
+
+      // Helper to replace the extension on the object file.
+      const changeObjectFileExtension = (newExt: string) => {
+        const objectPath = path.parse(args['object-file']);
+        return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
+      };
+
+      // Clear listing file if it exists, and dump a formatted listing of the user program to it.
+      const listingFile = fs.openSync(changeObjectFileExtension('pepl'), 'w');
+      fs.ftruncateSync(listingFile);
+      fs.writeFileSync(listingFile, project.formattedUserListing());
+      fs.close(listingFile);
+
+      //    If --elf, output as .elf
+      if (args['enable-elf']) {
+        const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
+        fs.ftruncateSync(elfFile);
+        const arrayBytes = project.rawBytesELF();
+        const bytes = new Uint8Array(arrayBytes);
+        fs.writeFileSync(elfFile, bytes);
+        fs.close(elfFile);
+      }
+    } catch (except) {
+      return error(except);
+    } finally {
+      project.delete();
+    }
   }
 };
 
@@ -42,7 +120,66 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (args.elf && args.obj) {
     error('--elf and --obj are mutually exclusive.');
   } else {
-    console.log('Handling run');
+    const mod = await pep10;
+    let image;
+    const simulator = new mod.Pep10Simulator();
+    try {
+      if (args.obj) {
+        const objectText = fs.readFileSync(args.obj).toString('ascii');
+        image = mod.objectCodeToImage(objectText);
+      } else if (args.elf) {
+        const elfText = fs.readFileSync(args.elf);
+        const elfBytes = new Uint8Array(elfText.buffer);
+        const buf = mod._malloc(elfBytes.length * elfBytes.BYTES_PER_ELEMENT);
+        mod.HEAPU8.set(elfBytes, buf);
+        image = mod.rawBytesToImage(buf, elfBytes.length);
+        mod._free(buf);
+      }
+
+      if (!image) return error('Provided object file was invalid.');
+      simulator.setImage(image);
+
+      // Load charIn if it exists.
+      if (args.charIn) {
+        const charIn = fs.readFileSync(args.charIn).toString('ascii');
+        simulator.setCharIn(charIn);
+      }
+
+      // Check and set max-steps.
+      if (args['max-steps']) {
+        const maxSteps = args['max-steps'];
+        if (typeof maxSteps !== 'number') return error('--max-steps must be a number.');
+        if (maxSteps < 0) return error('--max-steps must be a positive number.');
+        simulator.setMaxSteps(maxSteps);
+      }
+
+      // Must start simulator before run, otherwise MMIOs won't register properly.
+      simulator.beginSimulation();
+      const retCode = simulator.run();
+      simulator.endSimulation();
+
+      // Handle endless loops or processor errors.
+      switch (retCode) {
+        case mod.StepResult.NeedsMMI: return error('Program requested more input than available.');
+        case mod.StepResult.Errored: return error('Processor crashed.');
+        case mod.StepResult.Nominal: return error('Possible endless loop detected.');
+        default: break;
+      }
+
+      if (args['echo-output']) console.log(simulator.getCharOut());
+
+      // Clear object file if it exists, and dump formatted object code to it.
+      const charOutFile = fs.openSync(args.charOut, 'w');
+      fs.ftruncateSync(charOutFile);
+      fs.writeFileSync(charOutFile, simulator.getCharOut());
+      fs.close(charOutFile);
+    } catch (except) {
+      error(except);
+    } finally {
+      simulator.delete();
+      // If image failed to load, it may not be an object. Only delete if exists.
+      if (image) image.delete();
+    }
   }
 };
 
@@ -59,6 +196,7 @@ const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
     const macro = reg.findMacro(args.macro);
     if (!macro) error(`${args.macro} is not a valid macro.`);
     else console.log(macro.text);
+    macro.delete();
     reg.delete();
   }
 };
@@ -73,7 +211,9 @@ const handleLSMacros = async (args: commandLineArgs.CommandLineOptions) => {
     const macros = new mod.Registry().macros();
     console.log('Computer Systems, 6th edition macros:');
     for (let i = 0; i < macros.size(); i += 1) {
-      console.log(`\t${macros.get(i).name}`);
+      const macroI = macros.get(i);
+      console.log(`\t${macroI.name}`);
+      macroI.delete();
     }
     macros.delete();
   }
@@ -84,7 +224,6 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.figure.usage));
   } else if (args._unknown) {
     console.error(`Unexpected option ${args._unknown[0]}`);
-    process.exitCode = 1;
   } else if (!args.ch) {
     error('--ch is a required argument.');
   } else if (!args.fig) {
@@ -100,6 +239,7 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
       if (!text) error(`${ch}.${fig} has no assembly source code.`);
       else console.log(text);
     }
+    figure.delete();
     reg.delete();
   }
 };
@@ -115,7 +255,9 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
     console.log('Computer Systems, 6th edition figures:');
     for (let i = 0; i < figures.size(); i += 1) {
       if (figures.get(i).processor === 'pep10') {
-        console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+        const figureI = figures.get(i);
+        console.log(`\tFigure ${figureI.chapter}.${figureI.figure}`);
+        figureI.delete();
       }
     }
     // Must clean up C++ memory after initializing

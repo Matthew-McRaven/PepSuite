@@ -54,6 +54,7 @@ template <typename address_size_t, bool enable_history, typename memory_val_size
 class MachineProcessorInterface {
   public:
     virtual ~MachineProcessorInterface() = default;
+    virtual void init() = 0;
     virtual void begin_simulation() = 0;
     virtual void end_simulation() = 0;
     virtual bool halted() const = 0;

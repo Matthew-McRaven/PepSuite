@@ -5,6 +5,7 @@
 #include "ex_registry.hpp"
 #include "masm/ir/directives.hpp"
 #include "masm/ir/macro.hpp"
+#include "masm/utils/listing.hpp"
 
 TEST_CASE("Parse entire OS", "[asmb::pep10::parser]") {
     using namespace asmb::pep10::driver;
@@ -25,6 +26,7 @@ TEST_CASE("Parse entire OS", "[asmb::pep10::parser]") {
 
         REQUIRE(res.first);
         auto x = project->image->os;
-        REQUIRE(project->image->os->body_ir->ir_lines.size() == 649);
+        masm::utils::generate_listing(project->image->os);
+        REQUIRE(project->image->os->body_ir->ir_lines.size() == 650);
     }
 }

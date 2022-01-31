@@ -5,6 +5,7 @@
 #include "ex_registry.hpp"
 #include "masm/ir/directives.hpp"
 #include "masm/ir/macro.hpp"
+#include "masm/utils/listing.hpp"
 
 TEST_CASE("Parse & pack all sample programs", "[asmb::pep10::parser]") {
     using namespace asmb::pep10::driver;
@@ -29,6 +30,8 @@ TEST_CASE("Parse & pack all sample programs", "[asmb::pep10::parser]") {
             file_user->body = figure.elements.at(element_type::kPep);
             auto res = driver->assemble_joint(project, file_os, file_user, masm::project::toolchain_stage::PACK);
             CHECK(res.first);
+            // Check that making the listing doesn't crash the program.
+            masm::utils::generate_listing(project->image->user);
             if (!res.first)
                 std::cout << fmt::format("Figure {}.{}", figure.chapter, figure.fig) << std::endl;
         }

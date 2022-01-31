@@ -67,8 +67,8 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         REQUIRE(ROM_result.has_value());
         auto [ROM_offset, ROM_storage] = ROM_result.value();
         // OS ROM should not unexpectedly change in size.
-        CHECK(ROM_offset == 0xFAAF);
-        CHECK(ROM_storage->max_offset() == 0x550);
+        CHECK(ROM_offset == 0xFAAc);
+        CHECK(ROM_storage->max_offset() == 0x553);
         // And the default OS should go right up to the maximum offset.
         CHECK(ROM_offset + ROM_storage->max_offset() == 0xFFFF);
     }
@@ -80,7 +80,7 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         auto [RAM_offset, RAM_storage] = RAM_result.value();
         // RAM should not unexpectedly change in size or location.
         CHECK(RAM_offset == 0x0000);
-        CHECK(RAM_storage->max_offset() == 0xFAAE);
+        CHECK(RAM_storage->max_offset() == 0xFAAB);
     }
 
     SECTION("MMIO definitions are correct.") {
@@ -94,16 +94,16 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         for (auto &port : ports) {
             if (port.name == "charIn") {
                 CHECK(port.type == masm::elf::mmio::Type::kInput);
-                CHECK(port.offset == 0xFAAC);
+                CHECK(port.offset == 0xFAA9);
             } else if (port.name == "charOut") {
                 CHECK(port.type == masm::elf::mmio::Type::kOutput);
-                CHECK(port.offset == 0xFAAD);
+                CHECK(port.offset == 0xFAAA);
             } else if (port.name == "diskIn") {
                 CHECK(port.type == masm::elf::mmio::Type::kInput);
-                CHECK(port.offset == 0xFAAB);
+                CHECK(port.offset == 0xFAA8);
             } else if (port.name == "pwrOff") {
                 CHECK(port.type == masm::elf::mmio::Type::kOutput);
-                CHECK(port.offset == 0xFAAE);
+                CHECK(port.offset == 0xFAAB);
             } else {
                 CHECK((false && "Bad MMIO definition"));
             }
@@ -119,16 +119,16 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         // Pep/10 should have 4 MMIO ports with the given address/type properties.
         CHECK(ports.size() == 4);
         for (auto &[offset, storage] : ports) {
-            if (offset == 0xFAAC) { // charIn
+            if (offset == 0xFAA9) { // charIn
                 auto ptr = std::dynamic_pointer_cast<components::storage::Input<uint16_t, false, uint8_t>>(storage);
                 CHECK(ptr != nullptr);
-            } else if (offset == 0xFAAD) { // charOut
+            } else if (offset == 0xFAAA) { // charOut
                 auto ptr = std::dynamic_pointer_cast<components::storage::Output<uint16_t, false, uint8_t>>(storage);
                 CHECK(ptr != nullptr);
-            } else if (offset == 0xFAAB) { // diskIn
+            } else if (offset == 0xFAA8) { // diskIn
                 auto ptr = std::dynamic_pointer_cast<components::storage::Input<uint16_t, false, uint8_t>>(storage);
                 CHECK(ptr != nullptr);
-            } else if (offset == 0xFAAE) { // pwrOff
+            } else if (offset == 0xFAAB) { // pwrOff
                 auto ptr = std::dynamic_pointer_cast<components::storage::Output<uint16_t, false, uint8_t>>(storage);
                 CHECK(ptr != nullptr);
             } else {
@@ -146,8 +146,8 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         auto RAM_baseline = storage->device_at(0x0000).value();
         auto ROM_baseline = storage->device_at(0xFFFF).value();
 
-        // Test that RAM spans from 0x0000 to 0xFAAA
-        for (uint16_t it = 0; it < 0xFAAB; it++) {
+        // Test that RAM spans from 0x0000 to 0xFAA8
+        for (uint16_t it = 0; it < 0xFAA8; it++) {
             auto RAM_result = storage->device_at(it);
             REQUIRE(RAM_result.has_value());
             auto RAM = dynamic_cast<components::storage::Block<uint16_t, false, uint8_t> *>(RAM_result.value());
@@ -155,8 +155,8 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
             CHECK(RAM == RAM_baseline);
         }
 
-        // Test that ROM spans from 0xFAAF to 0xFFFF
-        for (uint32_t it = 0xFAAF; it <= 0xFFFF; it++) {
+        // Test that ROM spans from 0xFAAC to 0xFFFF
+        for (uint32_t it = 0xFAAC; it <= 0xFFFF; it++) {
             auto ROM_result = storage->device_at((uint16_t)it);
             REQUIRE(ROM_result.has_value());
             auto ROM = dynamic_cast<components::storage::Block<uint16_t, false, uint8_t> *>(ROM_result.value());
@@ -165,22 +165,22 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         }
 
         // Test MMIO ports in alphabetic order
-        auto charIn_result = storage->device_at(0xFAAC);
+        auto charIn_result = storage->device_at(0xFAA9);
         REQUIRE(charIn_result.has_value());
         auto charIn = dynamic_cast<components::storage::Input<uint16_t, false, uint8_t> *>(charIn_result.value());
         CHECK(charIn != nullptr);
 
-        auto charOut_result = storage->device_at(0xFAAD);
+        auto charOut_result = storage->device_at(0xFAAA);
         REQUIRE(charOut_result.has_value());
         auto charOut = dynamic_cast<components::storage::Output<uint16_t, false, uint8_t> *>(charOut_result.value());
         CHECK(charOut != nullptr);
 
-        auto diskIn_result = storage->device_at(0xFAAB);
+        auto diskIn_result = storage->device_at(0xFAA8);
         REQUIRE(diskIn_result.has_value());
         auto diskIn = dynamic_cast<components::storage::Input<uint16_t, false, uint8_t> *>(diskIn_result.value());
         CHECK(diskIn != nullptr);
 
-        auto pwrOff_result = storage->device_at(0xFAAE);
+        auto pwrOff_result = storage->device_at(0xFAAB);
         REQUIRE(pwrOff_result.has_value());
         auto pwrOff = dynamic_cast<components::storage::Output<uint16_t, false, uint8_t> *>(pwrOff_result.value());
         CHECK(pwrOff != nullptr);
