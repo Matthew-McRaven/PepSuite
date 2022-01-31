@@ -111,9 +111,7 @@ auto asmb::pep10::parser::parse(std::shared_ptr<masm::project::project<uint16_t>
         // Check if we comment or empty line. If so, we can skip a lot of processing.
         if (auto [match_comment, _1, text_comment] = masm::frontend::match(start, last, comment, true); match_comment) {
             // Require that line end in empty token.
-            auto [match_empty, _2, _3] =
-                masm::frontend::match(start, last, empty, true); // NOLINT: Matches have nothing useful.
-            // TODO: Process comment-only line.
+            auto [match_empty, _2, _3] = masm::frontend::match(start, last, empty, true); // NOLINT: Matches have nothing useful.
             local_line = std::make_shared<masm::ir::comment_line<uint16_t>>();
             local_line->comment = text_comment;
             local_line->source_line = index;
@@ -403,7 +401,11 @@ asmb::pep10::parser::parse_nonunary(token_iterator_t &start, const token_iterato
     } else if (auto [match_addr, _1, text_addr] = masm::frontend::match(start, last, identifier, true);
                requires_addr_mode(mn) && !match_addr) {
         return {false, ";ERROR: Invalid addressing mode.", nullptr};
-    } else if (auto addr = requires_addr_mode(mn) ? parse_addr_mode(text_addr) : isa::pep10::addressing_mode::I;
+    } else if (auto parsed=parse_addr_mode(text_addr),
+               // If an addr mode is required, use the parsed addr mode.
+               // If an addr mode isn't required, then substitute invalid for I.
+               // Dear future me: I'm sorry for the nested ternary.
+               addr = requires_addr_mode(mn) ? parsed : (parsed==isa::pep10::addressing_mode::INVALID?isa::pep10::addressing_mode::I : parsed);
                !addr) {
         return {false, ";ERROR: Invalid addressing mode.", nullptr};
     } else if (!allowed_addressing_mode(mn, addr.value())) {
