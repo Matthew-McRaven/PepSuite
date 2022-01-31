@@ -187,6 +187,7 @@ const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
     const macro = reg.findMacro(args.macro);
     if (!macro) error(`${args.macro} is not a valid macro.`);
     else console.log(macro.text);
+    macro.delete();
     reg.delete();
   }
 };
@@ -201,7 +202,9 @@ const handleLSMacros = async (args: commandLineArgs.CommandLineOptions) => {
     const macros = new mod.Registry().macros();
     console.log('Computer Systems, 6th edition macros:');
     for (let i = 0; i < macros.size(); i += 1) {
-      console.log(`\t${macros.get(i).name}`);
+      const macroI = macros.get(i);
+      console.log(`\t${macroI.name}`);
+      macroI.delete();
     }
     macros.delete();
   }
@@ -212,7 +215,6 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.figure.usage));
   } else if (args._unknown) {
     console.error(`Unexpected option ${args._unknown[0]}`);
-    process.exitCode = 1;
   } else if (!args.ch) {
     error('--ch is a required argument.');
   } else if (!args.fig) {
@@ -228,6 +230,7 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
       if (!text) error(`${ch}.${fig} has no assembly source code.`);
       else console.log(text);
     }
+    figure.delete();
     reg.delete();
   }
 };
@@ -243,7 +246,9 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
     console.log('Computer Systems, 6th edition figures:');
     for (let i = 0; i < figures.size(); i += 1) {
       if (figures.get(i).processor === 'pep10') {
-        console.log(`\tFigure ${figures.get(i).chapter}.${figures.get(i).figure}`);
+        const figureI = figures.get(i);
+        console.log(`\tFigure ${figureI.chapter}.${figureI.figure}`);
+        figureI.delete();
       }
     }
     // Must clean up C++ memory after initializing
