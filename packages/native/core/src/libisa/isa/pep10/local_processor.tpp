@@ -53,7 +53,7 @@ template <bool enable_history> result<step::Result> isa::pep10::LocalProcessor<e
 
         auto success = unary_dispatch(is.value());
 
-        static const auto unary_fmt = "{PC} {A} {X}, {SP} ||{IS}";
+        static const auto unary_fmt = "{PC} {A} {X} {STAT}, {SP} ||{IS}";
         if constexpr (DEBUG_PROC)
             debug_summary(*this, unary_fmt);
 
@@ -71,7 +71,7 @@ template <bool enable_history> result<step::Result> isa::pep10::LocalProcessor<e
 
         auto success = nonunary_dispatch(is.value(), os.value());
 
-        static const auto nonunary_fmt = "{PC} {A} {X}, {SP} ||{IS} {OS},{ADDR}";
+        static const auto nonunary_fmt = "{PC} {A} {X} {STAT}, {SP} ||{IS} {OS},{ADDR}";
         if constexpr (DEBUG_PROC)
             debug_summary(*this, nonunary_fmt);
 
@@ -1005,6 +1005,7 @@ void isa::pep10::debug_summary(const LocalProcessor<enable_history> &proc, const
     args["X"] = fmt::format("{:04x}", read_register(proc, Register::X));
     args["SP"] = fmt::format("{:04x}", read_register(proc, Register::SP));
     args["PC"] = fmt::format("{:04x}", read_register(proc, Register::PC));
+    args["STAT"] = fmt::format("{:04b}", read_packed_NZVC(proc));
     auto is = read_register(proc, Register::IS);
     auto instr = isa.riproll[is];
     args["IS"] = fmt::format("{}", isa::pep10::as_string(instr.inst->mnemonic));
@@ -1013,7 +1014,7 @@ void isa::pep10::debug_summary(const LocalProcessor<enable_history> &proc, const
     std::cout << fmt::vformat(format, fmt::make_format_args(fmt::arg("A", args["A"]), fmt::arg("X", args["X"]),
                                                             fmt::arg("SP", args["SP"]), fmt::arg("PC", args["PC"]),
                                                             fmt::arg("IS", args["IS"]), fmt::arg("OS", args["OS"]),
-                                                            fmt::arg("ADDR", args["ADDR"])))
+                                                            fmt::arg("ADDR", args["ADDR"]), fmt::arg("STAT", args["STAT"])))
               << std::endl;
 }
 
