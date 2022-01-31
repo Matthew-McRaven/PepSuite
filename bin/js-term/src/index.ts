@@ -163,9 +163,16 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
         case mod.StepResult.Nominal: return error('Possible endless loop detected.');
         default: break;
       }
-      simulator.endSimulation();
 
-      console.log(simulator.getCharOut());
+      if (args['echo-output']) console.log(simulator.getCharOut());
+
+      // Clear object file if it exists, and dump formatted object code to it.
+      const charOutFile = fs.openSync(args.charOut, 'w');
+      fs.ftruncateSync(charOutFile);
+      fs.writeFileSync(charOutFile, simulator.getCharOut());
+      fs.close(charOutFile);
+    } catch (except) {
+      error(except);
     } finally {
       simulator.delete();
       // If image failed to load, it may not be an object. Only delete if exists.
