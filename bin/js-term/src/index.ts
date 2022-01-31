@@ -20,6 +20,7 @@ const error = (message: string, exitCode?: number) => {
   console.error(chalk.red(message));
   process.exitCode = exitCode || 1;
 };
+
 const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.asm.usage));
@@ -118,7 +119,56 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (args.elf && args.obj) {
     error('--elf and --obj are mutually exclusive.');
   } else {
-    console.log('Handling run');
+    const mod = await pep10;
+    let image;
+    const simulator = new mod.Pep10Simulator();
+    try {
+      if (args.obj) {
+        const objectText = fs.readFileSync(args.obj).toString('ascii');
+        image = mod.objectCodeToImage(objectText);
+      } else if (args.elf) {
+        const elfText = fs.readFileSync(args.elf);
+        const elfBytes = new Uint8Array(elfText.buffer);
+        const buf = mod._malloc(elfBytes.length * elfBytes.BYTES_PER_ELEMENT);
+        mod.HEAPU8.set(elfBytes, buf);
+        image = mod.rawBytesToImage(buf, elfBytes.length);
+        mod._free(buf);
+      }
+
+      if (!image) return error('Provided object file was invalid.');
+      simulator.setImage(image);
+
+      // Load charIn if it exists.
+      if (args.charIn) {
+        const charIn = fs.readFileSync(args.charIn).toString('ascii');
+        simulator.setCharIn(charIn);
+      }
+      // Check and set max-steps.
+      if (args['max-steps']) {
+        const maxSteps = args['max-steps'];
+        if (typeof maxSteps !== 'number') return error('--max-steps must be a number.');
+        if (maxSteps < 0) return error('--max-steps must be a positive number.');
+        simulator.setMaxSteps(maxSteps);
+      }
+
+      // Must start simulator before run, otherwise MMIOs won't register properly.
+      simulator.beginSimulation();
+      const retCode = simulator.run();
+      // Handle endless loops or processor errors.
+      switch (retCode) {
+        case mod.StepResult.NeedsMMI: return error('Program requested more input than available.');
+        case mod.StepResult.Errored: return error('Processor crashed.');
+        case mod.StepResult.Nominal: return error('Possible endless loop detected.');
+        default: break;
+      }
+      simulator.endSimulation();
+
+      console.log(simulator.getCharOut());
+    } finally {
+      simulator.delete();
+      // If image failed to load, it may not be an object. Only delete if exists.
+      if (image) image.delete();
+    }
   }
 };
 
