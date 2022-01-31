@@ -102,9 +102,8 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         fs.writeFileSync(elfFile, bytes);
         fs.close(elfFile);
       }
-      // If there are only warnings or below, then:
-      //    output listing
-      //    If --elf, output as .elf
+    } catch (except) {
+      return error(except);
     } finally {
       project.delete();
     }
