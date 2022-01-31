@@ -6,7 +6,7 @@
   "bin": "dist/bundle.js",
   "scripts": {
     "exec": "node dist/index.js",
-    "pkg": "yarn webpack && pkg . --options experimental-wasi-unstable-preview1",
+    "pkg": "yarn webpack && pkg . --options trace-uncaught,experimental-wasi-unstable-preview1",
     "tsc": "bash scripts/echo-rev.sh && tsc -p tsconfig.json",
     "webpack": "yarn tsc && cp ../../packages/native/core/dist/*.wasm dist && webpack --config webpack.config.cjs"
   },
