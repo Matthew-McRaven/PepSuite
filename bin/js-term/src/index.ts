@@ -144,6 +144,7 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
         const charIn = fs.readFileSync(args.charIn).toString('ascii');
         simulator.setCharIn(charIn);
       }
+
       // Check and set max-steps.
       if (args['max-steps']) {
         const maxSteps = args['max-steps'];
@@ -155,6 +156,8 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       // Must start simulator before run, otherwise MMIOs won't register properly.
       simulator.beginSimulation();
       const retCode = simulator.run();
+      simulator.endSimulation();
+
       // Handle endless loops or processor errors.
       switch (retCode) {
         case mod.StepResult.NeedsMMI: return error('Program requested more input than available.');
