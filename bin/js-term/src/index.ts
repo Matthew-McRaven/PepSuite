@@ -25,11 +25,11 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
-    error(`Unexpected option ${args._unknown[0]}`);
+    return error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args['source-file']) {
-    error('--source-file (or -s) is required.');
+    return error('--source-file (or -s) is required.');
   } else if (!args['object-file']) {
-    error('--object-file (or -o) is required.');
+    return error('--object-file (or -o) is required.');
   } else {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
@@ -39,8 +39,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       const errorCode = project.assemble();
 
       if (errorCode !== mod.AssemblyErrorCode.Complete) {
-        error(`Assembly failed to execute code ${mod.errorName(errorCode)}`);
-        return;
+        return error(`Assembly failed to execute code ${mod.errorName(errorCode)}`);
       }
 
       // Determine if there are warnings or errors.
@@ -72,7 +71,9 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       }
 
       // If at least one message was an Error, no object code was generated, abort.
-      if (mod.MessageLevel.Error === maxSeverity) return;
+      if (mod.MessageLevel.Error === maxSeverity) {
+        return error('Assembly failed due to errors in the supplied program.');
+      }
 
       // Clear object file if it exists, and dump formatted object code to it.
       const objectFile = fs.openSync(args['object-file'], 'w');
@@ -92,6 +93,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       fs.writeFileSync(listingFile, project.formattedUserListing());
       fs.close(listingFile);
 
+      //    If --elf, output as .elf
       if (args['enable-elf']) {
         const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
         fs.ftruncateSync(elfFile);
