@@ -30,7 +30,7 @@ std::string asmb::pep10::unary_instruction::generate_listing_string() const {
         code_string = fmt::format("{:02X}", isa::pep10::opcode(mnemonic));
     }
 
-    return fmt::format("{:<6}{:>7}{}", fmt::format("0x{:04X}", this->base_address()), code_string,
+    return fmt::format("{:<6} {:<6} {}", fmt::format("0x{:04X}", this->base_address()), code_string,
                        generate_source_string());
 }
 
@@ -79,10 +79,10 @@ std::string asmb::pep10::nonunary_instruction::generate_listing_string() const {
     // Potentially skip codegen
     std::string code_string = "";
     if (this->emits_object_code) {
-        code_string = fmt::format("{:01x}{:04X}", isa::pep10::opcode(mnemonic, addressing_mode), argument->value());
+        code_string = fmt::format("{:02x}{:04X}", isa::pep10::opcode(mnemonic, addressing_mode), argument->value());
     }
 
-    return fmt::format("{:<6}{:>7}{}", fmt::format("0x{:04X}", this->base_address()), code_string,
+    return fmt::format("{:<6} {:<6} {}", fmt::format("0x{:04X}", this->base_address()), code_string,
                        generate_source_string());
 }
 
