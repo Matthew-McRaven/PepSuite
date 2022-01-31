@@ -72,7 +72,6 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
 
       // If at least one message was an Error, no object code was generated, abort.
       if (mod.MessageLevel.Error === maxSeverity) return;
-      console.log(project.formattedObjectCode());
 
       // Clear object file if it exists, and dump formatted object code to it.
       const objectFile = fs.openSync(args['object-file'], 'w');
@@ -92,7 +91,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       fs.writeFileSync(listingFile, project.formattedUserListing());
       fs.close(listingFile);
 
-      if (args.elf) {
+      if (args['enable-elf']) {
         const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
         fs.ftruncateSync(elfFile);
         const arrayBytes = project.rawBytesELF();
