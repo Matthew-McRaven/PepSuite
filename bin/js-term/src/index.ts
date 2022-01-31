@@ -74,12 +74,12 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       if (mod.MessageLevel.Error === maxSeverity) {
         return error('Assembly failed due to errors in the supplied program.');
       }
-
+      
       // Clear object file if it exists, and dump formatted object code to it.
       const objectFile = fs.openSync(args['object-file'], 'w');
       fs.ftruncateSync(objectFile);
       fs.writeFileSync(objectFile, project.formattedObjectCode());
-      fs.close(objectFile);
+      fs.closeSync(objectFile);
 
       // Helper to replace the extension on the object file.
       const changeObjectFileExtension = (newExt: string) => {
@@ -87,20 +87,21 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
       };
 
+
       // Clear listing file if it exists, and dump a formatted listing of the user program to it.
       const listingFile = fs.openSync(changeObjectFileExtension('pepl'), 'w');
       fs.ftruncateSync(listingFile);
       fs.writeFileSync(listingFile, project.formattedUserListing());
-      fs.close(listingFile);
+      fs.closeSync(listingFile);
 
-      //    If --elf, output as .elf
+      // If --enable-elf, output as .elf
       if (args['enable-elf']) {
         const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
         fs.ftruncateSync(elfFile);
         const arrayBytes = project.rawBytesELF();
         const bytes = new Uint8Array(arrayBytes);
         fs.writeFileSync(elfFile, bytes);
-        fs.close(elfFile);
+        fs.closeSync(elfFile);
       }
     } catch (except) {
       return error(except);
@@ -172,7 +173,7 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       const charOutFile = fs.openSync(args.charOut, 'w');
       fs.ftruncateSync(charOutFile);
       fs.writeFileSync(charOutFile, simulator.getCharOut());
-      fs.close(charOutFile);
+      fs.closeSync(charOutFile);
     } catch (except) {
       error(except);
     } finally {
