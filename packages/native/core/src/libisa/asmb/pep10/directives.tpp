@@ -20,7 +20,7 @@ std::shared_ptr<masm::ir::linear_line<address_size_t>> asmb::pep10::dot_export<a
 
 template <typename address_size_t>
 std::string asmb::pep10::dot_export<address_size_t>::generate_listing_string() const {
-    auto temp = fmt::format("{:<6} {:<6}{}", "", "", generate_source_string());
+    auto temp = fmt::format("{:<6} {:<6} {}", "", "", generate_source_string());
 
     return temp;
 }
@@ -57,7 +57,7 @@ std::shared_ptr<masm::ir::linear_line<address_size_t>> asmb::pep10::dot_scall<ad
 }
 
 template <typename address_size_t> std::string asmb::pep10::dot_scall<address_size_t>::generate_listing_string() const {
-    auto temp = fmt::format("{:<6} {:<6}{}", "", "", generate_source_string());
+    auto temp = fmt::format("{:<6} {:<6} {}", "", "", generate_source_string());
 
     return temp;
 }
@@ -95,7 +95,7 @@ std::shared_ptr<masm::ir::linear_line<address_size_t>> asmb::pep10::dot_uscall<a
 
 template <typename address_size_t>
 std::string asmb::pep10::dot_uscall<address_size_t>::generate_listing_string() const {
-    auto temp = fmt::format("{:<6} {:<6}{}", "", "", generate_source_string());
+    auto temp = fmt::format("{:<6} {:<6} {}", "", "", generate_source_string());
 
     return temp;
 }
