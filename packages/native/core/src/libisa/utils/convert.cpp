@@ -1,6 +1,7 @@
 #include "utils/convert.hpp"
 
 #include <sstream>
+#include <stdint.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
