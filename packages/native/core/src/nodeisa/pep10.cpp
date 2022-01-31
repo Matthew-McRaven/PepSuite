@@ -1,15 +1,20 @@
+#include <boost/interprocess/streams/vectorstream.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <iostream>
+#include <outcome.hpp>
+
 #include "pep10.hpp"
+#include "asmb/pep10/highlight.hpp"
+#include "asmb/pep10/create_driver.hpp"
+#include "components/machine/processor_model.hpp"
 #include "elf_tools/elf_helper.hpp"
 #include "ex_registry.hpp"
+#include "isa/pep10/from_elf.hpp"
+#include "isa/pep10/local_machine.hpp"
 #include "masm/registry.hpp"
 #include "masm/project/project.hpp"
 #include "masm/utils/listing.hpp"
-#include "asmb/pep10/highlight.hpp"
-#include "asmb/pep10/create_driver.hpp"
-
-#include <emscripten.h>
-#include <iostream>
-
+#include "utils/convert.hpp"
 #include "utils/format.hpp"
 
 emscripten::val get_macro(registry& reg, std::string name) {
@@ -168,6 +173,108 @@ emscripten::val user_listing(std::shared_ptr<project> project) {
     return emscripten::val(string);
 }
 
+// Generate a listing of the OS program.
+emscripten::val os_listing(std::shared_ptr<project> project) {
+    if(!project->masm_project->image->os) return emscripten::val::undefined();
+    auto string = masm::utils::generate_listing(project->masm_project->image->os);
+    return emscripten::val(string);
+}
+
+emscripten::val loadable_image(std::shared_ptr<project> project) {
+    return emscripten::val(project->masm_project->as_elf);
+}
+
+
+// Needed for `run`
+emscripten::val object_code_to_image(std::string string) {
+    using namespace ELFIO;
+
+    // Try and parse bytes, and give up if they fail to parse
+    auto bytes =  utils::parse_object_bytes(string);
+    if (bytes.empty()) return emscripten::val::undefined();
+
+    auto project = init_project();
+    assemble(project);
+    auto elf = project->masm_project->as_elf;
+    auto user_section = elf->image().sections.add("user.text");
+    user_section->set_type(SHT_PROGBITS);
+    user_section->set_flags(SHF_ALLOC | SHF_EXECINSTR | SHF_WRITE);
+    user_section->set_addr_align(0x1);
+    user_section->set_data((const char *)bytes.data(), bytes.size());
+    
+    return emscripten::val(elf);
+}
+
+// WARNING: bufAsInt **must** be an object declared on the module heap!!
+// BEWARE: EVIL HACK BELOW
+// I know that all pointers are ui32 in WASM. I also know that memory address as passed as
+// js 'number'. So, I can just cast the integral value to a pointer, and it'll work.
+emscripten::val elf_bytes_to_image(uint32_t bufAsInt, uint32_t size) {
+    auto buf = reinterpret_cast<char*>(bufAsInt);
+    boost::iostreams::basic_array_source<char> input_source(buf, size);
+    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > input_stream(input_source);
+    std::istream wrap(input_stream.rdbuf());
+
+    auto reader = std::make_shared<ELFIO::elfio>();
+    if(!reader->load(wrap)) return emscripten::val::undefined();
+    return emscripten::val(std::make_shared<masm::elf::AnnotatedImage<uint16_t>>(reader));
+}
+
+struct simulator {
+    uint64_t max_steps = 100'00;
+    std::shared_ptr<masm::elf::AnnotatedImage<uint16_t>> machine_image{nullptr};
+    std::shared_ptr<isa::pep10::LocalMachine<false>> machine{nullptr};
+};
+
+void set_max_steps(std::shared_ptr<simulator> simulator, double max_steps) {
+    simulator->max_steps = (uint64_t) max_steps;
+}
+
+std::shared_ptr<simulator> make_simulator() {
+    return std::make_shared<simulator>(simulator{});
+}
+
+void set_program_image(std::shared_ptr<simulator> simulator, std::shared_ptr<masm::elf::AnnotatedImage<uint16_t>> machine_image) {
+    simulator->machine_image = machine_image;
+    simulator->machine = isa::pep10::machine_from_elf<false>(machine_image->image()).value();
+    simulator->machine->init();
+}
+
+void set_charIn(std::shared_ptr<simulator> simulator, std::string text) {
+    auto charIn_result = simulator->machine->input_device("charIn");
+    if (charIn_result.has_error()) assert(0);
+    auto charIn = charIn_result.value();
+    std::vector<uint8_t> bytes{};
+    bytes.assign(text.begin(), text.end());
+    components::storage::buffer_input(*charIn, bytes);
+}
+
+emscripten::val get_charOut(std::shared_ptr<simulator> simulator) {
+    auto charOut_result = simulator->machine->output_device("charOut");
+    if (charOut_result.has_error()) return emscripten::val::undefined();
+    auto charOut = charOut_result.value();
+    auto bytes = components::storage::read_output(*charOut);
+    std::ostringstream ss;
+    std::copy(bytes.begin(), bytes.end(), std::ostream_iterator<uint8_t>(ss, ""));
+    return emscripten::val(ss.str());
+}
+
+emscripten::val run(std::shared_ptr<simulator> simulator) {
+    auto loaded = isa::pep10::load_user_program(simulator->machine_image->image(), simulator->machine, isa::pep10::Loader::kDiskIn);
+    if(loaded.has_error()) return emscripten::val::undefined();
+    auto ret = isa::pep10::run(simulator->machine, simulator->max_steps);
+    if(!ret.has_value()) return emscripten::val::undefined();
+    else return emscripten::val(ret.value());
+}
+
+void begin_simulation(std::shared_ptr<simulator> simulator) {
+    simulator->machine->begin_simulation();
+}
+
+void end_simulation(std::shared_ptr<simulator> simulator) {
+    simulator->machine->end_simulation();
+}
+
 EMSCRIPTEN_BINDINGS(pep10) {
 
     emscripten::function("errorName", &error_name);
@@ -224,5 +331,28 @@ EMSCRIPTEN_BINDINGS(pep10) {
         .function("errors", &errors)
         .function("formattedObjectCode", &object_bytes)
         .function("formattedUserListing", &user_listing)
-        .function("rawBytesELF", &elf_bytes);
+        .function("formattedOSListing", &os_listing)
+        .function("rawBytesELF", &elf_bytes)
+        .function("loadableImage", &loadable_image);
+    
+    // Needed for `run`
+    emscripten::class_<std::shared_ptr<masm::elf::AnnotatedImage<uint16_t>>>("LoadableMachineImage");
+    emscripten::function("objectCodeToImage", object_code_to_image);
+    emscripten::function("rawBytesToImage", elf_bytes_to_image, emscripten::allow_raw_pointers());
+    emscripten::enum_<step::Result>("StepResult")
+        .value("Halted", step::Result::kHalted)
+        .value("Breakpoint", step::Result::kBreakpoint)
+        .value("NeedsMMI", step::Result::kNeedsMMI)
+        .value("Nominal", step::Result::kNominal)
+        .value("Errored", step::Result::kErrored);
+    emscripten::class_<std::shared_ptr<simulator>>("Pep10Simulator")
+        .constructor(make_simulator)
+        .function("setImage", &set_program_image)
+        .function("setMaxSteps", &set_max_steps)
+        .function("setCharIn", &set_charIn)
+        .function("getCharOut", &get_charOut)
+        .function("run", &run)
+        .function("beginSimulation", &begin_simulation)
+        .function("endSimulation", &end_simulation);
+
 }
