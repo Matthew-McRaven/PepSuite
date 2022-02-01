@@ -74,7 +74,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       if (mod.MessageLevel.Error === maxSeverity) {
         return error('Assembly failed due to errors in the supplied program.');
       }
-      
+
       // Clear object file if it exists, and dump formatted object code to it.
       const objectFile = fs.openSync(args['object-file'], 'w');
       fs.ftruncateSync(objectFile);
@@ -86,7 +86,6 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         const objectPath = path.parse(args['object-file']);
         return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
       };
-
 
       // Clear listing file if it exists, and dump a formatted listing of the user program to it.
       const listingFile = fs.openSync(changeObjectFileExtension('pepl'), 'w');
@@ -197,7 +196,7 @@ const handleMacro = async (args: commandLineArgs.CommandLineOptions) => {
     const macro = reg.findMacro(args.macro);
     if (!macro) error(`${args.macro} is not a valid macro.`);
     else console.log(macro.text);
-    macro.delete();
+    if (macro) macro.delete();
     reg.delete();
   }
 };
@@ -240,7 +239,7 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
       if (!text) error(`${ch}.${fig} has no assembly source code.`);
       else console.log(text);
     }
-    figure.delete();
+    if (figure) figure.delete();
     reg.delete();
   }
 };
