@@ -83,6 +83,8 @@ TEST_CASE("Validate functionality for 1 symbol table.") {
         CHECK(x0->value->value() == 11);
         CHECK(x1->value->value() == 21);
         CHECK(x2->value->value() == 31);
+        // Test that listing doesn't crash or fail to compile.
+        std:: cout << symbol::symbol_table_listing<uint16_t>(st) << std::endl;
     }
 
     SECTION("Offset modification, threshold.") {
