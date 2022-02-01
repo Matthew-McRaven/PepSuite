@@ -22,6 +22,9 @@
 
 #include "visit.hpp"
 
+#include <boost/algorithm/string.hpp>
+#include <fmt/core.h>
+#include <sstream>
 /*
  * RootVisitor Implementation
  */
@@ -112,6 +115,29 @@ void symbol::AdjustOffsetVisitor<value_t>::operator()(std::shared_ptr<LeafTable<
 }
 
 /*
+ * EnumerationVisitor Implementation
+ */
+
+template <typename value_t>
+std::list<std::shared_ptr<symbol::entry<value_t>>>
+symbol::EnumerationVisitor<value_t>::operator()(std::shared_ptr<symbol::BranchTable<value_t>> table) {
+    auto ret = std::list<std::shared_ptr<symbol::entry<value_t>>>();
+    for (auto &child : table->children()) {
+        auto child_vals = std::visit(*this, NodeType<value_t>(child));
+        ret.splice(ret.begin(), child_vals);
+    }
+    return ret;
+}
+
+template <typename value_t>
+std::list<std::shared_ptr<symbol::entry<value_t>>>
+symbol::EnumerationVisitor<value_t>::operator()(std::shared_ptr<symbol::LeafTable<value_t>> table) {
+    auto ret = std::list<std::shared_ptr<symbol::entry<value_t>>>();
+    for(const auto& entry: table->entries()) ret.insert(ret.begin(), entry);
+    return ret;
+}
+
+/*
  * Helper methods
  */
 template <typename value_t> symbol::NodeType<uint16_t> symbol::root_table(NodeType<value_t> table) {
@@ -148,4 +174,44 @@ void symbol::adjust_offset(NodeType<value_t> table, value_t offset, value_t thre
     else if (policy == TraversalPolicy::kWholeTree)
         table = symbol::root_table(table);
     return std::visit(vis, table);
+}
+
+template <typename value_t>
+std::list<std::shared_ptr<symbol::entry<value_t>>>
+symbol::enumerate_symbols(NodeType<value_t> table, TraversalPolicy policy) {
+    auto vis = symbol::EnumerationVisitor<value_t>();
+    if (policy == TraversalPolicy::kSiblings)
+        table = symbol::parent(table);
+    else if (policy == TraversalPolicy::kWholeTree)
+        table = symbol::root_table(table);
+    auto ret = std::visit(vis, table);
+    ret.sort([](const auto& rhs, const auto& lhs) {
+        return boost::algorithm::lexicographical_compare(rhs->name, lhs->name);
+    });
+    return ret;
+}
+
+template <typename value_t>
+std::string
+symbol::symbol_table_listing(NodeType<value_t> table, TraversalPolicy policy) {
+    auto symbols = enumerate_symbols(table, policy);
+    // Compute the midpoint of the list such that the left is equal to or greater than the right half
+    const auto leftEnd=std::next(symbols.cbegin(), (symbols.size()+1)/2), rightEnd=symbols.cend();
+    // Get the start iterators for each section
+    auto leftIt=symbols.cbegin(), rightIt=std::next(symbols.cbegin(), (symbols.size()+1)/2);
+    // Compute the bitwidth of the symbol table.
+    const auto  template_string= fmt::format(":0{}x", sizeof(value_t)*2);
+
+    // Helper lambda to pretty print a single symbol.
+    auto format = [&template_string](const auto& sym) {
+        return fmt::vformat("{:<9} {"+template_string+"}", fmt::make_format_args(sym->name, sym->value->value()));
+    };
+
+    std::ostringstream ss;
+    while(rightIt != rightEnd) ss << format(*leftIt++) << "      " << format(*rightIt++) << std::endl;
+    if(leftIt != leftEnd)  ss << format(*leftIt++) << std::endl;
+    // Left and right its should both be at the end by now.
+    assert(leftIt == leftEnd);
+    assert(rightBegin == rightEnd);
+    return ss.str();
 }
