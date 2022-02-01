@@ -185,8 +185,11 @@ symbol::enumerate_symbols(NodeType<value_t> table, TraversalPolicy policy) {
     else if (policy == TraversalPolicy::kWholeTree)
         table = symbol::root_table(table);
     auto ret = std::visit(vis, table);
-    ret.sort([](const auto& rhs, const auto& lhs) {
-        return boost::algorithm::lexicographical_compare(rhs->name, lhs->name);
+    // Sort the strings in a case-insensitive manner, so DECI and DECO don't always come first...
+    ret.sort([](const auto& lhs, const auto& rhs) {
+        return boost::algorithm::lexicographical_compare(lhs->name, rhs->name, [](char lhs, char rhs){
+            return std::toupper(lhs)<std::toupper(rhs);
+        });
     });
     return ret;
 }
@@ -195,10 +198,8 @@ template <typename value_t>
 std::string
 symbol::symbol_table_listing(NodeType<value_t> table, TraversalPolicy policy) {
     auto symbols = enumerate_symbols(table, policy);
-    // Compute the midpoint of the list such that the left is equal to or greater than the right half
-    const auto leftEnd=std::next(symbols.cbegin(), (symbols.size()+1)/2), rightEnd=symbols.cend();
-    // Get the start iterators for each section
-    auto leftIt=symbols.cbegin(), rightIt=std::next(symbols.cbegin(), (symbols.size()+1)/2);
+    auto it=symbols.cbegin();
+
     // Compute the bitwidth of the symbol table.
     const auto  template_string= fmt::format(":0{}x", sizeof(value_t)*2);
 
@@ -208,10 +209,13 @@ symbol::symbol_table_listing(NodeType<value_t> table, TraversalPolicy policy) {
     };
 
     std::ostringstream ss;
-    while(rightIt != rightEnd) ss << format(*leftIt++) << "      " << format(*rightIt++) << std::endl;
-    if(leftIt != leftEnd)  ss << format(*leftIt++) << std::endl;
-    // Left and right its should both be at the end by now.
-    assert(leftIt == leftEnd);
-    assert(rightBegin == rightEnd);
+    bool lhs = true;
+    while(it != symbols.cend()) {
+        if(lhs) 
+            ss <<format(*it++);
+        else 
+            ss << "      " << format(*it++) << std::endl;
+        lhs^=true;
+    }
     return ss.str();
 }
