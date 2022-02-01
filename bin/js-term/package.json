@@ -8,6 +8,7 @@
     "exec": "node dist/index.js",
     "pkg": "yarn webpack && pkg . --options trace-uncaught,experimental-wasi-unstable-preview1",
     "tsc": "bash scripts/echo-rev.sh && tsc -p tsconfig.json",
+    "sign:macos": "codesign --force --sign 5B7J46989C  -o runtime --timestamp --verbose=4 dist/js-term-macos",
     "webpack": "yarn tsc && cp ../../packages/native/core/dist/*.wasm dist && webpack --config webpack.config.cjs"
   },
   "dependencies": {
