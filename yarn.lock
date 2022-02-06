@@ -4604,12 +4604,17 @@ __metadata:
     "@types/enzyme-adapter-react-16": ^1.0.6
     "@types/jest": ^27.4.0
     "@types/react": ^17.0.36
+    classnames: ^2.2.6
     enzyme: ^3.11.0
     enzyme-adapter-react-16: ^1.15.6
     identity-obj-proxy: ^3.0.0
     jest: ^27.3.1
     jest-junit: ^13.0.0
     jsdom: ^19.0.0
+    keycode-js: ^2.0.3
+    keycoder: ^1.1.1
+    react-virtualized-auto-sizer: ^1.0.2
+    react-window: ^1.8.5
     rimraf: ~3.0.2
     ts-jest: ^27.0.7
     typescript: ~4.4.0
@@ -4623,6 +4628,7 @@ __metadata:
     sass: ^1.43.4
     sass-loader: ^10.2.0
     style-loader: ^2.0.0
+    styled-components: ^4.3.2
   languageName: unknown
   linkType: soft
 
@@ -11480,6 +11486,13 @@ __metadata:
     isobject: ^3.0.0
     static-extend: ^0.1.1
   checksum: be108900801e639e50f96a7e4bfa8867c753a7750a7603879f3981f8b0a89cba657497a2d5f40cd4ea557ff15d535a100818bb486baf6e26fe5d7872e75f1078
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.2.6":
+  version: 2.3.1
+  resolution: "classnames@npm:2.3.1"
+  checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
   languageName: node
   linkType: hard
 
@@ -19217,6 +19230,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"keycode-js@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "keycode-js@npm:2.0.3"
+  checksum: f12c3899d7fcd8c5db0aa557a49e423adfaf3dee0f85614b4711c85bbb4ee685d1988fb5f541ca7e53dc1cc09be49d3caa633cb611fbb2dc5c5b2516b06b9eb2
+  languageName: node
+  linkType: hard
+
+"keycoder@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "keycoder@npm:1.1.1"
+  checksum: 812c6b6a258a9b459027f3105e5b50770163478e6387891072fcd08ebd18fa971a7e248f93461a097a64a5b6109c80dbf3d8bf838cfe836971e12171c010e3b6
+  languageName: node
+  linkType: hard
+
 "keytar@npm:7.2.0":
   version: 7.2.0
   resolution: "keytar@npm:7.2.0"
@@ -20230,6 +20257,13 @@ __metadata:
   dependencies:
     fs-monkey: 1.0.3
   checksum: 56ed70e1bdbc67d0c3758fa76c7ef25cd48c93c192f20c492e6b9811d783fdc453528d7ea91d9a79d5e6e121efa865adffd13fda30db0fa2b894ab91dfd1d653
+  languageName: node
+  linkType: hard
+
+"memoize-one@npm:>=3.1.1 <6":
+  version: 5.2.1
+  resolution: "memoize-one@npm:5.2.1"
+  checksum: a3cba7b824ebcf24cdfcd234aa7f86f3ad6394b8d9be4c96ff756dafb8b51c7f71320785fbc2304f1af48a0467cbbd2a409efc9333025700ed523f254cb52e3d
   languageName: node
   linkType: hard
 
@@ -23776,6 +23810,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-virtualized-auto-sizer@npm:^1.0.2":
+  version: 1.0.6
+  resolution: "react-virtualized-auto-sizer@npm:1.0.6"
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0
+    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0
+  checksum: 81270e9d328e9b779515f42b6aa8dea2f21097f69fc776906d6b7d31ada03706d34408a6318baf59531f180402fbf74fdb9928ab65d53442a134b7ee5ba01265
+  languageName: node
+  linkType: hard
+
 "react-virtualized@npm:^9.20.0":
   version: 9.22.3
   resolution: "react-virtualized@npm:9.22.3"
@@ -23790,6 +23834,19 @@ __metadata:
     react: ^15.3.0 || ^16.0.0-alpha
     react-dom: ^15.3.0 || ^16.0.0-alpha
   checksum: 5e3b566592293bc0057bc6be4f6ee29c58c8931421d2882a3ef45ca9b24c6f3ea78bbc5a182c2916af6520845e5a90f569b3a63c9b5e89428720913e6d6239cc
+  languageName: node
+  linkType: hard
+
+"react-window@npm:^1.8.5":
+  version: 1.8.6
+  resolution: "react-window@npm:1.8.6"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    memoize-one: ">=3.1.1 <6"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 54ccf2b16c921a1acfadbe6de5dc19fe0981d84c5a913e4607afbf24448b96e938020704bf5125ec528e43a710643fc05e86fc117219fc4936e231ecd19be0b2
   languageName: node
   linkType: hard
 
