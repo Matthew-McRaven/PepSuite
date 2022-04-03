@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "react-dom": "^16.8.0",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
