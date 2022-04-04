@@ -36,6 +36,11 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
     setLocalState(parseValue(state));
   }
 
+  const bytesFromString = (string: string) => {
+    const encoder = new TextEncoder();
+    return encoder.encode(string);
+  };
+
   // If localState is bad, reset to known-good external state
   const resetValue = () => { setLocalState(parseValue(state)); };
 
@@ -50,16 +55,15 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
       setState(0);
       return undefined;
     }
-    const encoder = new TextEncoder();
-    const bytes = encoder.encode(localState);
 
-    let accumulator = 0n;
+    const bytes = bytesFromString(localState);
+    let accumulator = BigInt(0);
 
     if (bytes.length > byteLength) {
       error(`${localState} does not fit in ${byteLength} bytes. Recieved ${byteLength} bytes.`);
       return resetValue();
     }
-    bytes.forEach((e) => { accumulator = accumulator * 256n + BigInt(e); });
+    bytes.forEach((e) => { accumulator = accumulator * BigInt(256) + BigInt(e); });
 
     const downCasted = BigInt.asUintN(8 * byteLength, accumulator);
     // Don't accept value if it doesn't fit in byteLength bytes.
@@ -84,6 +88,7 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
     // Reject changes when read only
     if (isReadOnly) return;
     const stringValue = e.currentTarget.value;
+    if (bytesFromString(stringValue).length > byteLength) return;
     setLocalState(stringValue);
   };
 
@@ -97,7 +102,13 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 
   return (
     <div className="UnicodeConverter" data-testid="UnicodeConverter">
-      <input value={localState} onChange={onChange} onBlur={onValidate} onKeyPress={onKeyPress} />
+      <input
+        className={`Input-${(isReadOnly || false) ? 'ro' : 'edit'}`}
+        value={localState}
+        onChange={onChange}
+        onBlur={onValidate}
+        onKeyPress={onKeyPress}
+      />
     </div>
   );
 };
@@ -105,7 +116,14 @@ export const UnicodeConverter = (props: UnicodeConverterProps) => {
 export const toHigherOrder = (byteLength: number) => {
   const localFn = (props: HigherOrderConverterProps) => {
     const { error, state, setState } = props;
-    return <UnicodeConverter byteLength={byteLength} state={state} setState={setState} error={error} />;
+    return (
+      <UnicodeConverter
+        byteLength={byteLength}
+        state={state}
+        setState={setState}
+        error={error}
+      />
+    );
   };
   return localFn;
 };

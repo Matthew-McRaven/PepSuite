@@ -1,8 +1,30 @@
 {
-  "private": true,
-  "name": "@pep10/start-page",
+  "name": "@pep10/ext-start-page",
   "version": "0.2.1",
+  "private": true,
   "description": "Eclipse Theia Blueprint Product Branding",
+  "keywords": [
+    "theia-extension"
+  ],
+  "homepage": "https://github.com/eclipse-theia/theia-blueprint",
+  "bugs": {
+    "url": "https://github.com/eclipse-theia/theia-blueprint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-theia/theia-blueprint.git"
+  },
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf lib *.tsbuildinfo",
+    "lint": "eslint --ext js,jsx,ts,tsx src",
+    "lint:fix": "eslint --ext js,jsx,ts,tsx src --fix"
+  },
   "dependencies": {
     "@theia/core": "1.21.0",
     "@theia/getting-started": "1.21.0",
@@ -16,36 +38,14 @@
     "tslint": "^5.12.0",
     "typescript": "^3.9.2"
   },
-  "theiaExtensions": [
-    {
-      "frontendElectron": "lib/browser/theia-blueprint-frontend-module",
-      "electronMain": "lib/electron-main/theia-blueprint-main-module",
-      "backend": "lib/node/theia-blueprint-backend-module"
-    }
-  ],
-  "keywords": [
-    "theia-extension"
-  ],
-  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eclipse-theia/theia-blueprint.git"
-  },
-  "bugs": {
-    "url": "https://github.com/eclipse-theia/theia-blueprint/issues"
-  },
-  "homepage": "https://github.com/eclipse-theia/theia-blueprint",
-  "files": [
-    "lib",
-    "src"
-  ],
-  "scripts": {
-    "clean": "rimraf lib *.tsbuildinfo",
-    "build": "tsc -b",
-    "lint": "eslint --ext js,jsx,ts,tsx src",
-    "lint:fix": "eslint --ext js,jsx,ts,tsx src --fix"
-  },
   "peerDependencies": {
     "react": "^16.8.0"
-  }
+  },
+  "theiaExtensions": [
+    {
+      "frontendElectron": "dist/browser/theia-blueprint-frontend-module",
+      "electronMain": "dist/electron-main/theia-blueprint-main-module",
+      "backend": "dist/node/theia-blueprint-backend-module"
+    }
+  ]
 }

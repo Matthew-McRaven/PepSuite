@@ -103,7 +103,7 @@ bool masm::elf::pack_image(std::shared_ptr<masm::project::project<addr_size_t>> 
         symbol_section_accessor sym_ac(*writer, sym_tab);
         for (auto symbol : symbols) {
             using namespace magic_enum::ostream_operators;
-            std::cout << symbol->value->type() << std::endl;
+            //std::cout << symbol->value->type() << std::endl;
             auto binding = STB_LOCAL;
             if (symbol->binding == symbol::binding_t::kGlobal)
                 binding = STB_GLOBAL;

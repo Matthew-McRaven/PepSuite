@@ -1,33 +1,31 @@
 {
-	"env": {
-		"myDefaultIncludePath": [
-			"${workspaceFolder}",
-			"${workspaceFolder}/include"
-		],
-	},
-	"configurations": [
-		{
-			"name": "Mac",
-			"intelliSenseMode": "clang-x64",
-			"includePath": [
-				"${myDefaultIncludePath}",
-				"/another/path"
-			],
-			"forcedInclude": [
-				"${workspaceFolder}/include/config.h"
-			],
-			"cStandard": "c11",
-			"cppStandard": "c++20",
-			"browse": {
-				"path": [
-					"${workspaceFolder}"
-				],
-				"limitSymbolsToIncludedHeaders": true,
-				"databaseFilename": ""
-			}
-		}
-	],
-	"version": 4
+  "env": {
+    "myDefaultIncludePath": [
+      "${workspaceFolder}",
+      "${workspaceFolder}/include"
+    ]
+  },
+  "configurations": [
+    {
+      "name": "Mac",
+      "intelliSenseMode": "clang-x64",
+      "includePath": [
+        "${myDefaultIncludePath}",
+        "/another/path"
+      ],
+      "forcedInclude": [
+        "${workspaceFolder}/include/config.h"
+      ],
+      "cStandard": "c11",
+      "cppStandard": "c++20",
+      "browse": {
+        "path": [
+          "${workspaceFolder}"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      }
+    }
+  ],
+  "version": 4
 }
-  
-  Top

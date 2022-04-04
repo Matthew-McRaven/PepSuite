@@ -1,0 +1,47 @@
+{
+  "name": "@pep10/ext-updater",
+  "version": "0.2.1",
+  "private": true,
+  "description": "Eclipse Theia Blueprint Updater",
+  "keywords": [
+    "theia-extension"
+  ],
+  "homepage": "https://github.com/eclipse-theia/theia-blueprint",
+  "bugs": {
+    "url": "https://github.com/eclipse-theia/theia-blueprint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-theia/theia-blueprint.git"
+  },
+  "license": "EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf lib *.tsbuildinfo",
+    "lint": "eslint --ext js,jsx,ts,tsx src",
+    "lint:fix": "eslint --ext js,jsx,ts,tsx src --fix"
+  },
+  "dependencies": {
+    "@theia/core": "1.21.0",
+    "@theia/output": "1.21.0",
+    "@theia/preferences": "1.21.0",
+    "electron-log": "^4.3.0",
+    "electron-updater": "4.3.9",
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.7.1",
+    "tslint": "^5.12.0",
+    "typescript": "^3.9.2"
+  },
+  "theiaExtensions": [
+    {
+      "electronMain": "dist/electron-main/update/theia-updater-main-module",
+      "frontendElectron": "dist/electron-browser/theia-updater-frontend-module"
+    }
+  ]
+}

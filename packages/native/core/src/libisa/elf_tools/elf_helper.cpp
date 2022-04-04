@@ -1,4 +1,15 @@
 #include "elf_tools/elf_helper.hpp"
+#include "sstream"
+
+std::vector<uint8_t> elf_tools::as_bytes(const ELFIO::elfio &image) {
+    std::ostringstream stream;
+    // This method should be const, but it isn't, so we have to do an evil cast.
+    const_cast<ELFIO::elfio&>(image).save(stream);
+    // Unfortunate copy of the stream. 
+    // We should do this so rarely that is does not matter.
+    auto bytes = stream.str();
+    return std::vector<uint8_t>(bytes.data(), bytes.data()+bytes.length());
+}
 
 ELFIO::section *elf_tools::find_section(ELFIO::elfio &image, const std::string &name) {
     ELFIO::section *sec = nullptr;

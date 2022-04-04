@@ -18,11 +18,11 @@ std::shared_ptr<masm::ir::linear_line<address_size_t>> masm::ir::comment_line<ad
 }
 
 template <typename address_size_t> std::string masm::ir::comment_line<address_size_t>::generate_listing_string() const {
-    return fmt::format("             {}", generate_source_string());
+    return fmt::format("              {}", generate_source_string());
 }
 
 template <typename address_size_t> std::string masm::ir::comment_line<address_size_t>::generate_source_string() const {
-    return this->comment.value_or("");
+    return ";"+this->comment.value_or("");
 }
 
 template <typename address_size_t>

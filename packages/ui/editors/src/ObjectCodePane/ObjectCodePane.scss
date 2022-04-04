@@ -1,0 +1,8 @@
+.ObjectCodePane {
+  font-family: 'Courier New', Courier, monospace;
+  textarea {
+    resize:none;
+    overflow: scroll;
+    max-width: calc(16*3)ch;
+  }
+}

@@ -23,6 +23,14 @@
 			"problemMatcher": [],
 			"label": "storybook",
 			"detail": "Open storybook for all UI components"
+		},
+		{
+			"type": "shell",
+			"command": "git submodule update --init --recursive",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "Init submodules",
+			"detail": "Recursively initialize submodules"
 		}
 	]
 }

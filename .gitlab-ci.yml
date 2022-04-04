@@ -4,17 +4,18 @@ stages:
 - packages/theia
 - test
 - chromatic
-- binaries
+- bin
 - docs
 - deploy
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.2.6
+  BUILD_VERSION: v0.2.7
   GIT_LFS_SKIP_SMUDGE: '1'
   # Append dist, because I have generated files there
   SAST_EXCLUDED_PATHS: spec, test, tests, tmp, dist
-
+  # Gemnasium crashes my pipelines... this will disable it.
+  DS_EXCLUDED_ANALYZERS: "gemnasium"
 ##################
 # Helper anchors #
 ##################
@@ -63,7 +64,7 @@ build:core:linux:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh || exit 1
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
     - yarn wasm build:coverage
@@ -81,7 +82,7 @@ build:core:wasm:
   stage: packages/native
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh || exit 1
     - export CXX=$(which clang++-14)
     - export C=$(which clang-14)
     - yarn wasm build:wasm
@@ -97,7 +98,7 @@ docs:core:
   stage: docs 
   needs: ["build:core:linux"]
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:docs
   artifacts:
     expire_in: 1 week
@@ -115,7 +116,7 @@ build:ui:
   stage: packages/ui
   needs: []
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh || exit 1
     - yarn ui:build
 
 test:ui:
@@ -124,12 +125,15 @@ test:ui:
   stage: test
   needs: ["build:ui"]
   script:
-    - yarn install --immutable 
+    - bash scripts/loop-install.sh || exit 1
     - yarn ui:test
+    - yarn ui:globcov
+  coverage: '/^\s*Coverage .*\d+.*/'
   artifacts:
     expire_in: 1 week
     when: always
     reports:
+      cobertura: packages/**/cobertura-coverage.xml
       junit:
         - packages/**/junit.xml
 
@@ -140,7 +144,7 @@ test:chromatic:
   stage: chromatic
   needs: ['test:ui']
   script:
-    - yarn install --immutable
+    - bash scripts/loop-install.sh || exit 1
     - yarn storybook:build
     - cd packages/ui
     - npx chromatic --exit-zero-on-changes --project-token ${CHROMATIC_PROJECT_TOKEN} --junit-report junit.xml -d storybook-static
@@ -156,6 +160,48 @@ test:chromatic:
       junit:
         - packages/ui/junit.xml
 
+##################
+# Build Binaries #
+##################
+build:ide:linux:
+  <<: *emscripten
+  <<: *cacheable-node
+  stage: bin
+  tags: 
+    - linux
+  needs: ['test:ui', 'build:core:wasm']
+  script:
+    - bash scripts/loop-install.sh || exit 1
+    - yarn ext:build
+    # Build IDE
+    # This step may fail if .browse-modules does not exist. Running it before build ensure build will pass.
+    - yarn ide theia rebuild:electron || true
+    - yarn ide build
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
+    - yarn ide package
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/PepIDE.AppImage
+
+build:jsterm:
+  <<: *emscripten
+  <<: *cacheable-node
+  stage: bin
+  tags: 
+    - docker
+  needs: ['build:core:wasm']
+  script:
+    - bash scripts/loop-install.sh || exit 1
+    # Build terminal application
+    - yarn js-term:pkg
+    # Run terminal application tests
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/PepIDE.AppImage
+
 #################
 # Version Bumps #
 #################
@@ -165,7 +211,7 @@ versions:bump:
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
   script:
-    - yarn install --immutable
+    - source scripts/loop-install.sh
     - |
       {
         echo "@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
@@ -182,7 +228,15 @@ versions:bump:
     - export NPM_CONFIG_REGISTRY=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm
     - echo ${NPM_CONFIG_REGISTRY}
     - echo $(git diff)
-    - "npx lerna publish -m \"build: release %v [skip ci]\" --conventional-commits --changelog-preset angular --yes --force-publish"
+    - "npx lerna version --no-push -m \"build: release %v [skip ci]\" --conventional-commits --changelog-preset angular --yes --force-publish"
+    # This is ugly, and could break things, but I **must** update the lock file or future CI will fail
+    - yarn
+    - git add yarn.lock
+    - git commit --amend --no-edit
+    - git tag --delete v$(jq -r .version < lerna.json )
+    - git tag v$(jq -r .version < lerna.json )
+    - git push && git push v$(jq -r .version < lerna.json )
+    - "npx lerna publish from-package --force-publish"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:

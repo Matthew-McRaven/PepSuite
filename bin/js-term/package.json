@@ -1,0 +1,51 @@
+{
+  "name": "js-term",
+  "version": "0.2.1",
+  "type": "commonjs",
+  "main": "dist/bundle.js",
+  "bin": "dist/bundle.js",
+  "scripts": {
+    "exec": "node dist/index.js",
+    "pkg": "yarn webpack && pkg . --options trace-uncaught,experimental-wasi-unstable-preview1",
+    "tsc": "bash scripts/echo-rev.sh && tsc -p tsconfig.json",
+    "sign:macos": "codesign --force --sign 5B7J46989C  -o runtime --timestamp --verbose=4 dist/js-term-macos",
+    "webpack": "yarn tsc && cp ../../packages/native/core/dist/*.wasm dist && webpack --config webpack.config.cjs"
+  },
+  "dependencies": {
+    "@pep10/core": "^0.2.1",
+    "@wasmer/wasi": "^1.0.2",
+    "chalk": "^4.0.0",
+    "command-line-args": "^5.2.0",
+    "command-line-usage": "^6.1.1",
+    "leven": "^4.0.0",
+    "pkg": "^5.5.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/command-line-args": "^5.2.0",
+    "@types/command-line-usage": "^5.0.2",
+    "@wasm-tool/wasi": "^0.0.4",
+    "typescript": "4.4",
+    "webpack": "5",
+    "webpack-cli": "^4.9.2"
+  },
+  "packageManager": "yarn@3.1.1",
+  "pkg": {
+    "assets": [
+      "./dist/*.wasm"
+    ],
+    "targets": [
+      "node14-linux-x64",
+      "node14-macos-x64",
+      "node14-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "targets": {
+    "node": [
+      "14"
+    ]
+  }
+}

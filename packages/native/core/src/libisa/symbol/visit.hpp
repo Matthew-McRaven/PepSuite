@@ -78,6 +78,13 @@ template <typename value_t> class AdjustOffsetVisitor {
     value_t offset_ = {0}, threshhold_ = {0};
 };
 
+//! List all symbols in a tree
+template <typename value_t> struct EnumerationVisitor {
+    std::list<std::shared_ptr<symbol::entry<value_t>>> operator()(std::shared_ptr<BranchTable<value_t>> table);
+    std::list<std::shared_ptr<symbol::entry<value_t>>> operator()(std::shared_ptr<LeafTable<value_t>> table);
+};
+
+
 /*
  * Helper methods that wrap visitor creation and std::visit invocation.
  */
@@ -113,14 +120,34 @@ bool exists(NodeType<value_t> table, const std::string &name, TraversalPolicy po
 
 /*!
  * \brief For each symbol in table, if the value is a value_location, adjust the offset field by "offset" if the base
- * field >= threshold. \arg table A node in a hierarchical symbol table. \arg offset \arg threshold \tparam value_t An
- * unsigned integral type that is large enough to contain the largest address on the target system. \sa
- * symbol::AdjustOffsetVisitor
+ * field >= threshold. 
+ * \arg table A node in a hierarchical symbol table. 
+ * \arg offset 
+ * \arg threshold 
+ * \tparam value_t Anunsigned integral type that is large enough to contain the largest address on the target system. 
+ * \sa symbol::AdjustOffsetVisitor
  */
 template <typename value_t>
 void adjust_offset(NodeType<value_t> table, value_t offset, value_t threshhold = 0,
                    TraversalPolicy policy = TraversalPolicy::kChildren);
 
+/*!
+ * \brief Create a list of all symbols in the symbol table
+ * \arg table A node in a hierarchical symbol table.
+ * \tparam value_t An unsigned integral type that is large enough to contain the largest address on the target system. 
+ * \sa symbol::EnumerationVisitor
+ */
+template <typename value_t>
+std::list<std::shared_ptr<symbol::entry<value_t>>> enumerate_symbols(NodeType<value_t> table, TraversalPolicy policy = TraversalPolicy::kChildren);
+
+/*!
+ * \brief Create a string representation of a symbol table
+ * \arg table A node in a hierarchical symbol table.
+ * \tparam value_t An unsigned integral type that is large enough to contain the largest address on the target system. 
+ * \sa symbol::EnumerationVisitor
+ */
+template <typename value_t>
+std::string symbol_table_listing(NodeType<value_t> table, TraversalPolicy policy = TraversalPolicy::kChildren);
 } // end namespace symbol
 
 #include "visit.tpp"
