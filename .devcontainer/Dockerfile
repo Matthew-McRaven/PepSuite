@@ -1,1 +1,1 @@
-FROM registry.gitlab.com/pep10/pepsuite/develop:v0.2.6
+FROM registry.gitlab.com/pep10/pepsuite/develop:v0.2.7
