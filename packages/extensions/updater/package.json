@@ -26,9 +26,9 @@
     "lint:fix": "eslint --ext js,jsx,ts,tsx src --fix"
   },
   "dependencies": {
-    "@theia/core": "1.21.0",
-    "@theia/output": "1.21.0",
-    "@theia/preferences": "1.21.0",
+    "@theia/core": "^1.24.0",
+    "@theia/output": "^1.24.0",
+    "@theia/preferences": "^1.24.0",
     "electron-log": "^4.3.0",
     "electron-updater": "4.3.9",
     "fs-extra": "^10.0.0"

@@ -14,7 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { BrowserWindow, Menu, remote } from '@theia/core/shared/electron';
+import * as electronRemote from '@theia/core/electron-shared/@electron/remote';
+import Electron from '@theia/core/electron-shared/electron';
 import {
     Command,
     CommandContribution,
@@ -29,12 +30,12 @@ import {
 import { PreferenceScope, PreferenceService } from '@theia/core/lib/browser/preferences';
 import { TheiaUpdater, TheiaUpdaterClient, UpdaterError } from '../../common/updater/theia-updater';
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
-
 import { CommonMenus, OpenerService } from '@theia/core/lib/browser';
 import { ElectronMainMenuFactory } from '@theia/core/lib/electron-browser/menu/electron-main-menu-factory';
 import { isOSX } from '@theia/core/lib/common/os';
 import { setInterval, clearInterval } from 'timers';
 import URI from '@theia/core/lib/common/uri';
+import { URI as VSCodeURI } from 'vscode-uri';
 
 export namespace TheiaUpdaterCommands {
 
@@ -112,9 +113,9 @@ export class ElectronMenuUpdater {
         this.setMenu();
     }
 
-    private setMenu(menu: Menu | null = this.factory.createElectronMenuBar(), electronWindow: BrowserWindow = remote.getCurrentWindow()): void {
+    private setMenu(menu: Electron.Menu | null = this.factory.createElectronMenuBar(), electronWindow: Electron.BrowserWindow = electronRemote.getCurrentWindow()): void {
         if (isOSX) {
-            remote.Menu.setApplicationMenu(menu);
+            electronRemote.Menu.setApplicationMenu(menu);
         } else {
             electronWindow.setMenu(menu);
         }
@@ -234,7 +235,7 @@ export class TheiaUpdaterFrontendContribution implements CommandContribution, Me
             const viewLogAction = 'View Error Log';
             const answer = await this.messageService.error(error.message, viewLogAction);
             if (answer === viewLogAction) {
-                const uri = new URI(error.errorLogPath);
+                const uri = new URI(VSCodeURI.file(error.errorLogPath));
                 const opener = await this.openerService.getOpener(uri);
                 opener.open(uri);
             }
