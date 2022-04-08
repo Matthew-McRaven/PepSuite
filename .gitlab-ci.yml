@@ -179,7 +179,7 @@ build:ide:linux:
     - yarn theia generate || true
     # This step may fail if .browse-modules does not exist. Running it before build ensure build will pass.
     - yarn theia rebuild:electron || true
-    - yarn build
+    - yarn theia build && yarn theia download:plugins
     # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
     - yarn ide:fix
     - yarn package
