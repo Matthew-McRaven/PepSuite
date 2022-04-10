@@ -16,7 +16,8 @@
     "packages/ui",
     "packages/ui/**/*",
     "packages/extensions/*",
-    "packages/native/*"
+    "packages/native/*",
+    "packages/playground"
   ],
   "scripts": {
     "build": "npx lerna run build",
