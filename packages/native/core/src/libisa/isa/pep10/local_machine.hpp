@@ -34,6 +34,12 @@ class LocalMachine : public components::machine::MachineProcessorInterface<uint1
     void begin_simulation() override;
     void end_simulation() override;
     bool halted() const override;
+    /* Do not export these functions to JS.
+     * We want our API in JS to require accessing components (e.g. machine.getComponent("CPU").readRegister()) to get
+     * values. This has several benefits: It gives us more freedom in API design. I don't have to figure out now how to
+     * seemlessly swap Pep/9's proc for Pep/10. It allows for more complex systems to be realized. One is allowed to
+     * have multiple CPUS/components/memories. This will be helpful when we design the full-system Pep/10 in the future.
+     */
     result<uint8_t> get_memory(uint16_t address) const override;
     result<void> set_memory(uint16_t address, uint8_t value) override;
     result<uint8_t> read_memory(uint16_t address) const override;
@@ -46,6 +52,7 @@ class LocalMachine : public components::machine::MachineProcessorInterface<uint1
     void write_csr(isa::pep10::CSR csr, bool value);
     uint8_t read_packed_csr() const;
     void write_packed_csr(uint8_t value);
+    // End unbindable functions
 
     result<void> unwind_active_instruction() override;
     uint16_t address_from_vector(isa::pep10::MemoryVector vector) const override;
