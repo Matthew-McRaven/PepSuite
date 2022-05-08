@@ -229,14 +229,25 @@ const handleFigure = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (!args.fig) {
     error('--fig is a required argument.');
   } else {
-    const { fig, ch } = args;
+    const { fig, ch, type } = args;
     const mod = await pep10;
+    let element_type: any;
+    switch ((type || "pep").toLowerCase()) {
+      case "c": element_type = mod.ElementType.C;
+      case "pepl": element_type = mod.ElementType.Pepl;
+      case "pepo": element_type = mod.ElementType.Pepo;
+      case "peph": element_type = mod.ElementType.Peph;
+      case "pepb": element_type = mod.ElementType.Pepb;
+      case "pepm": element_type = mod.ElementType.Pepm;
+      case "pep": element_type = mod.ElementType.Pep;
+      default: error(`${type} is not a valid figure type.`);
+    }
     const reg = new mod.Registry();
     const figure = reg.findFigure('pep10', ch, fig);
     if (!figure) error(`${ch}.${fig} is not a valid figure.`);
     else {
-      const text = figure.elements.get(mod.ElementType.Pep);
-      if (!text) error(`${ch}.${fig} has no assembly source code.`);
+      const text = figure.elements.get(element_type);
+      if (!text) error(`${ch}.${fig} has element of type ${type}.`);
       else console.log(text);
     }
     if (figure) figure.delete();
@@ -257,6 +268,7 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
       if (figures.get(i).processor === 'pep10') {
         const figureI = figures.get(i);
         console.log(`\tFigure ${figureI.chapter}.${figureI.figure}`);
+        console.log(figureI);
         figureI.delete();
       }
     }

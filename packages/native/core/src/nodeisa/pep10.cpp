@@ -279,7 +279,13 @@ EMSCRIPTEN_BINDINGS(pep10) {
 
     emscripten::function("errorName", &error_name);
     emscripten::enum_<element_type>("ElementType")
-        .value("Pep", element_type::kPep);
+        .value("C", element_type::kC)
+        .value("Pep", element_type::kPep)
+        .value("Pepl", element_type::kPepl)
+        .value("Pepo", element_type::kPepo)
+        .value("Peph", element_type::kPeph)
+        .value("Pepb", element_type::kPepb)
+        .value("Pepm", element_type::kPepm);
     emscripten::register_map<element_type, std::string>("FigureElement");
 
     // Needed for figure, ls-figures.

@@ -217,8 +217,13 @@ export const figure: Command = {
     description: 'Figure name for figure',
     type: String,
   },
+  {
+    name: 'type',
+    description: 'Which variant of the figure (e.g. C source/asm source, ...). Defaults to asm.\nOptions are: c, pep, pepl, pepo, peph pepb, pepm',
+    type: String,
+  },
   ],
-  sampleInvoke: '$ pepterm figure --ch {underline chapter-number} --fig {underline figure-name}',
+  sampleInvoke: '$ pepterm figure --ch {underline chapter-number} --fig {underline figure-name} --type {underline figure-type}',
   detailed: 'TODO',
   usage: [],
 };
