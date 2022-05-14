@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://gitlab.com/pep10/pepsuite/compare/v0.2.1...v0.3.0) (2022-05-14)
+
+
+### Bug Fixes
+
+* **ui:** fix broken reference to IntegralConverter ([dd1596b](https://gitlab.com/pep10/pepsuite/commit/dd1596bdae757a54b9d86f7e6ad94d412b828e73)), closes [#349](https://gitlab.com/pep10/pepsuite/issues/349)
+
+
+### Features
+
+* **ui:** add basic implementation for ExportsViewer ([4c7fb53](https://gitlab.com/pep10/pepsuite/commit/4c7fb5342a3d22a16b5132cfbf4bec49b1b13c73)), closes [#333](https://gitlab.com/pep10/pepsuite/issues/333)
+* **ui:** add stub for ExportsViewer ([80cae48](https://gitlab.com/pep10/pepsuite/commit/80cae48c0ee36322dd547d88b60086d1de1be765)), closes [#333](https://gitlab.com/pep10/pepsuite/issues/333)
+* **ui:** allow multiple bases in ExportsViewer ([fd96012](https://gitlab.com/pep10/pepsuite/commit/fd96012bc8e58b012bd9c6b494f626001053ed39)), closes [#333](https://gitlab.com/pep10/pepsuite/issues/333)
+* **ui:** render ExportViewer value with IntegralConverter ([5d87d86](https://gitlab.com/pep10/pepsuite/commit/5d87d86caf06be28cef6e7430ead5f951dd1dc25)), closes [#333](https://gitlab.com/pep10/pepsuite/issues/333)
+
+
+
+
+
 ## [0.2.1](https://gitlab.com/pep10/pepsuite/compare/v0.2.0...v0.2.1) (2022-01-20)
 
 **Note:** Version bump only for package @pep10/ui-help
