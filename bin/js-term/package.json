@@ -1,6 +1,6 @@
 {
   "name": "js-term",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "commonjs",
   "main": "dist/bundle.js",
   "bin": "dist/bundle.js",
@@ -12,7 +12,7 @@
     "webpack": "yarn tsc && cp ../../packages/native/core/dist/*.wasm dist && webpack --config webpack.config.cjs"
   },
   "dependencies": {
-    "@pep10/core": "^0.3.0",
+    "@pep10/core": "^0.3.1",
     "@wasmer/wasi": "^1.0.2",
     "chalk": "^4.0.0",
     "command-line-args": "^5.2.0",
