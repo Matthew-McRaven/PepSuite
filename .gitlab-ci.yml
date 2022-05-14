@@ -46,8 +46,6 @@ build:builtins:
   stage: packages/native
   needs: []
   script:
-    - export CXX=$(which clang++-14)
-    - export C=$(which clang-14)
     - cd packages/native/builtins
     - (cd gen && python3 gen.py)
     - mkdir build && cd build
@@ -65,8 +63,6 @@ build:core:linux:
   needs: []
   script:
     - bash scripts/loop-install.sh || exit 1
-    - export CXX=$(which clang++-14)
-    - export C=$(which clang-14)
     - yarn wasm build:coverage
     - mv packages/native/core/coverage.xml coverage.xml
   coverage: '/^\s*lines.*/'
@@ -85,8 +81,6 @@ build:core:wasm:
   needs: []
   script:
     - bash scripts/loop-install.sh || exit 1
-    - export CXX=$(which clang++-14)
-    - export C=$(which clang-14)
     - yarn wasm build:wasm
     - yarn wasm dist
   artifacts:
