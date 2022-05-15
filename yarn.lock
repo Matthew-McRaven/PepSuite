@@ -3401,7 +3401,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pep10/core@^0.3.0, @pep10/core@workspace:packages/native/core":
+"@pep10/core@^0.3.1, @pep10/core@workspace:packages/native/core":
   version: 0.0.0-use.local
   resolution: "@pep10/core@workspace:packages/native/core"
   dependencies:
@@ -3412,7 +3412,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pep10/ext-start-page@^0.3.0, @pep10/ext-start-page@workspace:packages/extensions/start-page":
+"@pep10/ext-start-page@^0.3.1, @pep10/ext-start-page@workspace:packages/extensions/start-page":
   version: 0.0.0-use.local
   resolution: "@pep10/ext-start-page@workspace:packages/extensions/start-page"
   dependencies:
@@ -3430,7 +3430,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pep10/ext-updater@^0.3.0, @pep10/ext-updater@workspace:packages/extensions/updater":
+"@pep10/ext-updater@^0.3.1, @pep10/ext-updater@workspace:packages/extensions/updater":
   version: 0.0.0-use.local
   resolution: "@pep10/ext-updater@workspace:packages/extensions/updater"
   dependencies:
@@ -18007,7 +18007,7 @@ __metadata:
     "@babel/cli": ^7.16.8
     "@babel/preset-env": ^7.16.11
     "@babel/preset-typescript": ^7.16.7
-    "@pep10/core": ^0.3.0
+    "@pep10/core": ^0.3.1
     "@types/command-line-args": ^5.2.0
     "@types/command-line-usage": ^5.0.2
     "@wasm-tool/wasi": ^0.0.4
@@ -26124,8 +26124,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "theia-blueprint@workspace:bin/ide"
   dependencies:
-    "@pep10/ext-start-page": ^0.3.0
-    "@pep10/ext-updater": ^0.3.0
+    "@pep10/ext-start-page": ^0.3.1
+    "@pep10/ext-updater": ^0.3.1
     "@theia/bulk-edit": ^1.24.0
     "@theia/callhierarchy": ^1.24.0
     "@theia/cli": ^1.24.0
