@@ -10,7 +10,7 @@ stages:
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.3.5
+  BUILD_VERSION: v0.4.0
   GIT_LFS_SKIP_SMUDGE: '1'
   # Append dist, because I have generated files there
   SAST_EXCLUDED_PATHS: spec, test, tests, tmp, dist
