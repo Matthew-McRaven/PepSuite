@@ -43,7 +43,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.set_begin_address(0x100);
 
         CHECK(line.generate_source_string() == "sym:     .ADDRSS sym         ");
-        CHECK(line.generate_listing_string() == "0x0100        sym:     .ADDRSS sym         ");
+        CHECK(line.generate_listing_string() == "0100        sym:     .ADDRSS sym         ");
         CHECK(line.object_code_bytes() == 2);
         CHECK(line.contains_memory_address());
         CHECK_FALSE(line.tracks_trace_tags());
@@ -57,7 +57,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.direction = masm::ir::dot_align<uint16_t>::align_direction::kNext;
 
         CHECK(line.generate_source_string() == "         .ALIGN  4           ");
-        CHECK(line.generate_listing_string() == "0x0011 000000          .ALIGN  4           ");
+        CHECK(line.generate_listing_string() == "0011 000000          .ALIGN  4           ");
         CHECK(line.object_code_bytes() == 3);
         CHECK(line.contains_memory_address());
         CHECK_FALSE(line.tracks_trace_tags());
@@ -70,7 +70,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.set_begin_address(0x11);
 
         CHECK(line.generate_source_string() == "         .ASCII  \"NIT\"       ");
-        CHECK(line.generate_listing_string() == "0x0011 4E4954          .ASCII  \"NIT\"       ");
+        CHECK(line.generate_listing_string() == "0011 4E4954          .ASCII  \"NIT\"       ");
         CHECK(line.object_code_bytes() == 3);
         CHECK(line.contains_memory_address());
         CHECK_FALSE(line.tracks_trace_tags());
@@ -83,7 +83,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.set_begin_address(0x11);
 
         CHECK(line.generate_source_string() == "         .BLOCK  3           ");
-        CHECK(line.generate_listing_string() == "0x0011 000000          .BLOCK  3           ");
+        CHECK(line.generate_listing_string() == "0011 000000          .BLOCK  3           ");
         CHECK(line.object_code_bytes() == 3);
         CHECK(line.contains_memory_address());
         CHECK(line.tracks_trace_tags());
@@ -109,7 +109,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.argument = std::make_shared<masm::ir::dec_argument<uint16_t>>(0xda);
 
         CHECK(line.generate_source_string() == "         .BYTE   218         ");
-        CHECK(line.generate_listing_string() == "0x0011 DA              .BYTE   218         ");
+        CHECK(line.generate_listing_string() == "0011 DA              .BYTE   218         ");
         CHECK(line.object_code_bytes() == 1);
         CHECK(line.contains_memory_address());
         CHECK(line.tracks_trace_tags());
@@ -147,7 +147,7 @@ TEST_CASE("Linear IR code lines, 16-bit,") {
         line.argument = std::make_shared<masm::ir::hex_argument<uint16_t>>(0xcafe);
 
         CHECK(line.generate_source_string() == "         .WORD   0xCAFE      ");
-        CHECK(line.generate_listing_string() == "0x0011 CAFE            .WORD   0xCAFE      ");
+        CHECK(line.generate_listing_string() == "0011 CAFE            .WORD   0xCAFE      ");
         CHECK(line.object_code_bytes() == 2);
         CHECK(line.contains_memory_address());
         CHECK(line.tracks_trace_tags());
