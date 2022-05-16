@@ -1,4 +1,5 @@
 #include "ex_registry.hpp"
+#include <algorithm>
 #include <iostream>
 
 registry *registry::_instance = nullptr;
