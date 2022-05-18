@@ -25,7 +25,7 @@ switch (process.argv[2]) {
   case 'wasm':
     fs.mkdir('build/js', () => { });
     commands.push('cd build/js');
-    commands.push('emcmake cmake -DBoost_INCLUDE_DIR=/boost/ ../.. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_TESTING=1');
+    commands.push('emcmake cmake -DBoost_INCLUDE_DIR=/usr/local/include ../.. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_TESTING=1');
     commands.push('emmake make -j$(nproc)');
     commands.push('emmake make test -j$(nproc)');
     break;

@@ -21,6 +21,7 @@ Distributed under the Boost Software License, Version 1.0.
     (See accompanying file Licence.txt or copy at
           http://www.boost.org/LICENSE_1_0.txt)
 */
+#include <atomic>
 #ifndef OUTCOME_EXPERIMENTAL_STATUS_OUTCOME_HPP
 #define OUTCOME_EXPERIMENTAL_STATUS_OUTCOME_HPP
 /* A less simple result type
@@ -4704,6 +4705,7 @@ Distributed under the Boost Software License, Version 1.0.
 #ifndef OUTCOME_BASIC_OUTCOME_FAILURE_OBSERVERS_HPP
 #define OUTCOME_BASIC_OUTCOME_FAILURE_OBSERVERS_HPP
 OUTCOME_V2_NAMESPACE_EXPORT_BEGIN
+static_assert((__cplusplus >= 201103L) && (ATOMIC_INT_LOCK_FREE > 1), "EXPLODE");
 namespace detail
 {
   namespace adl
