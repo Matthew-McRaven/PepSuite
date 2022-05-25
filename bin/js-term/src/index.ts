@@ -93,6 +93,22 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       fs.writeFileSync(listingFile, project.formattedUserListing());
       fs.closeSync(listingFile);
 
+      // If --enable-peph, output as .peph
+      if (args['enable-peph']) {
+        const pephFile = fs.openSync(changeObjectFileExtension('peph'), 'w');
+        fs.ftruncateSync(pephFile);
+        fs.writeFileSync(pephFile, project.formattedPeph());
+        fs.closeSync(pephFile)
+      }
+
+      // If --enable-pepb, output as .pepb
+      if (args['enable-pepb']) {
+        const pepbFile = fs.openSync(changeObjectFileExtension('pepb'), 'w');
+        fs.ftruncateSync(pepbFile);
+        fs.writeFileSync(pepbFile, project.formattedPepb());
+        fs.closeSync(pepbFile)
+      }
+
       // If --enable-elf, output as .elf
       if (args['enable-elf']) {
         const elfFile = fs.openSync(changeObjectFileExtension('elf'), 'w');
