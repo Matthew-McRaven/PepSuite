@@ -45,6 +45,8 @@ build:builtins:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - cd packages/native/builtins
     - (cd gen && python3 gen.py)
@@ -61,6 +63,8 @@ build:core:linux:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:coverage
@@ -79,6 +83,8 @@ build:core:wasm:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:wasm
@@ -93,6 +99,8 @@ docs:core:
   <<: *emscripten
   stage: docs 
   needs: ["build:core:linux"]
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:docs
@@ -111,6 +119,8 @@ build:ui:
   <<: *cacheable-node
   stage: packages/ui
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn ui:build
@@ -120,6 +130,8 @@ test:ui:
   <<: *cacheable-node
   stage: test
   needs: ["build:ui"]
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn ui:test
@@ -141,6 +153,8 @@ test:chromatic:
   <<: *cacheable-node
   stage: chromatic
   needs: ['test:ui']
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn storybook:build
@@ -167,6 +181,7 @@ build:ide:linux:
   stage: bin
   tags: 
     - linux
+    - x86-64
   needs: ['test:ui', 'build:core:wasm']
   script:
     - bash scripts/loop-install.sh || exit 1
@@ -191,7 +206,8 @@ build:jsterm:
   <<: *cacheable-node
   stage: bin
   tags: 
-    - docker
+    - linux
+    - x86-64
   needs: ['build:core:wasm']
   script:
     - bash scripts/loop-install.sh || exit 1
@@ -211,6 +227,8 @@ versions:bump:
   # Ignore cache, as cache seems to break chromatic  
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
+  tags:
+    - docker
   script:
     - source scripts/loop-install.sh
     - |
