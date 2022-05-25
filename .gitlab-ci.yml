@@ -45,6 +45,8 @@ build:builtins:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - cd packages/native/builtins
     - (cd gen && python3 gen.py)
@@ -61,6 +63,8 @@ build:core:linux:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:coverage
@@ -79,6 +83,8 @@ build:core:wasm:
   <<: *emscripten
   stage: packages/native
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:wasm
@@ -93,6 +99,8 @@ docs:core:
   <<: *emscripten
   stage: docs 
   needs: ["build:core:linux"]
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn wasm build:docs
@@ -111,6 +119,8 @@ build:ui:
   <<: *cacheable-node
   stage: packages/ui
   needs: []
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn ui:build
@@ -120,6 +130,8 @@ test:ui:
   <<: *cacheable-node
   stage: test
   needs: ["build:ui"]
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn ui:test
@@ -141,6 +153,8 @@ test:chromatic:
   <<: *cacheable-node
   stage: chromatic
   needs: ['test:ui']
+  tags: 
+    - docker
   script:
     - bash scripts/loop-install.sh || exit 1
     - yarn storybook:build
@@ -161,12 +175,73 @@ test:chromatic:
 ##################
 # Build Binaries #
 ##################
+build:ide:windows:
+  #See link: https://github.com/electron-userland/electron-builder/issues/3179
+  variables:
+    USE_HARD_LINKS: 0
+  stage: bin
+  tags: 
+    - windows
+    - x86-64
+  needs: ['test:ui', 'build:core:wasm']
+  before_script:
+    - echo "override before_script"
+  script:
+    - set USE_HARD_LINKS=false
+    - bash scripts/loop-install.sh || exit 1
+    - yarn ext:build
+    # Okay. So electron-builder hates electron rebuild -- and cause mac build to fail when it is installed.
+    # But Theia depends on it to do module building. So lets install it globally and make everyone happy
+    - npm i -g electron-rebuild
+    # Build IDE
+    # This step may fail if .browser-modules does not exist. Running it before build ensure build will pass.
+    - yarn ide theia rebuild:electron
+    - yarn ide theia build && yarn ide theia download:plugins
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
+    - yarn ide package
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/<name>.exe
+
+build:ide:macos:
+  #See link: https://github.com/electron-userland/electron-builder/issues/3179
+  variables:
+    USE_HARD_LINKS: 0
+  stage: bin
+  needs: ['test:ui', 'build:core:wasm']
+  tags: 
+    - macos
+    - x86-64
+  script:
+    - nvm use 14.18.2
+    - export USE_HARD_LINKS=false
+    - zsh scripts/loop-install.sh || exit 1
+    - yarn ext:build
+    # Okay. So electron-builder hates electron rebuild -- and cause mac build to fail when it is installed.
+    # But Theia depends on it to do module building. So lets install it globally and make everyone happy
+    - npm i -g electron-rebuild
+    # Build IDE
+    # This step may fail if .browser-modules does not exist. Running it before build ensure build will pass.
+    - yarn ide theia rebuild:electron
+    - yarn ide theia build && yarn ide theia download:plugins
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
+    - yarn ide package
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/<name>.AppImage
+
+
 build:ide:linux:
   <<: *emscripten
   <<: *cacheable-node
   stage: bin
   tags: 
     - linux
+    - x86-64
   needs: ['test:ui', 'build:core:wasm']
   script:
     - bash scripts/loop-install.sh || exit 1
@@ -191,7 +266,8 @@ build:jsterm:
   <<: *cacheable-node
   stage: bin
   tags: 
-    - docker
+    - linux
+    - x86-64
   needs: ['build:core:wasm']
   script:
     - bash scripts/loop-install.sh || exit 1
@@ -211,6 +287,8 @@ versions:bump:
   # Ignore cache, as cache seems to break chromatic  
   stage: deploy
   needs: ['build:core:wasm', 'test:ui']
+  tags:
+    - docker
   script:
     - source scripts/loop-install.sh
     - |
