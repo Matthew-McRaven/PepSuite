@@ -62,6 +62,16 @@ If there are no errors, the error log file is not created.',
     description: 'Override the name of the default error log file.',
   },
   {
+    name: 'enable-pepb',
+    type: Boolean,
+    description: 'Enable outputting pep object code as formatted binary'
+  },
+  {
+    name: 'enable-peph',
+    type: Boolean,
+    description: 'Enable outputting pep object code as formatted hex'
+  },
+  {
     name: 'os',
     description: 'Input Pep/10 operating system for assembler. If not present, will default to textbook\'s OS.',
   },
