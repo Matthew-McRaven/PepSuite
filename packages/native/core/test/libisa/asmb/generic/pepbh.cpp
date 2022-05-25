@@ -30,7 +30,7 @@ TEST_CASE("Convert to pepb") {
         auto res = driver->assemble_joint(project, file_os, file_user, masm::project::toolchain_stage::FINISHED);
         REQUIRE(res.first);
         std::string formatted = ::masm::utils::generate_pretty_object_code(project->image->user, 2);
-        CHECK(formatted == "0000 1010 0000 1101 1110 1010 1101\n0003 0001 0001  ;comment here\n");
+        CHECK(formatted == "0000 1010 0000 1101 1110 1010 1101\n0003 0001 0001                ;comment here\n");
     }
 }
 
@@ -54,6 +54,6 @@ TEST_CASE("Convert to peph") {
         auto res = driver->assemble_joint(project, file_os, file_user, masm::project::toolchain_stage::FINISHED);
         REQUIRE(res.first);
         std::string formatted = ::masm::utils::generate_pretty_object_code(project->image->user, 16);
-        CHECK(formatted == "0000 A0DEAD\n0003 11  ;comment here\n");
+        CHECK(formatted == "0000 A0DEAD\n0003 11     ;comment here\n");
     }
 }
