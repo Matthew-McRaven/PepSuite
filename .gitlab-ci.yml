@@ -175,6 +175,36 @@ test:chromatic:
 ##################
 # Build Binaries #
 ##################
+build:ide:windows:
+  #See link: https://github.com/electron-userland/electron-builder/issues/3179
+  variables:
+    USE_HARD_LINKS: 0
+  stage: bin
+  tags: 
+    - windows
+    - x86-64
+  needs: ['test:ui', 'build:core:wasm']
+  before_script:
+    - echo "override before_script"
+  script:
+    - set USE_HARD_LINKS=false
+    - bash scripts/loop-install.sh || exit 1
+    - yarn ext:build
+    # Okay. So electron-builder hates electron rebuild -- and cause mac build to fail when it is installed.
+    # But Theia depends on it to do module building. So lets install it globally and make everyone happy
+    - npm i -g electron-rebuild
+    # Build IDE
+    # This step may fail if .browser-modules does not exist. Running it before build ensure build will pass.
+    - yarn ide theia rebuild:electron
+    - yarn ide theia build && yarn ide theia download:plugins
+    # Some installed packages have no install script, and we need to add it so node-gyp doesn't explode.
+    - yarn ide:fix
+    - yarn ide package
+  #artifacts:
+    #expire_in: 1 week
+    #paths:
+      #- bin/ide/dist/<name>.exe
+
 build:ide:linux:
   <<: *emscripten
   <<: *cacheable-node
