@@ -182,13 +182,11 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
         default: break;
       }
 
-      if (args['echo-output']) console.log(simulator.getCharOut());
+      // Dump charOut to stdOut, and add \n to prevent ugly % char
+      // See: https://www.geeksforgeeks.org/difference-between-process-stdout-write-and-console-log-in-node-js/
+      process.stdout.write(simulator.getCharOut())
+      process.stdout.write("\n")
 
-      // Clear object file if it exists, and dump formatted object code to it.
-      const charOutFile = fs.openSync(args.charOut, 'w');
-      fs.ftruncateSync(charOutFile);
-      fs.writeFileSync(charOutFile, simulator.getCharOut());
-      fs.closeSync(charOutFile);
     } catch (except) {
       error(except);
     } finally {

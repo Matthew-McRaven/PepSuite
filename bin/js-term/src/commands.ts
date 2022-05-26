@@ -118,15 +118,6 @@ export const run: Command = {
     description: 'File buffered behind the charIn input port.',
   },
   {
-    name: 'charOut',
-    alias: 'o',
-    description: 'File to which the charOut output port is streamed.',
-  },
-  {
-    name: 'echo-output',
-    description: 'Echo data written to charOut to stdout.',
-  },
-  {
     name: 'max-steps',
     alias: 'm',
     type: Number,
