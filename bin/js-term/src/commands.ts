@@ -37,9 +37,7 @@ export const asm: Command = {
   name: 'asm',
   oneLine: 'Assemble a Pep/10 assembler source code program to object code.',
   detailed: 'The source_file must be a .pep file.\n\
-The object_file must be a .pepo file.\n\
 If there are assembly errors, an error log file named <source_file>_errLog.txt is created with the error messages.\
-<source_file> is the name of source_file without the .pep extension.\n\
 If there are no errors, the error log file is not created.',
   commands: [{
     name: 'positionals',
@@ -47,12 +45,7 @@ If there are no errors, the error log file is not created.',
     description: 'Arguments that must be passed',
   }, helpCommand,
   {
-    name: 'source-file',
-    alias: 's',
-    description: 'Input Pep/10 source program for assembler.',
-  },
-  {
-    name: 'object-file',
+    name: 'obj',
     alias: 'o',
     description: 'Output object code generated from source.',
   },

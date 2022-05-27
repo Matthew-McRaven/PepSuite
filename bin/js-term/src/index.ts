@@ -26,15 +26,11 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
     return error(`Unexpected option ${args._unknown[0]}`);
-  } else if (!args['source-file']) {
-    return error('--source-file (or -s) is required.');
-  } else if (!args['object-file']) {
-    return error('--object-file (or -o) is required.');
   } else {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
     try {
-      const sourceFileText = fs.readFileSync(args['source-file']).toString('ascii');
+      const sourceFileText = fs.readFileSync(args.positionals).toString('ascii');
       project.setUserProgram(sourceFileText);
       const errorCode = project.assemble();
 
@@ -56,7 +52,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       // If there are errors or warning, output them to --error-file or <source_file>_errLog.txt.
       if (errors) {
         // Select default error file, and override if --error-file is present.
-        const defaultErrorPath = path.parse(args['source-file']);
+        const defaultErrorPath = path.parse(args.positionals);
         let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
         if (args['error-file']) errorFileName = args['error-file'];
         // Remove any text from the error log
