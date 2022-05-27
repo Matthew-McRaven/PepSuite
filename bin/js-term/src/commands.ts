@@ -37,9 +37,7 @@ export const asm: Command = {
   name: 'asm',
   oneLine: 'Assemble a Pep/10 assembler source code program to object code.',
   detailed: 'The source_file must be a .pep file.\n\
-The object_file must be a .pepo file.\n\
 If there are assembly errors, an error log file named <source_file>_errLog.txt is created with the error messages.\
-<source_file> is the name of source_file without the .pep extension.\n\
 If there are no errors, the error log file is not created.',
   commands: [{
     name: 'positionals',
@@ -47,17 +45,12 @@ If there are no errors, the error log file is not created.',
     description: 'Arguments that must be passed',
   }, helpCommand,
   {
-    name: 'source-file',
-    alias: 's',
-    description: 'Input Pep/10 source program for assembler.',
-  },
-  {
-    name: 'object-file',
+    name: 'obj',
     alias: 'o',
-    description: 'Output object code generated from source.',
+    description: 'File to which object code will be written. Defaults to name of source file, with extension changed to pepo.',
   },
   {
-    name: 'error-file',
+    name: 'err',
     alias: 'e',
     description: 'Override the name of the default error log file.',
   },
@@ -72,16 +65,16 @@ If there are no errors, the error log file is not created.',
     description: 'Enable outputting pep object code as formatted hex'
   },
   {
-    name: 'os',
-    description: 'Input Pep/10 operating system for assembler. If not present, will default to textbook\'s OS.',
-  },
-  {
     name: 'enable-elf',
     type: Boolean,
     description: 'In addition to a .pepo objetc code file, dump the object code as an ELF file.',
   },
+  {
+    name: 'os',
+    description: 'Input Pep/10 operating system for assembler. If not present, will default to textbook\'s OS.',
+  },
   ],
-  sampleInvoke: '$ pepterm asm -s <{underline source_file}> -o <{underline object_file}> <options>',
+  sampleInvoke: '$ pepterm asm {underline source_file} <options>',
   usage: [],
 };
 asm.usage = [
@@ -102,29 +95,15 @@ export const run: Command = {
   commands: [{
     name: 'positionals',
     defaultOption: true,
-    description: 'Arguments that must be passed',
+    description: 'File containg object code to be executed',
   }, helpCommand,
   {
-    name: 'obj',
-    description: 'Pep object code file to be loaded. Mutually exclusive with --elf.',
+    name: 'force-obj',
+    description: 'Force interpretation of input file as pep object code. Mutually exclusive with --force-elf.',
   },
   {
-    name: 'elf',
-    description: 'Pep ELF file to be loaded. Mutually exclusive with --obj.',
-  },
-  {
-    name: 'charIn',
-    alias: 'i',
-    description: 'File buffered behind the charIn input port.',
-  },
-  {
-    name: 'charOut',
-    alias: 'o',
-    description: 'File to which the charOut output port is streamed.',
-  },
-  {
-    name: 'echo-output',
-    description: 'Echo data written to charOut to stdout.',
+    name: 'force-elf',
+    description: 'orce interpretation of input file as a pep ELF file. Mutually exclusive with --force-obj.',
   },
   {
     name: 'max-steps',
@@ -133,10 +112,12 @@ export const run: Command = {
     description: 'Override the default value of max_steps.',
   },
   ],
-  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} -i {underline input_file} <options>',
-  detailed: 'The object_file must be a .pepo file.\n\
-If the program takes input, -i is required.\n\
-If the program produces output, -o is required.\n\
+  sampleInvoke: '$ pepterm run {underline object_file}  <options>',
+  detailed: 'The object_file must be a .pepo or .elf file.\n\
+File type will be inferred from extension, and will default to pep object code.\n\
+Interpretation of object code can be force with the --force-* flags.\n\
+Character input is read from stdin (if present) and character output is written to stdout.\n\
+Runtime errors are written to stderr.\n\
 As a guard against endless loops the program will abort after max_steps assembly instructions execute.\n\
 The default value of max_steps is 100,000',
   usage: [],
