@@ -131,10 +131,8 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.run.usage));
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
-  } else if (!(args.elf || args.obj)) {
-    error('Exactly one of --elf or --obj is required.');
-  } else if (args.elf && args.obj) {
-    error('--elf and --obj are mutually exclusive.');
+  } else if (args['force-elf'] && args['force-obj']) {
+    error('--force-elf and --force-obj are mutually exclusive.');
   } else {
     const mod = await pep10;
     let image;

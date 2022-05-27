@@ -105,12 +105,12 @@ export const run: Command = {
     description: 'File containg object code to be executed',
   }, helpCommand,
   {
-    name: 'obj',
-    description: 'Pep object code file to be loaded. Mutually exclusive with --elf.',
+    name: 'force-obj',
+    description: 'Force interpretation of input file as pep object code. Mutually exclusive with --force-elf.',
   },
   {
-    name: 'elf',
-    description: 'Pep ELF file to be loaded. Mutually exclusive with --obj.',
+    name: 'force-elf',
+    description: 'orce interpretation of input file as a pep ELF file. Mutually exclusive with --force-obj.',
   },
   {
     name: 'max-steps',
@@ -122,6 +122,8 @@ export const run: Command = {
   sampleInvoke: '$ pepterm run {underline object_file}  <options>',
   detailed: 'The object_file must be a .pepo or .elf file.\n\
 File type will be inferred from extension, and will default to pep object code.\n\
+Interpretation of object code can be force with the --force-* flags.\n\
+Character input is read from stdin (if present) and character output is written to stdout.\n\
 Runtime errors are written to stderr.\n\
 As a guard against endless loops the program will abort after max_steps assembly instructions execute.\n\
 The default value of max_steps is 100,000',
@@ -133,7 +135,6 @@ run.usage = [
   synopsis(run.detailed, run.sampleInvoke),
   {
     header: 'Options',
-    hide: ['positionals'],
     optionList: run.commands,
   },
 ];
