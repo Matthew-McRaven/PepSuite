@@ -102,7 +102,7 @@ export const run: Command = {
   commands: [{
     name: 'positionals',
     defaultOption: true,
-    description: 'Arguments that must be passed',
+    description: 'File containg object code to be executed',
   }, helpCommand,
   {
     name: 'obj',
@@ -119,9 +119,9 @@ export const run: Command = {
     description: 'Override the default value of max_steps.',
   },
   ],
-  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} <options>',
-  detailed: 'The object_file must be a .pepo file.\n\
-characte input is read from stdin (if present) and characte output is written to stdout.\n\
+  sampleInvoke: '$ pepterm run {underline object_file}  <options>',
+  detailed: 'The object_file must be a .pepo or .elf file.\n\
+File type will be inferred from extension, and will default to pep object code.\n\
 Runtime errors are written to stderr.\n\
 As a guard against endless loops the program will abort after max_steps assembly instructions execute.\n\
 The default value of max_steps is 100,000',

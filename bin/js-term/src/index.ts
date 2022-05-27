@@ -140,12 +140,14 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
     let image;
     const simulator = new mod.Pep10Simulator();
     try {
-      if (args.obj) {
-        const objectText = fs.readFileSync(args.obj).toString('ascii');
+      const pepo = !(args['force-elf'] || args['positionals'].endsWith('elf'))
+      if (pepo) {
+        const objectText = fs.readFileSync(args.positionals).toString('ascii');
         image = mod.objectCodeToImage(objectText);
-      } else if (args.elf) {
-        const elfText = fs.readFileSync(args.elf);
+      } else if (!pepo) {
+        const elfText = fs.readFileSync(args.positionals);
         const elfBytes = new Uint8Array(elfText.buffer);
+        // Hack to pass raw bytes from JS to WASM
         const buf = mod._malloc(elfBytes.length * elfBytes.BYTES_PER_ELEMENT);
         mod.HEAPU8.set(elfBytes, buf);
         image = mod.rawBytesToImage(buf, elfBytes.length);
