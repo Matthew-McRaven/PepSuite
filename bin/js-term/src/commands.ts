@@ -135,6 +135,7 @@ run.usage = [
   synopsis(run.detailed, run.sampleInvoke),
   {
     header: 'Options',
+    hide: ['positionals'],
     optionList: run.commands,
   },
 ];
