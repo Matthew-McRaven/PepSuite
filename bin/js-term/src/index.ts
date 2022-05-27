@@ -71,15 +71,19 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         return error('Assembly failed due to errors in the supplied program.');
       }
 
+
+      const sourcePath = path.parse(args.positionals);
+      let defaultObjectCodeFileName = path.join(sourcePath.dir, `${sourcePath.name}.pepo`);
+      let objectCodeFileName = args.obj || defaultObjectCodeFileName
       // Clear object file if it exists, and dump formatted object code to it.
-      const objectFile = fs.openSync(args['object-file'], 'w');
+      const objectFile = fs.openSync(objectCodeFileName, 'w');
       fs.ftruncateSync(objectFile);
       fs.writeFileSync(objectFile, project.formattedObjectCode());
       fs.closeSync(objectFile);
 
       // Helper to replace the extension on the object file.
       const changeObjectFileExtension = (newExt: string) => {
-        const objectPath = path.parse(args['object-file']);
+        const objectPath = path.parse(objectCodeFileName);
         return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
       };
 
