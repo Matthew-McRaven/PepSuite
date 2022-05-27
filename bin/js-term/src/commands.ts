@@ -50,7 +50,7 @@ If there are no errors, the error log file is not created.',
     description: 'Output object code generated from source.',
   },
   {
-    name: 'error-file',
+    name: 'err',
     alias: 'e',
     description: 'Override the name of the default error log file.',
   },

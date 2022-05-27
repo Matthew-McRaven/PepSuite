@@ -49,9 +49,9 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         mod.MessageLevel.Status,
       );
 
-      // If there are errors or warning, output them to --error-file or <source_file>_errLog.txt.
+      // If there are errors or warning, output them to --err or <source_file>_errLog.txt.
       if (errors) {
-        // Select default error file, and override if --error-file is present.
+        // Select default error file, and override if --err is present.
         const defaultErrorPath = path.parse(args.positionals);
         let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
         if (args['error-file']) errorFileName = args['error-file'];
