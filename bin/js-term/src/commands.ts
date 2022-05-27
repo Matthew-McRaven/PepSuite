@@ -47,7 +47,7 @@ If there are no errors, the error log file is not created.',
   {
     name: 'obj',
     alias: 'o',
-    description: 'Output object code generated from source.',
+    description: 'File to which object code will be written. Defaults to name of source file, with extension changed to pepo.',
   },
   {
     name: 'err',
@@ -65,16 +65,16 @@ If there are no errors, the error log file is not created.',
     description: 'Enable outputting pep object code as formatted hex'
   },
   {
-    name: 'os',
-    description: 'Input Pep/10 operating system for assembler. If not present, will default to textbook\'s OS.',
-  },
-  {
     name: 'enable-elf',
     type: Boolean,
     description: 'In addition to a .pepo objetc code file, dump the object code as an ELF file.',
   },
+  {
+    name: 'os',
+    description: 'Input Pep/10 operating system for assembler. If not present, will default to textbook\'s OS.',
+  },
   ],
-  sampleInvoke: '$ pepterm asm -s <{underline source_file}> -o <{underline object_file}> <options>',
+  sampleInvoke: '$ pepterm asm {underline source_file} <options>',
   usage: [],
 };
 asm.usage = [
