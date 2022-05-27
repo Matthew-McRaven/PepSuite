@@ -155,11 +155,10 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       if (!image) return error('Provided object file was invalid.');
       simulator.setImage(image);
 
-      // Load charIn if it exists.
-      if (args.charIn) {
-        const charIn = fs.readFileSync(args.charIn).toString('ascii');
-        simulator.setCharIn(charIn);
-      }
+      // Load charIn from stdIn, which is fd==0
+      const charIn = fs.readFileSync(process.stdin.fd, "ascii")
+      simulator.setCharIn(charIn);
+
 
       // Check and set max-steps.
       if (args['max-steps']) {

@@ -113,21 +113,16 @@ export const run: Command = {
     description: 'Pep ELF file to be loaded. Mutually exclusive with --obj.',
   },
   {
-    name: 'charIn',
-    alias: 'i',
-    description: 'File buffered behind the charIn input port.',
-  },
-  {
     name: 'max-steps',
     alias: 'm',
     type: Number,
     description: 'Override the default value of max_steps.',
   },
   ],
-  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} -i {underline input_file} <options>',
+  sampleInvoke: '$ pepterm run --elf|--obj {underline object_file} <options>',
   detailed: 'The object_file must be a .pepo file.\n\
-If the program takes input, -i is required.\n\
-If the program produces output, -o is required.\n\
+characte input is read from stdin (if present) and characte output is written to stdout.\n\
+Runtime errors are written to stderr.\n\
 As a guard against endless loops the program will abort after max_steps assembly instructions execute.\n\
 The default value of max_steps is 100,000',
   usage: [],
