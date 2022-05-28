@@ -26,6 +26,8 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
     return error(`Unexpected option ${args._unknown[0]}`);
+  } else if (!args.positionals) {
+    error("must pass source code as a positional argument (e.g., pepterm asm myFile.pep")
   } else {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
@@ -131,6 +133,8 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.run.usage));
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
+  } else if (!args.positionals) {
+    error("must pass object code as a positional argument (e.g., pepterm run myFile.pepo")
   } else if (args['force-elf'] && args['force-obj']) {
     error('--force-elf and --force-obj are mutually exclusive.');
   } else {
