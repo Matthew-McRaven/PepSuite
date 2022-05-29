@@ -186,4 +186,6 @@ template <typename value_t> symbol::NodeType<value_t> symbol::parent(symbol::Nod
             return ptr;
     } else
         assert(0 && "Something went wrong with the variant type conversion");
+    // This will never be reached, but compiler can't tell that above assert is a catch-all.
+    return {};
 }
