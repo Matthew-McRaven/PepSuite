@@ -11,6 +11,7 @@ stages:
 # Variables that must be injected into every pipeline
 variables:
   BUILD_VERSION: v0.4.0
+  LATEX_VERSION: v0.1.0
   GIT_LFS_SKIP_SMUDGE: '1'
   # Append dist, because I have generated files there
   SAST_EXCLUDED_PATHS: spec, test, tests, tmp, dist
@@ -108,6 +109,19 @@ docs:core:
     expire_in: 1 week
     paths:
       - packages/native/core/build/docs/
+
+docs:spec:
+  image: registry.gitlab.com/pep10/pepsuite/latex:${LATEX_VERSION}
+  stage: docs 
+  needs: []
+  tags: 
+    - docker
+  artifacts:
+    paths:
+    - docs/spec/pep10-documentation.pdf
+  script:
+    - cd docs/spec
+    - latexmk -xelatex pep10-documentation.tex
 
 
 ###############
