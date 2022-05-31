@@ -347,9 +347,9 @@ Specifier   &                &                                      & Mode      
 0000 1000   & \verb|NOP|     & No operation                         & U \\
  \\
 0001 000r   & \verb|NOTr|    & Bitwise invert r                     & U                           & NZ \\
-0001 001r   & \verb|NEGr|    & Negate r                             & U                           & NZV \\
+0001 001r   & \verb|NEGr|    & Negate r                             & U                           & NZVC \\
 0001 010r   & \verb|ASLr|    & Arithmetic shift left r              & U                           & NZVC \\
-0001 011r   & \verb|ASRr|    & Arithmetic shift right r             & U                           & NZC \\
+0001 011r   & \verb|ASRr|    & Arithmetic shift right r             & U                           & NVZC \\
 0001 100r   & \verb|ROLr|    & Rotate left r                        & U                           & C \\
 0001 101r   & \verb|RORr|    & Rotate right r                       & U                           & C \\
  \\
@@ -415,9 +415,9 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \verb|NOP|     & \{\textit{No operation}\}\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
-\verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;\textrm{r}[ 15]\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry\; from}\textrm{ NOT }x+1\; \mathit{operation}\}$\\
+\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;\textrm{r}[ 15]\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\}$\\
+\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow0$\\
 \verb|ROLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;{r}[ 15]\leftarrow \textrm{C}$\\
 \verb|RORr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; , \;{r}[ 0]\leftarrow \textrm{C}$\\
 \\
