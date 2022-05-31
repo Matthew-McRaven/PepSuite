@@ -449,11 +449,11 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \verb|STWr|    & $\textrm{Oprnd} \leftarrow \textrm{r}$\\
 \verb|STBr|    & $\textrm{byte Oprnd} \leftarrow \textrm{r}[ 8:15]$\\
 \\
-\verb|CPWr|    & $\textrm{Y}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
+\verb|CPWr|    & $\textrm{Y}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
 \verb|CPBr|    & $\textrm{Y}\leftarrow \textrm{r}[ 8:15] -\textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow 0 \; , \; \textrm{C}\leftarrow 0$\\
 \\
-\verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
-\verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
+\verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\}$\\
+\verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\}$\\
 \verb|ANDr|    & $\textrm{r}\leftarrow \textrm{r}\land\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|ORr|     & $\textrm{r}\leftarrow \textrm{r}\lor\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|XORr|     & $\textrm{r}\leftarrow \textrm{r}\oplus\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
