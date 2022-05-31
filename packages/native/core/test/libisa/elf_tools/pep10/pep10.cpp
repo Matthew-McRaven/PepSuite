@@ -211,7 +211,7 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         auto machine_result = isa::pep10::machine_from_elf<false>(image->image());
         REQUIRE(machine_result.has_value());
         auto machine = machine_result.value();
-        isa::pep10::load_user_program(image->image(), machine, isa::pep10::Loader::kDiskIn);
+        REQUIRE(isa::pep10::load_user_program(image->image(), machine, isa::pep10::Loader::kDiskIn));
 
         auto diskIn_lookup = machine->input_device("diskIn");
         CHECK(diskIn_lookup.has_value());
@@ -233,7 +233,7 @@ TEST_CASE("Convert ELF image to Pep/10 machine", "[elf_tools::pep10]") {
         auto machine_result = isa::pep10::machine_from_elf<false>(image->image());
         REQUIRE(machine_result.has_value());
         auto machine = machine_result.value();
-        isa::pep10::load_user_program(image->image(), machine, isa::pep10::Loader::kRAM);
+        REQUIRE(isa::pep10::load_user_program(image->image(), machine, isa::pep10::Loader::kRAM));
 
         auto bytes_result = elf_tools::section_as_bytes(image->image(), "user.text");
         CHECK(bytes_result.has_value());

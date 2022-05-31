@@ -1,6 +1,6 @@
 {
   "name": "@pep10/ui-help",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Components designed as part of the PepSuite help system.",
   "homepage": "https://gitlab.com/pep10/pepsuite#readme",
   "bugs": {
@@ -18,10 +18,10 @@
     "src"
   ],
   "scripts": {
-    "build": "npm run clean && npm run compile",
+    "build": "yarn clean && yarn compile",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.json",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn build",
     "test": "npx jest",
     "test:ci": "npx jest --ci --reporters=default --reporters=jest-junit --coverageReporters=cobertura --coverage"
   },

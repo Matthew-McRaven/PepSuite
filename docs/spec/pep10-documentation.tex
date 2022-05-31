@@ -347,9 +347,9 @@ Specifier   &                &                                      & Mode      
 0000 1000   & \verb|NOP|     & No operation                         & U \\
  \\
 0001 000r   & \verb|NOTr|    & Bitwise invert r                     & U                           & NZ \\
-0001 001r   & \verb|NEGr|    & Negate r                             & U                           & NZV \\
+0001 001r   & \verb|NEGr|    & Negate r                             & U                           & NZVC \\
 0001 010r   & \verb|ASLr|    & Arithmetic shift left r              & U                           & NZVC \\
-0001 011r   & \verb|ASRr|    & Arithmetic shift right r             & U                           & NZC \\
+0001 011r   & \verb|ASRr|    & Arithmetic shift right r             & U                           & NVZC \\
 0001 100r   & \verb|ROLr|    & Rotate left r                        & U                           & C \\
 0001 101r   & \verb|RORr|    & Rotate right r                       & U                           & C \\
  \\
@@ -381,8 +381,8 @@ Specifier   &                &                                      & Mode      
 1101 raaa   & \verb|ORr|     & Bitwise OR to r                      & i, d, n, s, sf, x, sx, sfx  & NZ \\
 1110 raaa   & \verb|XORr|    & Bitwise XOR to r                     & i, d, n, s, sf, x, sx, sfx  & NZ \\
  \\
-1111 0aaa   & \verb|ADDSP|   & Add to SP                            & i, d, n, s, sf, x, sx, sfx  & NZVC \\
-1111 1aaa   & \verb|SUBSP|   & Subtract from SP                     & i, d, n, s, sf, x, sx, sfx  & NZVC \\
+1111 0aaa   & \verb|ADDSP|   & Add to SP                            & i, d, n, s, sf, x, sx, sfx  \\
+1111 1aaa   & \verb|SUBSP|   & Subtract from SP                     & i, d, n, s, sf, x, sx, sfx  \\
 \bottomrule
 \end{tabular}
 
@@ -415,9 +415,9 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \verb|NOP|     & \{\textit{No operation}\}\\
 \\
 \verb|NOTr|    & $\textrm{r}\leftarrow \neg\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
-\verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;\textrm{r}[ 15]\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\}$\\
-\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
+\verb|NEGr|    & $\textrm{r}\leftarrow -\textrm{r}\; ; \;\textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry\; from}\textrm{ NOT }x+1\; \mathit{operation}\}$\\
+\verb|ASLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;\textrm{r}[ 15]\leftarrow\textrm0 \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\}$\\
+\verb|ASRr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow0$\\
 \verb|ROLr|    & $\textrm{C}\leftarrow \textrm{r}[ 0] \; , \; \textrm{r}[ 0:14]\leftarrow\textrm{r}[ 1:15] \; , \;{r}[ 15]\leftarrow \textrm{C}$\\
 \verb|RORr|    & $\textrm{C}\leftarrow \textrm{r}[ 15] \; , \; \textrm{r}[ 1:15]\leftarrow\textrm{r}[ 0:14] \; , \;{r}[ 0]\leftarrow \textrm{C}$\\
 \\
@@ -449,11 +449,11 @@ $\textrm{Mem}[\textrm{Y}-9]\leftarrow\textrm{A} \; ; \;
 \verb|STWr|    & $\textrm{Oprnd} \leftarrow \textrm{r}$\\
 \verb|STBr|    & $\textrm{byte Oprnd} \leftarrow \textrm{r}[ 8:15]$\\
 \\
-\verb|CPWr|    & $\textrm{Y}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
+\verb|CPWr|    & $\textrm{Y}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\} \; ; \; \textrm{N}\leftarrow\textrm{N} \oplus \textrm{V}$\\
 \verb|CPBr|    & $\textrm{Y}\leftarrow \textrm{r}[ 8:15] -\textrm{byte Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{Y}<0 \; , \; \textrm{Z}\leftarrow\textrm{Y}=0 \; , \; \textrm{V}\leftarrow 0 \; , \; \textrm{C}\leftarrow 0$\\
 \\
-\verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
-\verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\textit{overflow}\} \; , \; \textrm{C}\leftarrow \{\textit{carry}\}$\\
+\verb|ADDr|    & $\textrm{r}\leftarrow \textrm{r}+\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\}$\\
+\verb|SUBr|    & $\textrm{r}\leftarrow \textrm{r}-\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0 \; , \; \textrm{V}\leftarrow \{\mathit{overflow}\} \; , \; \textrm{C}\leftarrow \{\mathit{carry}\}$\\
 \verb|ANDr|    & $\textrm{r}\leftarrow \textrm{r}\land\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|ORr|     & $\textrm{r}\leftarrow \textrm{r}\lor\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\
 \verb|XORr|     & $\textrm{r}\leftarrow \textrm{r}\oplus\textrm{Oprnd} \; ; \; \textrm{N}\leftarrow\textrm{r}<0 \; , \; \textrm{Z}\leftarrow\textrm{r}=0$\\

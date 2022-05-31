@@ -26,15 +26,13 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.asm.usage));
   } else if (args._unknown) {
     return error(`Unexpected option ${args._unknown[0]}`);
-  } else if (!args['source-file']) {
-    return error('--source-file (or -s) is required.');
-  } else if (!args['object-file']) {
-    return error('--object-file (or -o) is required.');
+  } else if (!args.positionals) {
+    error("must pass source code as a positional argument (e.g., pepterm asm myFile.pep")
   } else {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
     try {
-      const sourceFileText = fs.readFileSync(args['source-file']).toString('ascii');
+      const sourceFileText = fs.readFileSync(args.positionals).toString('ascii');
       project.setUserProgram(sourceFileText);
       const errorCode = project.assemble();
 
@@ -53,10 +51,10 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         mod.MessageLevel.Status,
       );
 
-      // If there are errors or warning, output them to --error-file or <source_file>_errLog.txt.
+      // If there are errors or warning, output them to --err or <source_file>_errLog.txt.
       if (errors) {
-        // Select default error file, and override if --error-file is present.
-        const defaultErrorPath = path.parse(args['source-file']);
+        // Select default error file, and override if --err is present.
+        const defaultErrorPath = path.parse(args.positionals);
         let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
         if (args['error-file']) errorFileName = args['error-file'];
         // Remove any text from the error log
@@ -75,15 +73,19 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         return error('Assembly failed due to errors in the supplied program.');
       }
 
+
+      const sourcePath = path.parse(args.positionals);
+      let defaultObjectCodeFileName = path.join(sourcePath.dir, `${sourcePath.name}.pepo`);
+      let objectCodeFileName = args.obj || defaultObjectCodeFileName
       // Clear object file if it exists, and dump formatted object code to it.
-      const objectFile = fs.openSync(args['object-file'], 'w');
+      const objectFile = fs.openSync(objectCodeFileName, 'w');
       fs.ftruncateSync(objectFile);
       fs.writeFileSync(objectFile, project.formattedObjectCode());
       fs.closeSync(objectFile);
 
       // Helper to replace the extension on the object file.
       const changeObjectFileExtension = (newExt: string) => {
-        const objectPath = path.parse(args['object-file']);
+        const objectPath = path.parse(objectCodeFileName);
         return path.join(objectPath.dir, `${objectPath.name}.${newExt}`);
       };
 
@@ -92,6 +94,22 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
       fs.ftruncateSync(listingFile);
       fs.writeFileSync(listingFile, project.formattedUserListing());
       fs.closeSync(listingFile);
+
+      // If --enable-peph, output as .peph
+      if (args['enable-peph']) {
+        const pephFile = fs.openSync(changeObjectFileExtension('peph'), 'w');
+        fs.ftruncateSync(pephFile);
+        fs.writeFileSync(pephFile, project.formattedPeph());
+        fs.closeSync(pephFile)
+      }
+
+      // If --enable-pepb, output as .pepb
+      if (args['enable-pepb']) {
+        const pepbFile = fs.openSync(changeObjectFileExtension('pepb'), 'w');
+        fs.ftruncateSync(pepbFile);
+        fs.writeFileSync(pepbFile, project.formattedPepb());
+        fs.closeSync(pepbFile)
+      }
 
       // If --enable-elf, output as .elf
       if (args['enable-elf']) {
@@ -115,21 +133,23 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
     console.log(commandLineUsage(commands.run.usage));
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
-  } else if (!(args.elf || args.obj)) {
-    error('Exactly one of --elf or --obj is required.');
-  } else if (args.elf && args.obj) {
-    error('--elf and --obj are mutually exclusive.');
+  } else if (!args.positionals) {
+    error("must pass object code as a positional argument (e.g., pepterm run myFile.pepo")
+  } else if (args['force-elf'] && args['force-obj']) {
+    error('--force-elf and --force-obj are mutually exclusive.');
   } else {
     const mod = await pep10;
     let image;
     const simulator = new mod.Pep10Simulator();
     try {
-      if (args.obj) {
-        const objectText = fs.readFileSync(args.obj).toString('ascii');
+      const pepo = !(args['force-elf'] || args['positionals'].endsWith('elf'))
+      if (pepo) {
+        const objectText = fs.readFileSync(args.positionals).toString('ascii');
         image = mod.objectCodeToImage(objectText);
-      } else if (args.elf) {
-        const elfText = fs.readFileSync(args.elf);
+      } else if (!pepo) {
+        const elfText = fs.readFileSync(args.positionals);
         const elfBytes = new Uint8Array(elfText.buffer);
+        // Hack to pass raw bytes from JS to WASM
         const buf = mod._malloc(elfBytes.length * elfBytes.BYTES_PER_ELEMENT);
         mod.HEAPU8.set(elfBytes, buf);
         image = mod.rawBytesToImage(buf, elfBytes.length);
@@ -139,11 +159,10 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       if (!image) return error('Provided object file was invalid.');
       simulator.setImage(image);
 
-      // Load charIn if it exists.
-      if (args.charIn) {
-        const charIn = fs.readFileSync(args.charIn).toString('ascii');
-        simulator.setCharIn(charIn);
-      }
+      // Load charIn from stdIn, which is fd==0
+      const charIn = fs.readFileSync(process.stdin.fd, "ascii")
+      simulator.setCharIn(charIn);
+
 
       // Check and set max-steps.
       if (args['max-steps']) {
@@ -166,13 +185,11 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
         default: break;
       }
 
-      if (args['echo-output']) console.log(simulator.getCharOut());
+      // Dump charOut to stdOut, and add \n to prevent ugly % char
+      // See: https://www.geeksforgeeks.org/difference-between-process-stdout-write-and-console-log-in-node-js/
+      process.stdout.write(simulator.getCharOut())
+      process.stdout.write("\n")
 
-      // Clear object file if it exists, and dump formatted object code to it.
-      const charOutFile = fs.openSync(args.charOut, 'w');
-      fs.ftruncateSync(charOutFile);
-      fs.writeFileSync(charOutFile, simulator.getCharOut());
-      fs.closeSync(charOutFile);
     } catch (except) {
       error(except);
     } finally {

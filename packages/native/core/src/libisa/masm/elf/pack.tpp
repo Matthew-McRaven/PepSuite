@@ -103,7 +103,7 @@ bool masm::elf::pack_image(std::shared_ptr<masm::project::project<addr_size_t>> 
         symbol_section_accessor sym_ac(*writer, sym_tab);
         for (auto symbol : symbols) {
             using namespace magic_enum::ostream_operators;
-            //std::cout << symbol->value->type() << std::endl;
+            // std::cout << symbol->value->type() << std::endl;
             auto binding = STB_LOCAL;
             if (symbol->binding == symbol::binding_t::kGlobal)
                 binding = STB_GLOBAL;
@@ -124,6 +124,17 @@ bool masm::elf::pack_image(std::shared_ptr<masm::project::project<addr_size_t>> 
             case symbol::Type::kConstant:
                 type = STT_OBJECT;
                 symbol_section_index = SHN_ABS;
+                break;
+            // Other symbol types don't map nicely to ELF.
+            // Explicitly enumerate renamining types, so that if we add more in the future, we know to fix this
+            // switch-case.
+            case symbol::Type::kEmpty:
+                [[fallthrough]];
+            case symbol::Type::kPtrToSym:
+                [[fallthrough]];
+            case symbol::Type::kDeleted:
+                type = STT_NOTYPE;
+                symbol_section_index = 0;
                 break;
             }
 
