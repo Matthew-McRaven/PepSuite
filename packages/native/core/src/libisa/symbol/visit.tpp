@@ -212,7 +212,7 @@ template <typename value_t> std::string symbol::symbol_table_listing(NodeType<va
         if (lhs)
             ss << format(*it++);
         else
-            ss << "      " << format(*it++) << std::endl;
+            ss << "         " << format(*it++) << std::endl;
         lhs ^= true;
     }
     return ss.str();
