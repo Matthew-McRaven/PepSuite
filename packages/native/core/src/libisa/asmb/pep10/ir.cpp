@@ -91,10 +91,16 @@ std::string asmb::pep10::nonunary_instruction::generate_source_string() const {
     if (this->symbol_entry != nullptr) {
         symbol_string = this->symbol_entry->name + ":";
     }
-    // TODO: Get correct addressing mode string.
+
     auto mnemonic_string = magic_enum::enum_name(this->mnemonic);
     auto operand_string = argument->string() + ",";
-    operand_string.append(magic_enum::enum_name(this->addressing_mode));
+
+    // Must make a copy, since addressing_mode is a const, capitalized string.
+    auto addr_mode = std::string(magic_enum::enum_name(this->addressing_mode));
+    // Lowercase the addressing mode for consistency with Pep/9 (see #395).
+    std::transform(addr_mode.begin(), addr_mode.end(), addr_mode.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    operand_string.append(addr_mode);
 
     return fmt::format("{:<9}{:<8}{:<12}{}", symbol_string, mnemonic_string, operand_string,
                        this->get_formatted_comment());
