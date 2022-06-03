@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://gitlab.com/pep10/pepsuite/compare/v0.4.0...v0.4.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **term:** check for passed positional arguments ([773416f](https://gitlab.com/pep10/pepsuite/commit/773416f082057373fef9a266126d9cc52cb457ac)), closes [#389](https://gitlab.com/pep10/pepsuite/issues/389)
+* **term:** prevent crashed when stdin is empty ([ded76a2](https://gitlab.com/pep10/pepsuite/commit/ded76a212b87bff65b9972c0080011b7468ad5f8)), closes [#396](https://gitlab.com/pep10/pepsuite/issues/396)
+
+
+
+
+
 # [0.4.0](https://gitlab.com/pep10/pepsuite/compare/v0.2.1...v0.4.0) (2022-05-27)
 
 

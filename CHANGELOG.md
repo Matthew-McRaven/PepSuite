@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://gitlab.com/pep10/pepsuite/compare/v0.4.0...v0.4.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **core:** add newline between asmb listing, symtab ([0fbfd29](https://gitlab.com/pep10/pepsuite/commit/0fbfd29db3d6968d0cdccfc66b7109688f3610c5)), closes [#395](https://gitlab.com/pep10/pepsuite/issues/395)
+* **core:** capitalize hex strings in symtab ([b6cb036](https://gitlab.com/pep10/pepsuite/commit/b6cb0364713ae92d685d5ea1f1fd041455bdabca)), closes [#395](https://gitlab.com/pep10/pepsuite/issues/395)
+* **core:** fix crashing assert ([c6cb7de](https://gitlab.com/pep10/pepsuite/commit/c6cb7de625bfb79607edda12c273e822e2b179e6))
+* **core:** fix peph/b macro lines ([d8bd652](https://gitlab.com/pep10/pepsuite/commit/d8bd652edeb7da77396c1e6ceba28d66a9b6afc5)), closes [#384](https://gitlab.com/pep10/pepsuite/issues/384)
+* **core:** increase spacing between symtab columns ([6a54bd1](https://gitlab.com/pep10/pepsuite/commit/6a54bd19439fb717d75206075edd641a96369bf9)), closes [#395](https://gitlab.com/pep10/pepsuite/issues/395)
+* **core:** make addressing mode string lower case ([bcc4c99](https://gitlab.com/pep10/pepsuite/commit/bcc4c996614088332e49277661a128980702fd59)), closes [#395](https://gitlab.com/pep10/pepsuite/issues/395)
+* **core:** silence [[nodiscard]] warning ([b8ae516](https://gitlab.com/pep10/pepsuite/commit/b8ae516092605fb8598baff70410a8a271c69112))
+* **core:** silence non-void missing return value ([035e83f](https://gitlab.com/pep10/pepsuite/commit/035e83fb65e5321389fdc7bdaa3aff3cfde1eeec))
+* **core:** silence unhandled cases warning ([2c207df](https://gitlab.com/pep10/pepsuite/commit/2c207df22b784b9731b8402afd354e4cc6ec42e4))
+* **spec:** ADD/SUB SP don't affect status bits ([f0dbc28](https://gitlab.com/pep10/pepsuite/commit/f0dbc28d932c70b2bb788e87626b4419ebea1e90)), closes [pep10/pepsuite#231](https://gitlab.com/pep10/pepsuite/issues/231) [#231](https://gitlab.com/pep10/pepsuite/issues/231)
+* **term:** check for passed positional arguments ([773416f](https://gitlab.com/pep10/pepsuite/commit/773416f082057373fef9a266126d9cc52cb457ac)), closes [#389](https://gitlab.com/pep10/pepsuite/issues/389)
+* **term:** prevent crashed when stdin is empty ([ded76a2](https://gitlab.com/pep10/pepsuite/commit/ded76a212b87bff65b9972c0080011b7468ad5f8)), closes [#396](https://gitlab.com/pep10/pepsuite/issues/396)
+
+
+
+
+
 # [0.4.0](https://gitlab.com/pep10/pepsuite/compare/v0.2.1...v0.4.0) (2022-05-27)
 
 
