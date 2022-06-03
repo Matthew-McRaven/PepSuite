@@ -160,7 +160,13 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       simulator.setImage(image);
 
       // Load charIn from stdIn, which is fd==0
-      const charIn = fs.readFileSync(process.stdin.fd, "ascii")
+      let charIn = '';
+      // Mac OS crashes with EAGAIN if STDIN has nothing buffered.
+      try {
+        charIn = fs.readFileSync(process.stdin.fd, "ascii")
+      } catch (e) {
+        if (e.code !== 'EAGAIN') throw e;
+      }
       simulator.setCharIn(charIn);
 
 
