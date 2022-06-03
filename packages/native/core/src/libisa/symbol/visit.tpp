@@ -199,7 +199,7 @@ template <typename value_t> std::string symbol::symbol_table_listing(NodeType<va
     auto it = symbols.cbegin();
 
     // Compute the bitwidth of the symbol table.
-    const auto template_string = fmt::format(":0{}x", sizeof(value_t) * 2);
+    const auto template_string = fmt::format(":0{}X", sizeof(value_t) * 2);
 
     // Helper lambda to pretty print a single symbol.
     auto format = [&template_string](const auto &sym) {
