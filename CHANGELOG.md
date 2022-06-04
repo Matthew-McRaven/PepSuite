@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://gitlab.com/pep10/pepsuite/compare/v0.4.1...v0.5.0) (2022-06-04)
+
+
+### Bug Fixes
+
+* **core:** fix listing+symtab spacing ([834765a](https://gitlab.com/pep10/pepsuite/commit/834765a38b1dd5b07150d54b9b7d1a75f3b8f86d)), closes [#395](https://gitlab.com/pep10/pepsuite/issues/395)
+* **term:** spelling fixes in `asm` flags ([0a115e8](https://gitlab.com/pep10/pepsuite/commit/0a115e8eb89ef515156c78579123a60363d6b5e3))
+* **term:** stop ignoring `asm`'s --os flag ([355a743](https://gitlab.com/pep10/pepsuite/commit/355a743da613cb131e0f74828076757c8da18d88)), closes [#400](https://gitlab.com/pep10/pepsuite/issues/400)
+
+
+### Features
+
+* **term:** add ability to assemble only OS ([6bf172b](https://gitlab.com/pep10/pepsuite/commit/6bf172b9ce8c68f2d4dbd8898c6a5cbf187cec09)), closes [#401](https://gitlab.com/pep10/pepsuite/issues/401)
+
+
+
+
+
 ## [0.4.1](https://gitlab.com/pep10/pepsuite/compare/v0.4.0...v0.4.1) (2022-06-03)
 
 
