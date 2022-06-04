@@ -47,7 +47,7 @@ If there are no errors, the error log file is not created.',
   {
     name: 'obj',
     alias: 'o',
-    description: 'File to which object code will be written. Defaults to name of source file, with extension changed to pepo.',
+    description: 'File to which object code will be written. Defaults to name of source file, with the extension changed to pepo.',
   },
   {
     name: 'err',
@@ -67,7 +67,7 @@ If there are no errors, the error log file is not created.',
   {
     name: 'enable-elf',
     type: Boolean,
-    description: 'In addition to a .pepo objetc code file, dump the object code as an ELF file.',
+    description: 'In addition to a .pepo object code file, dump the object code as an ELF file.',
   },
   {
     name: 'os',
