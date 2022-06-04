@@ -130,6 +130,92 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
+const handleAsmOS = async (args: commandLineArgs.CommandLineOptions) => {
+  if (args.help) {
+    console.log(commandLineUsage(commands.asm.usage));
+  } else if (args._unknown) {
+    return error(`Unexpected option ${args._unknown[0]}`);
+  } else if (!args.positionals) {
+    error("must pass OS source code as a positional argument (e.g., pepterm asm-os myOS.pep")
+  } else {
+    const mod = await pep10;
+    const project = new mod.AssemblyProject();
+    //try {
+    project.setOS(fs.readFileSync(args.positionals, "ascii"));
+    const errorCode = project.assemble();
+
+    if (errorCode !== mod.AssemblyErrorCode.Complete) {
+      return error(`OS Assembly failed to execute code ${mod.errorName(errorCode)}`);
+    }
+
+    // Determine if there are warnings or errors.
+    const errors = project.errors();
+    // Determine max severity of message, with error blocking any forward progress
+    const maxSeverity = (errors || []).reduce(
+      (prev: typeof mod.MessageLevel, cur: typeof mod.ErrorMessage) => {
+        console.log(prev, cur);
+        return mod.maxSeverity(prev, cur.type);
+      },
+      mod.MessageLevel.Status,
+    );
+
+    // If there are errors or warning, output them to --err or <source_file>_errLog.txt.
+    if (errors) {
+      // Select default error file, and override if --err is present.
+      const defaultErrorPath = path.parse(args.positionals);
+      let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
+      if (args['error-file']) errorFileName = args['error-file'];
+      // Remove any text from the error log
+      const errorFile = fs.openSync(errorFileName, 'w');
+      fs.ftruncateSync(errorFile, 0);
+      // And write all error messages in a ###: <message> format
+      errors.forEach((element: any) => {
+        const message = `${element.line}: ${element.message}\n`;
+        fs.writeFileSync(errorFile, message);
+      });
+      fs.closeSync(errorFile);
+    }
+
+    // If at least one message was an Error, no object code was generated, abort.
+    if (mod.MessageLevel.Error === maxSeverity) {
+      return error('Assembly failed due to errors in the supplied OS.');
+    }
+
+    // Unlike user program, don't generate object code, because it is meaningless for OS.
+
+    const sourcePath = path.parse(args.positionals);
+    let defaultListingName = path.join(sourcePath.dir, `${sourcePath.name}.pepl`);
+    let listingFileName = args.listing || defaultListingName
+
+    // Clear listing file if it exists, and dump formatted OS listing to it.
+    const listingFile = fs.openSync(listingFileName, 'w');
+    fs.ftruncateSync(listingFile);
+    fs.writeFileSync(listingFile, project.formattedOSListing());
+    fs.closeSync(listingFile);
+
+    // Helper to replace the extension on the listing file.
+    const changeListingFileExtension = (newExt: string) => {
+      const listingPath = path.parse(listingFileName);
+      return path.join(listingPath.dir, `${listingPath.name}.${newExt}`);
+    };
+
+    // If --enable-elf, output as .elf
+    if (args['enable-elf']) {
+      const elfFile = fs.openSync(changeListingFileExtension('elf'), 'w');
+      fs.ftruncateSync(elfFile);
+      const arrayBytes = project.rawBytesELF();
+      const bytes = new Uint8Array(arrayBytes);
+      fs.writeFileSync(elfFile, bytes);
+      fs.closeSync(elfFile);
+    }
+    /*} catch (except) {
+      return error(except);
+    } finally {
+      project.delete();
+    }*/
+  }
+};
+
 const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.run.usage));
@@ -297,6 +383,9 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
   switch (mode.command) {
     case 'asm':
       await handleAsm(commandLineArgs(commands.asm.commands, { partial: true, argv }));
+      break;
+    case 'asm-os':
+      await handleAsmOS(commandLineArgs(commands.asm.commands, { partial: true, argv }));
       break;
     case 'run':
       await handleRun(commandLineArgs(commands.run.commands, { partial: true, argv }));
