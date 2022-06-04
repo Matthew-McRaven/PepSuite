@@ -215,5 +215,10 @@ template <typename value_t> std::string symbol::symbol_table_listing(NodeType<va
             ss << "         " << format(*it++) << std::endl;
         lhs ^= true;
     }
+
+    // The last entry was on the left, but we did not append a newline. Insert here to fix #399
+    if (!lhs)
+        ss << std::endl;
+
     return ss.str();
 }
