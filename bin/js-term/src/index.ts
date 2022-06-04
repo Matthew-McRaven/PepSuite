@@ -32,11 +32,10 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
     try {
-      const sourceFileText = fs.readFileSync(args.positionals).toString('ascii');
       // Attempt to load OS if passed (fixes #400).
       if (args.os)
         project.setOS(fs.readFileSync(args.os, "ascii"))
-      project.setUserProgram(sourceFileText);
+      project.setUserProgram(fs.readFileSync(args.positionals, "ascii"));
       const errorCode = project.assemble();
 
       if (errorCode !== mod.AssemblyErrorCode.Complete) {
