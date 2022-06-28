@@ -10,7 +10,7 @@ stages:
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.4.0
+  BUILD_VERSION: v0.4.1
   LATEX_VERSION: v0.1.0
   GIT_LFS_SKIP_SMUDGE: '1'
   # Append dist, because I have generated files there
