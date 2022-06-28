@@ -11,12 +11,19 @@
 		"terminal.integrated.defaultProfile.linux": "bash",
 	},
     "extensions": [
+		"dbaeumer.vscode-eslint",
+		"silvenon.mdx",
+		"ms-vscode.live-server",
+		"ms-vscode.vscode-js-profile-flame",
+		"eamodio.gitlens",
+		"wix.vscode-import-cost",
+		"ms-vsliveshare.vsliveshare",
+		"Orta.vscode-jest",
 		"liviuschera.noctis",
 		"ms-vscode.cpptools",
-		"eamodio.gitlens",
 		"ms-vscode.cmake-tools",
 		"matepek.vscode-catch2-test-adapter",
-		"jeff-hykin.better-cpp-syntax"
+		"jeff-hykin.better-cpp-syntax",
 	],
 	"build": {
 		"dockerfile": "Dockerfile",
