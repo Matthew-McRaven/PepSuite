@@ -17957,7 +17957,7 @@ __metadata:
     webpack: 5
     webpack-cli: ^4.9.2
   bin:
-    js-term: dist/bundle.js
+    js-term: dist/bundle.cjs
   languageName: unknown
   linkType: soft
 
@@ -25819,12 +25819,6 @@ __metadata:
   checksum: 8709d4d63278bd309ca0e49e80a268308dea543a949e71acd427b3314cd9417da9a2cc73425dd9c21c6780334dbffd67e05e7be5aaa73e9affe8479afc6f20e3
   languageName: node
   linkType: hard
-
-"term@workspace:bin/term":
-  version: 0.0.0-use.local
-  resolution: "term@workspace:bin/term"
-  languageName: unknown
-  linkType: soft
 
 "terminal-link@npm:^2.0.0":
   version: 2.1.1
