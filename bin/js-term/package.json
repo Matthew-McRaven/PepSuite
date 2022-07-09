@@ -2,8 +2,8 @@
   "name": "js-term",
   "version": "0.5.0",
   "type": "module",
-  "main": "dist/bundle.js",
-  "bin": "dist/bundle.js",
+  "main": "dist/bundle.cjs",
+  "bin": "dist/bundle.cjs",
   "scripts": {
     "exec": "node dist/index.js",
     "pkg": "yarn webpack && pkg . --options trace-uncaught,experimental-wasi-unstable-preview1",
