@@ -10,7 +10,7 @@ stages:
 
 # Variables that must be injected into every pipeline
 variables:
-  BUILD_VERSION: v0.4.1
+  BUILD_VERSION: v0.4.2
   LATEX_VERSION: v0.1.0
   GIT_LFS_SKIP_SMUDGE: '1'
   # Append dist, because I have generated files there
@@ -26,8 +26,6 @@ variables:
     GIT_SUBMODULE_STRATEGY: recursive
   image: registry.gitlab.com/pep10/pepsuite/develop:${BUILD_VERSION}
   before_script:
-    - apt update
-    - apt-get install git-lfs
     - source /emsdk/emsdk_env.sh
     - mkdir -p ./yarn
 
