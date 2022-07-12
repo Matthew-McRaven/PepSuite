@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://gitlab.com/pep10/pepsuite/compare/v0.5.0...v0.5.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* **term:** add extensions to imports ([1abbde0](https://gitlab.com/pep10/pepsuite/commit/1abbde0248f95900393f27e243819f0dab666c03))
+
+
+
+
+
 # [0.5.0](https://gitlab.com/pep10/pepsuite/compare/v0.4.1...v0.5.0) (2022-06-04)
 
 

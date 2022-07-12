@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://gitlab.com/pep10/pepsuite/compare/v0.5.0...v0.5.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* **core:** add quotes to character arguments ([76149ad](https://gitlab.com/pep10/pepsuite/commit/76149adfa2ee84ed607c013d9137520122ea98ad)), closes [#406](https://gitlab.com/pep10/pepsuite/issues/406)
+* **core:** fix formatting string for IR char argument ([63ffc20](https://gitlab.com/pep10/pepsuite/commit/63ffc20480660aa54a689e120502f98d9c7e09a4))
+* **term:** add extensions to imports ([1abbde0](https://gitlab.com/pep10/pepsuite/commit/1abbde0248f95900393f27e243819f0dab666c03))
+
+
+
+
+
 # [0.5.0](https://gitlab.com/pep10/pepsuite/compare/v0.4.1...v0.5.0) (2022-06-04)
 
 
