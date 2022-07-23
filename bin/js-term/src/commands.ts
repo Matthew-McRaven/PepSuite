@@ -47,7 +47,7 @@ If there are no errors, the error log file is not created.',
   {
     name: 'obj',
     alias: 'o',
-    description: 'File to which object code will be written. Defaults to name of source file, with extension changed to pepo.',
+    description: 'File to which object code will be written. Defaults to name of source file, with the extension changed to pepo.',
   },
   {
     name: 'err',
@@ -67,7 +67,7 @@ If there are no errors, the error log file is not created.',
   {
     name: 'enable-elf',
     type: Boolean,
-    description: 'In addition to a .pepo objetc code file, dump the object code as an ELF file.',
+    description: 'In addition to a .pepo object code file, dump the object code as an ELF file.',
   },
   {
     name: 'os',
@@ -83,6 +83,48 @@ asm.usage = [
     header: 'Options',
     hide: ['positionals'],
     optionList: asm.commands,
+  },
+];
+
+/** *************
+* `asm` Section *
+***************** */
+export const asmos: Command = {
+  name: 'asm-os',
+  oneLine: 'Assemble a Pep/10 assembler source code as an operating system.',
+  detailed: 'The source_file must be a .pep file containing an operating system.\n\
+If there are assembly errors, an error log file named <source_file>_errLog.txt is created with the error messages.\
+If there are no errors, the error log file is not created.',
+  commands: [{
+    name: 'positionals',
+    defaultOption: true,
+    description: 'Arguments that must be passed',
+  }, helpCommand,
+  {
+    name: 'listing',
+    alias: 'o',
+    description: 'File to which listing will be written. Defaults to name of source file, with the extension changed to pepl.',
+  },
+  {
+    name: 'err',
+    alias: 'e',
+    description: 'Override the name of the default error log file.',
+  },
+  {
+    name: 'enable-elf',
+    type: Boolean,
+    description: 'In addition to a .pepl listing file, dump the object code as an ELF file.',
+  },
+  ],
+  sampleInvoke: '$ pepterm asm-os {underline os_source_file} <options>',
+  usage: [],
+};
+asmos.usage = [
+  synopsis(asmos.detailed, asmos.sampleInvoke),
+  {
+    header: 'Options',
+    hide: ['positionals'],
+    optionList: asmos.commands,
   },
 ];
 
@@ -286,7 +328,7 @@ toplevel.usage = [
   synopsis(toplevel.detailed, toplevel.sampleInvoke),
   {
     header: 'Valid Subcommands',
-    content: [asm, run, macro, lsmacros, figure, lsfigures].map(
+    content: [asm, asmos, run, macro, lsmacros, figure, lsfigures].map(
       (element) => `${element.name.padEnd(15, ' ')}${element.oneLine}`,
     ),
   },

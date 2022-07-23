@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://gitlab.com/pep10/pepsuite/compare/v0.5.0...v0.5.1) (2022-07-12)
+
+
+### Bug Fixes
+
+* **term:** add extensions to imports ([1abbde0](https://gitlab.com/pep10/pepsuite/commit/1abbde0248f95900393f27e243819f0dab666c03))
+
+
+
+
+
+# [0.5.0](https://gitlab.com/pep10/pepsuite/compare/v0.4.1...v0.5.0) (2022-06-04)
+
+
+### Bug Fixes
+
+* **term:** spelling fixes in `asm` flags ([0a115e8](https://gitlab.com/pep10/pepsuite/commit/0a115e8eb89ef515156c78579123a60363d6b5e3))
+* **term:** stop ignoring `asm`'s --os flag ([355a743](https://gitlab.com/pep10/pepsuite/commit/355a743da613cb131e0f74828076757c8da18d88)), closes [#400](https://gitlab.com/pep10/pepsuite/issues/400)
+
+
+### Features
+
+* **term:** add ability to assemble only OS ([6bf172b](https://gitlab.com/pep10/pepsuite/commit/6bf172b9ce8c68f2d4dbd8898c6a5cbf187cec09)), closes [#401](https://gitlab.com/pep10/pepsuite/issues/401)
+
+
+
+
+
+## [0.4.1](https://gitlab.com/pep10/pepsuite/compare/v0.4.0...v0.4.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **term:** check for passed positional arguments ([773416f](https://gitlab.com/pep10/pepsuite/commit/773416f082057373fef9a266126d9cc52cb457ac)), closes [#389](https://gitlab.com/pep10/pepsuite/issues/389)
+* **term:** prevent crashed when stdin is empty ([ded76a2](https://gitlab.com/pep10/pepsuite/commit/ded76a212b87bff65b9972c0080011b7468ad5f8)), closes [#396](https://gitlab.com/pep10/pepsuite/issues/396)
+
+
+
+
+
 # [0.4.0](https://gitlab.com/pep10/pepsuite/compare/v0.2.1...v0.4.0) (2022-05-27)
 
 

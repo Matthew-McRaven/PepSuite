@@ -6,7 +6,7 @@ TEST_CASE("Linear IR arguments, 16-bit, Character Arguments"){
 
     SECTION("Basic argument"){auto cv = masm::ir::char_argument<uint16_t>("a");
 CHECK(cv.value() == (int)'a');
-CHECK(cv.string() == "a");
+CHECK(cv.string() == "'a'");
 CHECK(!cv.fits_in(0));
 CHECK(cv.fits_in(1));
 CHECK(cv.fits_in(2));
@@ -14,14 +14,14 @@ CHECK(cv.fits_in(2));
 SECTION("Parse hex arguments") {
     auto cv = masm::ir::char_argument<uint16_t>("\\xff");
     CHECK(cv.value() == 255);
-    CHECK(cv.string() == "\\xff");
+    CHECK(cv.string() == "'\\xff'");
     CHECK(!cv.fits_in(0));
     CHECK(cv.fits_in(1));
     CHECK(cv.fits_in(2));
 
     cv = masm::ir::char_argument<uint16_t>("\\xba");
     CHECK(cv.value() == 0xba);
-    CHECK(cv.string() == "\\xba");
+    CHECK(cv.string() == "'\\xba'");
     CHECK(!cv.fits_in(0));
     CHECK(cv.fits_in(1));
     CHECK(cv.fits_in(2));
@@ -35,7 +35,7 @@ SECTION("Parse escape codes") {
     for (auto [k, v] : items) {
         auto cv = masm::ir::char_argument<uint16_t>(k);
         CHECK(cv.value() == v);
-        CHECK(cv.string() == k);
+        CHECK(cv.string() == fmt::format("'{}'", k));
         CHECK(!cv.fits_in(0));
         CHECK(cv.fits_in(1));
         CHECK(cv.fits_in(2));

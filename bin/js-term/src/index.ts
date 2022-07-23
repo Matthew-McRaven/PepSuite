@@ -10,9 +10,9 @@ import leven from 'leven';
 import { pep10 } from '@pep10/core';
 import path from 'path';
 import fs from 'fs';
-import aboutText from './about';
-import * as commands from './commands';
-import { gitSHA, version } from './version';
+import aboutText from './about.js';
+import * as commands from './commands.js';
+import { gitSHA, version } from './version.js';
 
 const versionString = `${commands.toplevel.name} version ${version}\nBased on commit: ${gitSHA}`;
 
@@ -27,13 +27,14 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   } else if (args._unknown) {
     return error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args.positionals) {
-    error("must pass source code as a positional argument (e.g., pepterm asm myFile.pep")
+    error('must pass source code as a positional argument (e.g., pepterm asm myFile.pep');
   } else {
     const mod = await pep10;
     const project = new mod.AssemblyProject();
     try {
-      const sourceFileText = fs.readFileSync(args.positionals).toString('ascii');
-      project.setUserProgram(sourceFileText);
+      // Attempt to load OS if passed (fixes #400).
+      if (args.os) project.setOS(fs.readFileSync(args.os, 'ascii'));
+      project.setUserProgram(fs.readFileSync(args.positionals, 'ascii'));
       const errorCode = project.assemble();
 
       if (errorCode !== mod.AssemblyErrorCode.Complete) {
@@ -73,10 +74,9 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         return error('Assembly failed due to errors in the supplied program.');
       }
 
-
       const sourcePath = path.parse(args.positionals);
-      let defaultObjectCodeFileName = path.join(sourcePath.dir, `${sourcePath.name}.pepo`);
-      let objectCodeFileName = args.obj || defaultObjectCodeFileName
+      const defaultObjectCodeFileName = path.join(sourcePath.dir, `${sourcePath.name}.pepo`);
+      const objectCodeFileName = args.obj || defaultObjectCodeFileName;
       // Clear object file if it exists, and dump formatted object code to it.
       const objectFile = fs.openSync(objectCodeFileName, 'w');
       fs.ftruncateSync(objectFile);
@@ -100,7 +100,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         const pephFile = fs.openSync(changeObjectFileExtension('peph'), 'w');
         fs.ftruncateSync(pephFile);
         fs.writeFileSync(pephFile, project.formattedPeph());
-        fs.closeSync(pephFile)
+        fs.closeSync(pephFile);
       }
 
       // If --enable-pepb, output as .pepb
@@ -108,7 +108,7 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
         const pepbFile = fs.openSync(changeObjectFileExtension('pepb'), 'w');
         fs.ftruncateSync(pepbFile);
         fs.writeFileSync(pepbFile, project.formattedPepb());
-        fs.closeSync(pepbFile)
+        fs.closeSync(pepbFile);
       }
 
       // If --enable-elf, output as .elf
@@ -128,13 +128,99 @@ const handleAsm = async (args: commandLineArgs.CommandLineOptions) => {
   }
 };
 
+const handleAsmOS = async (args: commandLineArgs.CommandLineOptions) => {
+  if (args.help) {
+    console.log(commandLineUsage(commands.asm.usage));
+  } else if (args._unknown) {
+    return error(`Unexpected option ${args._unknown[0]}`);
+  } else if (!args.positionals) {
+    error('must pass OS source code as a positional argument (e.g., pepterm asm-os myOS.pep');
+  } else {
+    const mod = await pep10;
+    const project = new mod.AssemblyProject();
+    // try {
+    project.setOS(fs.readFileSync(args.positionals, 'ascii'));
+    const errorCode = project.assemble();
+
+    if (errorCode !== mod.AssemblyErrorCode.Complete) {
+      return error(`OS Assembly failed to execute code ${mod.errorName(errorCode)}`);
+    }
+
+    // Determine if there are warnings or errors.
+    const errors = project.errors();
+    // Determine max severity of message, with error blocking any forward progress
+    const maxSeverity = (errors || []).reduce(
+      (prev: typeof mod.MessageLevel, cur: typeof mod.ErrorMessage) => {
+        console.log(prev, cur);
+        return mod.maxSeverity(prev, cur.type);
+      },
+      mod.MessageLevel.Status,
+    );
+
+    // If there are errors or warning, output them to --err or <source_file>_errLog.txt.
+    if (errors) {
+      // Select default error file, and override if --err is present.
+      const defaultErrorPath = path.parse(args.positionals);
+      let errorFileName = path.join(defaultErrorPath.dir, `${defaultErrorPath.name}_errLog.txt`);
+      if (args['error-file']) errorFileName = args['error-file'];
+      // Remove any text from the error log
+      const errorFile = fs.openSync(errorFileName, 'w');
+      fs.ftruncateSync(errorFile, 0);
+      // And write all error messages in a ###: <message> format
+      errors.forEach((element: any) => {
+        const message = `${element.line}: ${element.message}\n`;
+        fs.writeFileSync(errorFile, message);
+      });
+      fs.closeSync(errorFile);
+    }
+
+    // If at least one message was an Error, no object code was generated, abort.
+    if (mod.MessageLevel.Error === maxSeverity) {
+      return error('Assembly failed due to errors in the supplied OS.');
+    }
+
+    // Unlike user program, don't generate object code, because it is meaningless for OS.
+
+    const sourcePath = path.parse(args.positionals);
+    const defaultListingName = path.join(sourcePath.dir, `${sourcePath.name}.pepl`);
+    const listingFileName = args.listing || defaultListingName;
+
+    // Clear listing file if it exists, and dump formatted OS listing to it.
+    const listingFile = fs.openSync(listingFileName, 'w');
+    fs.ftruncateSync(listingFile);
+    fs.writeFileSync(listingFile, project.formattedOSListing());
+    fs.closeSync(listingFile);
+
+    // Helper to replace the extension on the listing file.
+    const changeListingFileExtension = (newExt: string) => {
+      const listingPath = path.parse(listingFileName);
+      return path.join(listingPath.dir, `${listingPath.name}.${newExt}`);
+    };
+
+    // If --enable-elf, output as .elf
+    if (args['enable-elf']) {
+      const elfFile = fs.openSync(changeListingFileExtension('elf'), 'w');
+      fs.ftruncateSync(elfFile);
+      const arrayBytes = project.rawBytesELF();
+      const bytes = new Uint8Array(arrayBytes);
+      fs.writeFileSync(elfFile, bytes);
+      fs.closeSync(elfFile);
+    }
+    /* } catch (except) {
+      return error(except);
+    } finally {
+      project.delete();
+    } */
+  }
+};
+
 const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
   if (args.help) {
     console.log(commandLineUsage(commands.run.usage));
   } else if (args._unknown) {
     error(`Unexpected option ${args._unknown[0]}`);
   } else if (!args.positionals) {
-    error("must pass object code as a positional argument (e.g., pepterm run myFile.pepo")
+    error('must pass object code as a positional argument (e.g., pepterm run myFile.pepo');
   } else if (args['force-elf'] && args['force-obj']) {
     error('--force-elf and --force-obj are mutually exclusive.');
   } else {
@@ -142,7 +228,7 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
     let image;
     const simulator = new mod.Pep10Simulator();
     try {
-      const pepo = !(args['force-elf'] || args['positionals'].endsWith('elf'))
+      const pepo = !(args['force-elf'] || args.positionals.endsWith('elf'));
       if (pepo) {
         const objectText = fs.readFileSync(args.positionals).toString('ascii');
         image = mod.objectCodeToImage(objectText);
@@ -160,9 +246,14 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
       simulator.setImage(image);
 
       // Load charIn from stdIn, which is fd==0
-      const charIn = fs.readFileSync(process.stdin.fd, "ascii")
+      let charIn = '';
+      // Mac OS crashes with EAGAIN if STDIN has nothing buffered.
+      try {
+        charIn = fs.readFileSync(process.stdin.fd, 'ascii');
+      } catch (e) {
+        if (e.code !== 'EAGAIN') throw e;
+      }
       simulator.setCharIn(charIn);
-
 
       // Check and set max-steps.
       if (args['max-steps']) {
@@ -187,9 +278,8 @@ const handleRun = async (args: commandLineArgs.CommandLineOptions) => {
 
       // Dump charOut to stdOut, and add \n to prevent ugly % char
       // See: https://www.geeksforgeeks.org/difference-between-process-stdout-write-and-console-log-in-node-js/
-      process.stdout.write(simulator.getCharOut())
-      process.stdout.write("\n")
-
+      process.stdout.write(simulator.getCharOut());
+      process.stdout.write('\n');
     } catch (except) {
       error(except);
     } finally {
@@ -289,6 +379,9 @@ const handleLSFigures = async (args: commandLineArgs.CommandLineOptions) => {
   switch (mode.command) {
     case 'asm':
       await handleAsm(commandLineArgs(commands.asm.commands, { partial: true, argv }));
+      break;
+    case 'asm-os':
+      await handleAsmOS(commandLineArgs(commands.asm.commands, { partial: true, argv }));
       break;
     case 'run':
       await handleRun(commandLineArgs(commands.run.commands, { partial: true, argv }));
